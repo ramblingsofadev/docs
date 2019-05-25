@@ -1,0 +1,136 @@
+# Installing
+
+## Table of Contents
+1. [Requirements](#requirements)
+2. [Installing](#installing)
+  1. [Libraries](#libraries)
+3. [Server Config](#server-config)
+  1. [PHP Built-in Web Server Config](#php-built-in-web-server-config)
+  2. [Apache Config](#apache-config)
+  3. [Nginx Config](#nginx-config)
+  4. [Caddy Config](#caddy-config)
+4. [Versioning](#versioning)
+
+<h2 id="requirements">Requirements</h2>
+
+* PHP &ge; 7.3.0
+* OpenSSL
+* mbstring
+
+> **Note:** If you're a FreeBSD user, you'll also need to make sure the ctype, dom, filter, hash, json, phar, session, tokenizer, and xml extensions are installed.
+
+<h2 id="installing">Installing</h2>
+
+Aphiria can be easily installed using Composer:
+
+```php
+composer create-project aphiria/app --prefer-dist
+```
+
+Be sure to [configure your server](#server-config) to finish the installation.  Load up your website in a browser, and you should see a basic website explaining on how to start customizing it.  That's it!  If it does not show up, make sure you've made *PATH_TO_APHIRIA/tmp* writable.
+
+> **Note:** You can <a href="https://getcomposer.org/download/" target="_blank">download Composer from here</a>.
+
+<h4 id="libraries">Libraries</h4>
+
+Aphiria is broken into various libraries, each of which can be installed individually:
+
+* aphiria/api
+* aphiria/configuration
+* aphiria/console
+* aphiria/middleware
+* aphiria/net
+* aphiria/router
+* aphiria/serialization
+
+<h2 id="server-config">Server Config</h2>
+
+* Aphiria's _tmp_ directory needs to be writable from PHP
+* The document root needs to be set to Aphiria's _public_ directory (usually _/var/www/html/public_ or */var/www/html/YOUR_SITE_NAME/public*)
+
+> **Note:** You must set `YOUR_SITE_DOMAIN` and `YOUR_SITE_DIRECTORY` with the appropriate values in the configs below.
+
+<h4 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h4>
+
+To run Aphiria locally, run the following command:
+
+```
+php -S localhost:80 -t public localhost_router.php
+```
+    
+This will run PHP's built-in web server. The site will be accessible at http://localhost.
+
+<h4 id="apache-config">Apache Config</h4>
+
+Create a virtual host in your Apache config with the following settings:
+
+```
+<VirtualHost *:80>
+    ServerName YOUR_SITE_DOMAIN
+    DocumentRoot YOUR_SITE_DIRECTORY/public
+
+    <Directory YOUR_DOCUMENT_ROOT/public>
+        <IfModule mod_rewrite.c>
+            RewriteEngine On
+
+            # Handle trailing slashes
+            RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+            # Create pretty URLs
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteRule ^ index.php [L]
+        </IfModule>
+    </Directory>
+</VirtualHost>
+```
+
+<h4 id="nginx-config">Nginx Config</h4>
+
+Add the following to your Nginx config:
+
+```
+server {
+    listen 80;
+    server_name YOUR_SITE_DOMAIN;
+    root YOUR_SITE_DIRECTORY/public;
+    index index.php;
+    
+    # Handle trailing slashes
+    rewrite ^/(.*)/$ /$1 permanent;
+    
+    # Create pretty URLs
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+    
+    location ~ \.php$ {
+        include                 /etc/nginx/fastcgi_params;
+        fastcgi_index           index.php;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_param           SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass            unix:/run/php/php7.0-fpm.sock;
+    }
+}
+```
+
+<h4 id="caddy-config">Caddy Config</h4>
+
+Add the following to your Caddyfile config:
+
+```
+YOUR_SITE_DOMAIN:80 {
+    rewrite {
+        r .*
+        ext /
+        to /index.php?{query}
+    }
+    fastcgi / 127.0.0.1:9000 php {
+        ext .php
+        index index.php
+    }
+}
+```
+
+<h2 id="versioning">Versioning</h2>
+
+Aphiria follows semantic versioning 2.0.0.  For more information on semantic versioning, check out its <a href="http://semver.org/" title="Semantic versioning documentation" target="_blank">documentation</a>.
