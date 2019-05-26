@@ -37,9 +37,9 @@ Notice how our controller method takes in a `User` object, and also returns one?
 
 <h1 id="psrs">PSRs</h1>
 
-The FIG did a great job with some of their earlier PHP Standards Recommendations (PSRs), but PSRs like PSR-7 were controversial for reasons like their decision to go with immutability.  Although it was a noble attempt, Aphiria attempts to fix some of the issues with the later PSRs, eg:
+The FIG did a great job with some of their earlier PHP Standards Recommendations (PSRs), but PSRs like PSR-7 were controversial for reasons like their decision to go with immutability.  Although the PSRs were a noble attempt, Aphiria attempts to fix some of their issues, eg:
 
-* [An improved API for HTTP models](net)
+* [An improved API for HTTP models](http-requests)
 * [Content negotiation](content-negotiation)
 * [A more expressive DI container](di-container)
 
