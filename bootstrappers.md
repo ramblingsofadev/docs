@@ -5,7 +5,7 @@
 2. [Inspection Bindings](#inspection-bindings)
 3. [Using App Builders](#using-app-builders)
 
-<h2 id="basics">Basics</h2>
+<h1 id="basics">Basics</h1>
 
 A bootstrapper is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a bootstrapper called `UserBootstrapper` to centralize all the bindings related to your user domain.
 
@@ -37,7 +37,7 @@ foreach ($bootstrappers as $bootstrapper) {
 
 Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#inspection-bindings) will go into more details on how to handle this more optimally.
 
-<h2 id="inspection-bindings">Inspection Bindings</h2>
+<h1 id="inspection-bindings">Inspection Bindings</h1>
 
 Rather than having to dispatch _every_ bootstrapper on every request, you can use binding inspections to lazily register them, eg only when they're actually needed.  At a high level, we can look inside your bootstrappers and determine what each of them bind.  It can then set up a factory for each of those bindings that runs `Bootstrapper::registerBindings()` only when at least one of the bootstrapper's bindings is necessary.  This prevents you from having to list out the bindings a bootstrapper registers to get this sort of functionality (like other frameworks force you to do).
 
@@ -65,6 +65,6 @@ That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it
 
 > **Note:** It's recommended that you only use caching for bootstrapper bindings in production environments.  Otherwise, changes you make to your bootstrappers might not be reflected.
 
-<h2 id="using-app-builders">Using App Builders</h2>
+<h1 id="using-app-builders">Using App Builders</h1>
 
 TODO

@@ -11,7 +11,7 @@
   4. [Caddy Config](#caddy-config)
 4. [Versioning](#versioning)
 
-<h2 id="requirements">Requirements</h2>
+<h1 id="requirements">Requirements</h1>
 
 * PHP &ge; 7.3.0
 * OpenSSL
@@ -19,7 +19,17 @@
 
 > **Note:** If you're a FreeBSD user, you'll also need to make sure the ctype, dom, filter, hash, json, phar, session, tokenizer, and xml extensions are installed.
 
-<h2 id="installing">Installing</h2>
+To work around PHP's inconsistencies with where it reads request data from (sometimes superglobals, sometimes `php://input`), Aphiria requires the following setting in either a <a href="http://php.net/manual/en/configuration.file.per-user.php" target="_blank">_.user.ini_</a> or your _php.ini_:
+
+```
+enable_post_data_reading = 0
+```
+
+This will disable automatically parsing POST data into `$_POST` and uploaded files into `$_FILES`.
+
+> **Note:** If you're developing any non-Aphiria applications on your web server, use <a href="http://php.net/manual/en/configuration.file.per-user.php" target="_blank">_.user.ini_</a> to limit this setting to only your Aphiria application.  Alternatively, you can add `php_value enable_post_data_reading 0` to an _.htaccess_ file or to your _httpd.conf_.
+
+<h1 id="installing">Installing</h1>
 
 Aphiria can be easily installed using Composer:
 
@@ -43,7 +53,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/router
 * aphiria/serialization
 
-<h2 id="server-config">Server Config</h2>
+<h1 id="server-config">Server Config</h1>
 
 * Aphiria's _tmp_ directory needs to be writable from PHP
 * The document root needs to be set to Aphiria's _public_ directory (usually _/var/www/html/public_ or */var/www/html/YOUR_SITE_NAME/public*)
@@ -131,6 +141,6 @@ YOUR_SITE_DOMAIN:80 {
 }
 ```
 
-<h2 id="versioning">Versioning</h2>
+<h1 id="versioning">Versioning</h1>
 
 Aphiria follows semantic versioning 2.0.0.  For more information on semantic versioning, check out its <a href="http://semver.org/" title="Semantic versioning documentation" target="_blank">documentation</a>.

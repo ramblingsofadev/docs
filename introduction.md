@@ -4,7 +4,7 @@
 1. [Basics](#basics)
 2. [PSRs](#psrs)
 
-<h2 id="basics">Basics</h2>
+<h1 id="basics">Basics</h1>
 
 Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries, and also builds on top of some libraries from <a href="https://www.opulencephp.com" target="_blank">Opulence</a>.  For example, need an endpoint to create a user object?  Simple:
 
@@ -35,7 +35,7 @@ $routes->map('POST', '')
 
 Notice how our controller method takes in a `User` object, and also returns one?  What separates Aphiria from other frameworks is that it can perform [content negotiation](content-negotiation) on your plain old PHP objects (POPOs) so that you can write more expressive controllers and leave the messy parts of HTTP to Aphiria.
 
-<h2 id="psrs">PSRs</h2>
+<h1 id="psrs">PSRs</h1>
 
 The FIG did a great job with some of their earlier PHP Standards Recommendations (PSRs), but PSRs like PSR-7 were controversial for reasons like their decision to go with immutability.  Although it was a noble attempt, Aphiria attempts to fix some of the issues with the later PSRs, eg:
 
