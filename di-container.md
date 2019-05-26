@@ -103,7 +103,10 @@ final class UserService implements IUserService
 You can tell the container to use a specific instance of `IUserRepository` when resolving `UserService`:
 
 ```php
-$container->for(UserService::class, fn(IContainer $container) => $container->bindInstance(IUserRepository::class, new UserRepository()));
+$container->for(
+    UserService::class,
+    fn($container) => $container->bindInstance(IUserRepository::class, new UserRepository())
+);
 ```
 
 Calling `$container->resolve(UserService::class)` will now automatically inject an instance of `UserRepository`.

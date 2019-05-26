@@ -48,7 +48,7 @@ Now, you're set to start [running commands](#running-commands).
 
 <h1 id="running-commands">Running Commands</h1>
 
-To run commands, type `php aphiria COMMAND_NAME` from the directory that Aphiria is installed in.
+To run commands, type `php aphiria COMMAND_NAME` into a terminal from the directory that Aphiria is installed in.
 
 <h2 id="getting-help">Getting Help</h2>
 
@@ -111,7 +111,7 @@ use Aphiria\Console\Kernel;
 $commands = new CommandRegistry();
 $commands->registerCommand(
     $greetingCommand, 
-    fn () => $greetingCommandHandler
+    fn() => $greetingCommandHandler
 );
 
 // Actually run the kernel

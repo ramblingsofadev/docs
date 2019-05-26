@@ -48,9 +48,7 @@ use Opulence\Ioc\Bootstrappers\Inspection\BindingInspectorBootstrapperDispatcher
 use Opulence\Ioc\Bootstrappers\Inspection\Caching\FileBootstrapperBindingCache;
 use Opulence\Ioc\Container;
 
-$bootstrappers = [
-    new UserBootstrapper()
-];
+$bootstrappers = [new UserBootstrapper()];
 $container = new Container();
 $bootstrapperDispatcher = new BindingInspectorBootstrapperDispatcher(
     $container,

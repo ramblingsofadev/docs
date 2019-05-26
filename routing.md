@@ -1,3 +1,6 @@
+# Routing
+
+## Table of Contents
 1. [Basics](#basics)
   1. [Route Variables](#route-variables)
   2. [Optional Route Parts](#optional-route-parts)
@@ -370,7 +373,7 @@ use Aphiria\Routing\Matchers\Rules\IRule;
 
 class MinLengthRule implements IRule
 {
-    private $minLength = 0;
+    private int $minLength;
 
     public function __construct(int $minLength)
     {

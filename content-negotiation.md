@@ -2,8 +2,8 @@
 
 ## Table of Contents
 1. [Basics](#basics)
-2. [Negotiating Requests](#negotiation-requests)
-3. [Negotiating Responses](#negotiation-responses)
+2. [Negotiating Requests](#negotiating-requests)
+3. [Negotiating Responses](#negotiating-responses)
 4. [Media Type Formatters](#media-type-formatters)
 
 <h1 id="basics">Basics</h1>
@@ -79,11 +79,11 @@ echo $user->getId(); // 123
 echo $user->getEmail(); // "foo@example.com"
 ```
 
-<h1 id="negotiating-responses">Negotiation Responses</h1>
+<h1 id="negotiating-responses">Negotiating Responses</h1>
 
 We negotiate the response content by inspecting the `Accept`, `Accept-Charset`, and `Accept-Language` headers.  If those headers are missing, we default to using the first media type formatter that can write the response body.
 
-Constructing a response with all the appropriate headers is a little involved when doing it manually, which is why Aphiria provides `NeogitatedResponseFactory` to handle it for you:
+Constructing a response with all the appropriate headers is a little involved when doing it manually, which is why Aphiria provides `NegotiatedResponseFactory` to handle it for you:
 
 ```php
 use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;

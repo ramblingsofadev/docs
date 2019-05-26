@@ -62,7 +62,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 
 <h4 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h4>
 
-To run Aphiria locally, run the following command:
+To run Aphiria locally, run the following in a terminal:
 
 ```
 php -S localhost:80 -t public localhost_router.php
