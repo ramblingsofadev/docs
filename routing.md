@@ -308,7 +308,7 @@ Now, let's add a route constraint to match the "API-VERSION" header to the attri
 use Aphiria\Routing\Matchers\Constraints\IRouteConstraint;
 use Aphiria\Routing\Matchers\MatchedRouteCandidate;
 
-class ApiVersionConstraint implements IRouteConstraint
+final class ApiVersionConstraint implements IRouteConstraint
 {
     public function passes(
         MatchedRouteCandidate $matchedRouteCandidate,
@@ -371,7 +371,7 @@ You can register your own rule by implementing `IRule`.  Let's make a rule that 
 ```php
 use Aphiria\Routing\Matchers\Rules\IRule;
 
-class MinLengthRule implements IRule
+final class MinLengthRule implements IRule
 {
     private int $minLength;
 
