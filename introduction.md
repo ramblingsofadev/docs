@@ -2,7 +2,7 @@
 
 ## Table of Contents
 1. [Basics](#basics)
-2. [PSRs](#psrs)
+2. [Another PHP Framework?](#another-php-framework)
 
 <h1 id="basics">Basics</h1>
 
@@ -35,12 +35,18 @@ $routes->map('POST', '')
 
 Notice how our controller method takes in a `User` object, and also returns one?  What separates Aphiria from other frameworks is that it can perform [content negotiation](content-negotiation) on your plain old PHP objects (POPOs) so that you can write more expressive controllers and leave the messy parts of HTTP to Aphiria.
 
-<h1 id="psrs">PSRs</h1>
+<h1 id="another-php-framework">Another PHP Framework?</h1>
 
-The FIG did a great job with some of their earlier PHP Standards Recommendations (PSRs), but PSRs like PSR-7 were controversial for reasons like their decision to go with immutability.  Although the PSRs were a noble attempt, Aphiria attempts to fix some of their issues, eg:
+Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks (even Opulence), and usually found at least one major problem with them all:
+ 
+* Lack of expressive controllers that supported [content negotiation](content-negotiation)
+* Too much magic going on behind the scenes
+* All-in adoption of some of the less popular PSRs
 
-* [An improved API for HTTP models](http-requests)
-* [Content negotiation](content-negotiation)
-* [A more expressive DI container](di-container)
+I spent months sketching out the ideal syntax.  As I waded into the depths of development, though, I started to realize that my ideas were a fundamental shift from Opulence 1.0.  For example:
+  
+* To make content negotiation work, I'd need to completely rewrite my abstractions for HTTP requests and responses
+* I'd need a whole library dedicated to the serializing and deserializing of POPOs with no/minimal configuration
+* The Opulence router would need to be rewritten to keep up with the speed of the latest routing libraries
 
-The decision to not embrace all the PSRs is certainly a controversial one, and we understand not everyone will be happy with it.  However, we hope after you read through Aphiria's alternatives, you'll be convinced of their superiority.
+After more than a year of development, a whole new framework was emerging - Aphiria.  I honestly believe it is the most intuitive, expressive PHP framework to date.  It enables developers to build powerful APIs without getting in the way.  I invite you to browse [some of the documentation](http-controllers) and see for yourself.

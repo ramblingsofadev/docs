@@ -39,7 +39,7 @@ use Aphiria\Middleware\IMiddleware;
 use Aphiria\Net\Http\Handlers\IRequestHandler;
 use Aphiria\Net\Http\{IHttpRequestMessage, IHttpResponseMessage};
 
-class RequestManipulator implements IMiddleware
+final class RequestManipulator implements IMiddleware
 {
     public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage
     {
@@ -85,19 +85,29 @@ use Aphiria\Net\Http\{HttpException, IHttpRequestMessage, IHttpResponseMessage};
 
 final class RoleMiddleware extends AttributeMiddleware
 {
-    private User $user;
+    private IAuthService $authService;
 
     // Inject any dependencies your middleware needs
-    public function __construct(User $user)
+    public function __construct(IAuthService $authService)
     {
-        $this->user = $user;
+        $this->authService = $authService;
     }
 
     public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage
     {
+        $accessToken = null;
+
+        if (!$request->getHeaders()->tryGetFirst('Authorization', $accessToken)) {
+            return new Response(401);
+        }
+
+        if ($this->authService->accessTokenIsValid($accessToken)) {
+            return new Response(403);
+        }
+    
         // Attributes are available via $this->attributes
-        if (!$this->user->hasRole($this->attributes['role'])) {
-            throw new HttpException(403);
+        if (!$this->authService->accessTokenHasRole($accessToken, $this->attributes['role'])) {
+            return new Response(403);
         }
 
         return $next->handle($request);
