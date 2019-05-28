@@ -6,7 +6,7 @@
 
 <h1 id="basics">Basics</h1>
 
-Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries, and also builds on top of some libraries from <a href="https://www.opulencephp.com" target="_blank">Opulence</a>.  For example, need an endpoint to create a user object?  Simple:
+Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries, and also builds on top of some libraries from <a href="https://www.opulencephp.com" target="_blank">Opulence</a>.  For example, need an endpoint to create a user object?  Simple.
 
 ```php
 final class UserController extends Controller
@@ -26,14 +26,19 @@ final class UserController extends Controller
 }
 ```
 
-Then, map a route to that endpoint:
+Notice how our controller method takes in a `User` object, and also returns one?  What separates Aphiria from other frameworks is that it can perform [content negotiation](content-negotiation) on your plain old PHP objects (POPOs) so that you can write more expressive controllers and leave the messy parts of HTTP to Aphiria.
+
+Let's actually configure our app to include this endpoint.  Let's say we need a [bootstrapper](bootstrappers) so that an instance of `IUserService` can be injected into the controller.  Easy.
 
 ```php
-$routes->map('POST', '')
-    ->toMethod(UserController::class, 'createUser');
+$appBuilder->withBootstrappers(fn() => [new UserServiceBootstrapper]);
+$appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
+    $routes->map('POST', '')
+        ->toMethod(UserController::class, 'createUser');
+});
 ```
 
-Notice how our controller method takes in a `User` object, and also returns one?  What separates Aphiria from other frameworks is that it can perform [content negotiation](content-negotiation) on your plain old PHP objects (POPOs) so that you can write more expressive controllers and leave the messy parts of HTTP to Aphiria.
+Our [application builder](configuration) simplifies registering all [bootstrappers](bootstrappers), [routes](routing), and [console commands](console) in an [area of your domain](configuration#modules).
 
 <h1 id="another-php-framework">Another PHP Framework?</h1>
 
