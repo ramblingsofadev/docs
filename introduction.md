@@ -31,7 +31,7 @@ Notice how our controller method takes in a `User` object, and also returns one?
 Let's actually configure our app to include this endpoint.  Let's say we need a [bootstrapper](bootstrappers) so that an instance of `IUserService` can be injected into the controller.  Easy.
 
 ```php
-$appBuilder->withBootstrappers(fn() => [new UserServiceBootstrapper]);
+$appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
 $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
     $routes->map('POST', '')
         ->toMethod(UserController::class, 'createUser');

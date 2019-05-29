@@ -215,7 +215,7 @@ Sometimes, a controller class is overkill for a route that does very little.  In
 
 ```php
  $routes->map('GET', 'ping')
-    ->toClosure(fn() => $this->ok());
+    ->toClosure(fn () => $this->ok());
 ```
 
 Closures support the same [parameter resolution](#parameter-resolution) features as controller methods.  Here's the cool part - Aphiria will bind an instance of `Controller` to your closure, which means you can use [all the methods](#controllers), [request parsers](#parsing-request-data), and [response formatters](#formatting-response-data) available inside of `Controller` via `$this`.

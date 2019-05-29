@@ -39,7 +39,7 @@ Your application logic is now all set to go.
 Let's take a look at how to configure bootstrappers:
 
 ```php
-$appBuilder->withBootstrappers(fn() => [new FooBootstrapper]);
+$appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
 ```
 
 <h2 id="configuring-routes">Configuring Routes</h2>
@@ -64,7 +64,7 @@ $appBuilder->withCommands(function (CommandRegistry $commands) {
     // You can also use $commands->registerManyCommands()
     $commands->registerCommand(
         new FooCommand(),
-        fn() => new FooCommandHandler()
+        fn () => new FooCommandHandler()
     );
 });
 ```
@@ -81,7 +81,7 @@ final class UserModuleBuilder implements IModuleBuilder
 {
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $appBuilder->withBootstrappers(fn() => [new UserServiceBootstrapper]);
+        $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
         
         $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
             // Let's prefix all our routes with 'users'
@@ -94,7 +94,7 @@ final class UserModuleBuilder implements IModuleBuilder
         $appBuilder->withCommands(function (CommandRegistry $commands) {
             $commands->registerCommand(
                 new RunUserReportCommand(),
-                fn() => new RunUserReportCommandHandler()
+                fn () => new RunUserReportCommandHandler()
             );
         });
     }

@@ -39,7 +39,7 @@ use Aphiria\Net\Http\Response;
 $exceptionResponseFactories = new ExceptionResponseFactoryRegistry();
 $exceptionResponseFactories->registerFactory(
     EntityNotFound::class,
-    fn(EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(HttpStatusCodes::HTTP_NOT_FOUND)
+    fn (EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(HttpStatusCodes::HTTP_NOT_FOUND)
 );
 
 // Assume the content negotiator was already set up
@@ -57,7 +57,7 @@ That's it.  Now, whenever an unhandled `EntityNotFound` exception is thrown, you
 
 ```php
 $exceptionResponseFactories->registerManyFactories([
-    EntityNotFound::class => fn(EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(404),
+    EntityNotFound::class => fn (EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(404),
     // ...
 ]);
 ```
@@ -100,7 +100,7 @@ final class WhoopsResponseFactory
 
 $exceptionResponseFactories->registerFactory(
     Exception::class,
-    fn(Exception $ex, ?IHttpRequestMessage $request) => (new WhoopsResponseFactory)->createResponse($ex, $request)
+    fn (Exception $ex, ?IHttpRequestMessage $request) => (new WhoopsResponseFactory)->createResponse($ex, $request)
 );
 ```
 
