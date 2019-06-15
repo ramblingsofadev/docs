@@ -38,7 +38,7 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
     * With 400 routes, it takes ~0.0025ms to match any route (**~200% faster than FastRoute**)
     * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
-* It is built to support the latest PHP 7.3 features
+* It is built to support the latest PHP 7.4 features
 
 Out of the box, this library provides a fluent syntax to help you build your routes.  Let's look at a working example.
 
