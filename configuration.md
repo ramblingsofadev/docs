@@ -4,9 +4,12 @@
 1. [Basics](#basics)
 2. [Application Builders](#application-builders)
   1. [Configuring Bootstrappers](#configuring-bootstrappers)
-  2. [Configuring Routes](#configuring-routes)
-  3. [Configuring Console Commands](#configuring-console-commands)
-3. [Modules](#modules)
+  2. [Configuring Middleware](#configuring-middleware)
+3. [Components](#components)
+4. [Modules](#modules)
+5. [Using Aphiria Components](#using-aphiria-components)
+  1. [Configuring Routes](#configuring-routes)
+  2. [Configuring Console Commands](#configuring-console-commands)
 
 <h1 id="basics">Basics</h1>
 
@@ -42,32 +45,47 @@ Let's take a look at how to configure bootstrappers:
 $appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
 ```
 
-<h2 id="configuring-routes">Configuring Routes</h2>
+<h2 id="configuring-middleware">Configuring Middleware</h2>
 
-We can register some routes to your application:
+TODO
+
+<h1 id="components">Components</h1>
+
+A component is a singular piece of your app, eg a [router](#configuring-routes), and is smaller in scope than a [module](#module).  Components are configured after bootstrappers are run, and are a convenient place to finish setting up your application before it runs.
+
+To build a component in your app builder, you must first register a factory for it:
 
 ```php
-$appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
-    $routes->map('GET', 'users/:id')
-        ->toMethod(UserController::class, 'getUserById');
+$appBuilder->registerComponentFactory('routes', function (array $callbacks) {
+    // Assume we're using some generic routing library
+    $router = new Router();
+
+    // $callbacks will contain all callbacks registered to this component via withComponent()
+    foreach ($callbacks as $callback) {
+        $callback($router);
+    }
 });
 ```
 
-Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
-
-<h2 id="configuring-console-commands">Configuring Console Commands</h2>
-
-Now, we'll add some console commands:
+Now, we can begin configuring this component.  For example, let's say we wanted to add some routes.  Just use the same component name as when we registered the component factory:
 
 ```php
-$appBuilder->withCommands(function (CommandRegistry $commands) {
-    // You can also use $commands->registerManyCommands()
-    $commands->registerCommand(
-        new FooCommand(),
-        fn () => new FooCommandHandler()
-    );
+$appBuilder->withComponent('routes', function (Router $router) {
+    $router->get('/users', UserController::class, 'getUsers');
 });
 ```
+
+In this example, each callback will be invoked by the factory registered in `registerComponentFactory`, and will be injected with an instance of `Router`.
+
+For an added bit of syntactic sugar, you can just call `with{ComponentName}`:
+
+```php
+$appBuilder->withRoutes(function (Router $router) {
+    $router->get('/users', UserController::class, 'getUsers');
+});
+```
+
+This is semantically identical to our previous example that called `withComponent('routes', ...)`.
 
 <h1 id="modules">Modules</h1>
 
@@ -82,8 +100,7 @@ final class UserModuleBuilder implements IModuleBuilder
     public function build(IApplicationBuilder $appBuilder): void
     {
         $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
-        
-        $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
+        $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
             // Let's prefix all our routes with 'users'
             $routes->group(new RouteGroupOptions('users'), function (RouteBuilderRegistry $routes) {
                 $routes->map('GET', '/:id')
@@ -91,7 +108,7 @@ final class UserModuleBuilder implements IModuleBuilder
             });
         });
         
-        $appBuilder->withCommands(function (CommandRegistry $commands) {
+        $appBuilder->withComponent('commands', function (CommandRegistry $commands) {
             $commands->registerCommand(
                 new RunUserReportCommand(),
                 fn () => new RunUserReportCommandHandler()
@@ -109,3 +126,51 @@ $appBuilder->build();
 ```
 
 Now, your entire user module is configured and ready to go.
+
+<h1 id="using-aphiria-components">Using Aphiria Components</h1>
+
+The configuration library isn't strictly tied to Aphiria's [routing](routing) or [console](console) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+
+```php
+use Aphiria\Configuraiton\AphiriaComponentBuilder;
+use Opulence\Ioc\Container;
+
+// Assume we already have an app builder
+$container = new Container;
+(new AphiriaComponentBuilder($container))
+    ->withRoutingComponent($appBuilder)
+    ->withCommandComponent($appBuilder);
+
+// Finish configuring your app...
+
+$app = $appBuilder->build();
+```
+
+These methods will set up components for your [routes](#configuring-routes) and [console commands](#configuring-console-commands).
+
+<h2 id="configuring-routes">Configuring Routes</h2>
+
+We can register some routes to your application:
+
+```php
+$appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
+    $routes->map('GET', 'users/:id')
+        ->toMethod(UserController::class, 'getUserById');
+});
+```
+
+Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
+
+<h2 id="configuring-console-commands">Configuring Console Commands</h2>
+
+Now, we'll add some console commands:
+
+```php
+$appBuilder->withComponent('commands', function (CommandRegistry $commands) {
+    // You can also use $commands->registerManyCommands()
+    $commands->registerCommand(
+        new FooCommand(),
+        fn () => new FooCommandHandler()
+    );
+});
+```
