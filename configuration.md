@@ -100,6 +100,7 @@ final class UserModuleBuilder implements IModuleBuilder
     public function build(IApplicationBuilder $appBuilder): void
     {
         $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
+
         $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
             // Let's prefix all our routes with 'users'
             $routes->group(new RouteGroupOptions('users'), function (RouteBuilderRegistry $routes) {
@@ -132,7 +133,7 @@ Now, your entire user module is configured and ready to go.
 The configuration library isn't strictly tied to Aphiria's [routing](routing) or [console](console) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
-use Aphiria\Configuraiton\AphiriaComponentBuilder;
+use Aphiria\Configuration\AphiriaComponentBuilder;
 use Opulence\Ioc\Container;
 
 // Assume we already have an app builder
