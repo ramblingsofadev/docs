@@ -10,6 +10,7 @@
 5. [Using Aphiria Components](#using-aphiria-components)
   1. [Configuring Routes](#configuring-routes)
   2. [Configuring Console Commands](#configuring-console-commands)
+  3. [Configuring Encoders](#configuring-encoders)
 
 <h1 id="basics">Basics</h1>
 
@@ -130,7 +131,7 @@ Now, your entire user module is configured and ready to go.
 
 <h1 id="using-aphiria-components">Using Aphiria Components</h1>
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing) or [console](console) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+The configuration library isn't strictly tied to Aphiria's [routing](routing), [console](console), or [encoder](serialization) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -140,14 +141,15 @@ use Opulence\Ioc\Container;
 $container = new Container;
 (new AphiriaComponentBuilder($container))
     ->withRoutingComponent($appBuilder)
-    ->withCommandComponent($appBuilder);
+    ->withCommandComponent($appBuilder)
+    ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...
 
 $app = $appBuilder->build();
 ```
 
-These methods will set up components for your [routes](#configuring-routes) and [console commands](#configuring-console-commands).
+These methods will set up components for your [routes](#configuring-routes), [console commands](#configuring-console-commands), and [encoders](#configuring-encoders).
 
 <h2 id="configuring-routes">Configuring Routes</h2>
 
@@ -173,5 +175,25 @@ $appBuilder->withComponent('commands', function (CommandRegistry $commands) {
         new FooCommand(),
         fn () => new FooCommandHandler()
     );
+});
+```
+
+<h2 id="configuring-encoders">Configuring Encoders</h2>
+
+Sometimes our models require some custom encoding logic when serializing and deserializing them.  Let's configure an encoder for a user model:
+
+```php
+$appBuilder->withComponent('encoders', function (EncoderRegistry $encoders) {
+    $encoders->registerEncoder(User::class, new class() implements IEncoder {
+        public function decode($userHash, string $type, EncodingContext $context)
+        {
+            return new User($userHash['id'], $userHash['email']);
+        }
+
+        public function encode($user, EncodingContext $context)
+        {
+            return ['id' => $user->getId(), 'email' => $user->getEmail()];
+        }
+    });
 });
 ```
