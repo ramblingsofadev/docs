@@ -57,7 +57,7 @@ A component is a singular piece of your app, eg a [router](#configuring-routes),
 To build a component in your app builder, you must first register a factory for it:
 
 ```php
-$appBuilder->registerComponentFactory('routes', function (array $callbacks) {
+$appBuilder->registerComponentBuilder('routes', function (array $callbacks) {
     // Assume we're using some generic routing library
     $router = new Router();
 
@@ -76,7 +76,7 @@ $appBuilder->withComponent('routes', function (Router $router) {
 });
 ```
 
-In this example, each callback will be invoked by the factory registered in `registerComponentFactory`, and will be injected with an instance of `Router`.
+In this example, each callback will be invoked by the factory registered in `registerComponentBuilder`, and will be injected with an instance of `Router`.
 
 For an added bit of syntactic sugar, you can just call `with{ComponentName}`:
 
