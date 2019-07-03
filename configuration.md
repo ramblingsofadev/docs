@@ -3,8 +3,10 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Application Builders](#application-builders)
-  1. [Configuring Bootstrappers](#configuring-bootstrappers)
-  2. [Configuring Middleware](#configuring-middleware)
+  1. [Building API Apps](#building-api-apps)
+  2. [Building Console Apps](#building-console-apps)
+  3. [Configuring Bootstrappers](#configuring-bootstrappers)
+  4. [Configuring Middleware](#configuring-middleware)
 3. [Components](#components)
 4. [Modules](#modules)
 5. [Using Aphiria Components](#using-aphiria-components)
@@ -30,13 +32,27 @@ $bootstrapperDispatcher = new BindingInspectorBootstrapperDispatcher($container)
 $appBuilder = new ApplicationBuilder($container, $bootstrapperDispatcher);
 ```
 
-Once you're done configuring your [bootstrappers](#configuring-bootstrappers), [routes](#configuring-routes), and [console commands](#configuring-console-commands), you can go ahead and build your application:
+Once you're done configuring your [bootstrappers](#configuring-bootstrappers), [routes](#configuring-routes), and [console commands](#configuring-console-commands), you can go ahead and build your application.
+
+<h2 id="building-api-apps">Building API Apps</h2>
+
+Let's create an API app:
 
 ```php
-$appBuilder->build();
+$requestHandler = $appBuilder->buildApiApplication();
 ```
 
-Your application logic is now all set to go.
+`$requestHandler` will be an instance of `IRequestHandler`.  Building your API will also dispatch bootstrappers and build your components.
+
+<h2 id="building-console-apps">Building Console Apps</h2>
+
+Let's create a console app:
+
+```php
+$kernel = $appBuilder->buildConsoleApplication();
+```
+
+`$kernel` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
 
 <h2 id="configuring-bootstrappers">Configuring Bootstrappers</h2>
 
@@ -124,7 +140,7 @@ To use your module in your application builder, just call:
 
 ```php
 $appBuilder->withModule(new UserModuleBuilder());
-$appBuilder->build();
+$requestHandler = $appBuilder->buildApiApplication();
 ```
 
 Now, your entire user module is configured and ready to go.
@@ -146,7 +162,7 @@ $container = new Container;
 
 // Finish configuring your app...
 
-$app = $appBuilder->build();
+$requestHandler = $appBuilder->buildApiApplication();
 ```
 
 These methods will set up components for your [routes](#configuring-routes), [console commands](#configuring-console-commands), and [encoders](#configuring-encoders).
