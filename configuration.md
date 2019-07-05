@@ -64,7 +64,17 @@ $appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
 
 <h2 id="configuring-middleware">Configuring Middleware</h2>
 
-TODO
+You can configure your app to have global middleware, which doesn't have to be coupled to any particular middleware library implementation.  Simply set up a `MiddlewareBinding` with the class name and any attributes (optional):
+
+```php
+use Aphiria\Configuration\Middleware\MiddlewareBinding;
+
+$appBuilder->withGlobalMiddleware(fn () => [
+    new MiddlewareBinding(AuthMiddleware::class)
+]);
+```
+
+Now, the `AuthMiddleware` will be run on every single request in your application.
 
 <h2 id="configuring-console-commands">Configuring Console Commands</h2>
 
