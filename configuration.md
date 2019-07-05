@@ -7,12 +7,12 @@
   2. [Building Console Apps](#building-console-apps)
   3. [Configuring Bootstrappers](#configuring-bootstrappers)
   4. [Configuring Middleware](#configuring-middleware)
+  5. [Configuring Console Commands](#configuring-console-commands)
 3. [Components](#components)
 4. [Modules](#modules)
 5. [Using Aphiria Components](#using-aphiria-components)
   1. [Configuring Routes](#configuring-routes)
-  2. [Configuring Console Commands](#configuring-console-commands)
-  3. [Configuring Encoders](#configuring-encoders)
+  2. [Configuring Encoders](#configuring-encoders)
 
 <h1 id="basics">Basics</h1>
 
@@ -65,6 +65,20 @@ $appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
 <h2 id="configuring-middleware">Configuring Middleware</h2>
 
 TODO
+
+<h2 id="configuring-console-commands">Configuring Console Commands</h2>
+
+Now, we'll add some console commands:
+
+```php
+$appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
+    // You can also use $commands->registerManyCommands()
+    $commands->registerCommand(
+        new FooCommand(),
+        fn () => new FooCommandHandler()
+    );
+});
+```
 
 <h1 id="components">Components</h1>
 
@@ -157,7 +171,6 @@ use Opulence\Ioc\Container;
 $container = new Container;
 (new AphiriaComponentBuilder($container))
     ->withRoutingComponent($appBuilder)
-    ->withCommandComponent($appBuilder)
     ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...
@@ -165,7 +178,7 @@ $container = new Container;
 $requestHandler = $appBuilder->buildApiApplication();
 ```
 
-These methods will set up components for your [routes](#configuring-routes), [console commands](#configuring-console-commands), and [encoders](#configuring-encoders).
+These methods will set up components for your [routes](#configuring-routes) and [encoders](#configuring-encoders).
 
 <h2 id="configuring-routes">Configuring Routes</h2>
 
@@ -179,20 +192,6 @@ $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
 ```
 
 Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
-
-<h2 id="configuring-console-commands">Configuring Console Commands</h2>
-
-Now, we'll add some console commands:
-
-```php
-$appBuilder->withComponent('commands', function (CommandRegistry $commands) {
-    // You can also use $commands->registerManyCommands()
-    $commands->registerCommand(
-        new FooCommand(),
-        fn () => new FooCommandHandler()
-    );
-});
-```
 
 <h2 id="configuring-encoders">Configuring Encoders</h2>
 
