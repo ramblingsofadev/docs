@@ -16,6 +16,7 @@
 8. [Formatters](#formatters)
   1. [Padding](#padding)
   2. [Tables](#tables)
+  3. [Progress Bars](#progress-bars)
 9. [Style Elements](#style-elements)
   1. [Built-In Elements](#built-in-elements)
   2. [Custom Elements](#custom-elements)
@@ -156,15 +157,15 @@ You might want different behavior in your command depending on whether or not an
 1. Short, eg "-h"
 2. Long, eg "--help"
 
-<h4 id="short-names">Short Names</h4>
+<h3 id="short-names">Short Names</h3>
 
 Short option names are always a single letter.  Multiple short options can be grouped together.  For example, `-rf` means that options with short codes "r" and "f" have been specified.  The default value will be used for short options.
 
-<h4 id="long-names">Long Names</h4>
+<h3 id="long-names">Long Names</h3>
 
 Long option names can specify values in two ways:  `--foo=bar` or `--foo bar`.  If you only specify `--foo` for an optional-value option, then the default value will be used.
 
-<h4 id="array-options">Array Options</h4>
+<h3 id="array-options">Array Options</h3>
 
 Options can be arrays, eg `--foo=bar --foo=baz` will set the "foo" option to `["bar", "baz"]`.
 
@@ -229,7 +230,7 @@ If you want to call the other command but not write its output, use the `Aphiria
 
 Prompts are great for asking users for input beyond what is accepted by arguments.  For example, you might want to confirm with a user before doing an administrative task, or you might ask her to select from a list of possible choices.  Prompts accept `Aphiria\Console\Output\Prompts\Question` objects.
 
-<h4 id="confirmation">Confirmation</h4>
+<h2 id="confirmation">Confirmation</h2>
 
 To ask a user to confirm an action with a simple "y" or "yes", use an `Aphiria\Console\Output\Prompts\Confirmation`:
 
@@ -242,7 +243,7 @@ $prompt = new Prompt();
 $prompt->ask(new Confirmation('Are you sure you want to continue?'), $output);
 ```
 
-<h4 id="multiple-choice">Multiple Choice</h4>
+<h2 id="multiple-choice">Multiple Choice</h2>
 
 Multiple choice questions are great for listing choices that might otherwise be difficult for a user to remember.  An `Aphiria\Console\Output\Prompts\MultipleChoice` accepts question text and a list of choices:
 
@@ -293,7 +294,7 @@ Each output offers three methods:
 
 Formatters are great for nicely-formatting output to the console.
 
-<h4 id="padding">Padding</h4>
+<h2 id="padding">Padding</h2>
 
 The `Aphiria\Console\Output\Formatters\PaddingFormatter` formatter allows you to create column-like output.  It accepts an array of column values.  The second parameter is a callback that will format each row's contents.  Let's look at an example:
 
@@ -325,7 +326,7 @@ There are a few useful functions for customizing the padding formatter:
 * `setPaddingString()`
     * Sets the padding string
 
-<h4 id="tables">Tables</h4>
+<h2 id="tables">Tables</h2>
 
 ASCII tables are a great way to show tabular data in a console.  To create a table, use `Aphiria\Console\Output\Formatters\TableFormatter`:
 
@@ -381,6 +382,76 @@ There are a few useful functions for customizing the look of tables:
     * Sets whether to pad before or after strings
 * `setVerticalBorderChar()`
     * Sets the vertical border character
+    
+<h2 id="progress-bars">Progress Bars</h2>
+
+Progress bars a great way to visually indicate to a user the progress of a long-running task, like this one:
+
+```
+[=================50%--------------------] 50/100
+Time remaining: 15 secs
+```  
+
+Creating one is simple - you just create a `ProgressBar`, and specify the formatter to use:
+
+```php
+use Aphiria\Console\Output\Formatters\{ProgressBar, ProgressBarFormatter};
+
+// Assume our output is already created
+$formatter = new ProgressBarFormatter($output);
+// Set the maximum number of "steps" to 100
+$progressBar = new ProgressBar(100, $formatter);
+```
+
+You can advance your progress bar:
+
+```php
+$progressBar->advance();
+
+// Or with a custom step
+
+$progressBar->advance(2);
+```
+
+Alternatively, you can set a specific progress:
+
+```php
+$progressBar->setProgress(50);
+```
+
+To explicitly finish the progress bar, call
+
+```php
+$progressBar->finish();
+```
+
+Each time progress is made, the formatter will be updated, and will draw a new bar.
+
+<h3 id="customizing-progress-bars">Customizing Progress Bars</h3>
+
+You may customize the characters used in your progress bar via:
+
+```php
+$formatter->completedProgressChar = '*';
+$formatter->remainingProgressChar = '-';
+```
+
+If you'd like to customize the format of the progress bar text, you may by specifying `sprintf()`-encoded text.  The following placeholders are built in for you to use:
+
+* `%progress%` - The current progress
+* `%maxSteps%` - The max number of steps
+* `%bar%` - The actual progress bar that's drawn
+* `%timeRemaining%` The amount of time remaining
+
+To specify the format, pass it into `ProgressBarFormatter`:
+
+```php
+$formatter = new ProgressBarFormatter(
+    $output,
+    80,
+    '%bar% - Time remaining: %timeRemaining%'
+);
+```
 
 <h1 id="style-elements">Style Elements</h1>
 
@@ -398,7 +469,7 @@ Aphiria supports HTML-like style elements to perform basic output formatting lik
 
 ..., which will output an underlined string where "Dave" is both bold AND underlined.
 
-<h4 id="built-in-elements">Built-In Elements</h4>
+<h2 id="built-in-elements">Built-In Elements</h2>
 
 The following elements come built-into Aphiria:
 * &lt;success&gt;&lt;/success&gt;
@@ -410,7 +481,7 @@ The following elements come built-into Aphiria:
 * &lt;b&gt;&lt;/b&gt;
 * &lt;u&gt;&lt;/u&gt;
 
-<h4 id="custom-elements">Custom Elements</h4>
+<h2 id="custom-elements">Custom Elements</h2>
 
 You can create your own style elements.  Elements are registered to `Aphiria\Console\Output\Compilers\Elements\ElementRegistry`.
 
@@ -431,7 +502,7 @@ global $argv;
 exit($kernel->handle($argv, $output));
 ```
 
-<h4 id="overriding-built-in-elements">Overriding Built-In Elements</h4>
+<h2 id="overriding-built-in-elements">Overriding Built-In Elements</h2>
 
 To override a built-in element, just re-register it:
 
