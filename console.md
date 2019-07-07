@@ -419,10 +419,10 @@ Alternatively, you can set a specific progress:
 $progressBar->setProgress(50);
 ```
 
-To explicitly finish the progress bar, call
+To explicitly complete the progress bar, call
 
 ```php
-$progressBar->finish();
+$progressBar->complete();
 ```
 
 Each time progress is made, the formatter will be updated, and will draw a new bar.
