@@ -441,7 +441,8 @@ If you'd like to customize the format of the progress bar text, you may by speci
 * `%progress%` - The current progress
 * `%maxSteps%` - The max number of steps
 * `%bar%` - The actual progress bar that's drawn
-* `%timeRemaining%` The amount of time remaining
+* `%timeRemaining%` - The amount of time remaining
+* `%percent%` - The current progress as a percentage
 
 To specify the format, pass it into `ProgressBarFormatter`:
 
