@@ -6,7 +6,7 @@
    2. [Optional Route Parts](#optional-route-parts)
    3. [Route Builders](#route-builders)
    4. [Route Annotations](#route-annotations)
-      1. [Example](#route-annotations-example)
+      1. [Example](#route-annotation-example)
       2. [Route Groups](#route-annotation-groups)
       3. [Middleware](#route-annotation-middleware)
       4. [Scanning For Annotations](#scanning-for-annotations)
