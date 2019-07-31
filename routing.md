@@ -147,7 +147,7 @@ Route builders give you a fluent syntax for mapping your routes to closures or c
 
 `RouteBuilderRegistry::map()` returns an instance of `RouteBuilder`.
 
-<h2 id="annotations">Annotations</h2>
+<h2 id="route-annotations">Route Annotations</h2>
 
 Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
