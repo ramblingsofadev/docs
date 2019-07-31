@@ -171,7 +171,7 @@ Now, your entire user module is configured and ready to go.
 
 <h1 id="using-aphiria-components">Using Aphiria Components</h1>
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing), [console](console), or [encoder](serialization) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), or [encoder](serialization.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -181,6 +181,7 @@ use Opulence\Ioc\Container;
 $container = new Container;
 (new AphiriaComponentBuilder($container))
     ->withRoutingComponent($appBuilder)
+    ->withRouteAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...
@@ -192,7 +193,7 @@ These methods will set up components for your [routes](#configuring-routes) and 
 
 <h2 id="configuring-routes">Configuring Routes</h2>
 
-We can register some routes to your application:
+You can manually register routes to your application:
 
 ```php
 $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
@@ -202,6 +203,8 @@ $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
 ```
 
 Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
+
+> **Note:** If you're using route annotations, those routes will be combined with any manually-registered routes.
 
 <h2 id="configuring-encoders">Configuring Encoders</h2>
 

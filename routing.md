@@ -233,7 +233,7 @@ class UserController extends Controller
 }
 ```
 
-When our routes get compiled, `users` will be prefixed to the path of any route within the controller.
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.
 
 The following properties can be set in `@RouteGroup`:
 
