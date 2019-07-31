@@ -3,16 +3,16 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Application Builders](#application-builders)
-  1. [Building API Apps](#building-api-apps)
-  2. [Building Console Apps](#building-console-apps)
-  3. [Configuring Bootstrappers](#configuring-bootstrappers)
-  4. [Configuring Middleware](#configuring-middleware)
-  5. [Configuring Console Commands](#configuring-console-commands)
+   1. [Building API Apps](#building-api-apps)
+   2. [Building Console Apps](#building-console-apps)
+   3. [Configuring Bootstrappers](#configuring-bootstrappers)
+   4. [Configuring Middleware](#configuring-middleware)
+   5. [Configuring Console Commands](#configuring-console-commands)
 3. [Components](#components)
 4. [Modules](#modules)
 5. [Using Aphiria Components](#using-aphiria-components)
-  1. [Configuring Routes](#configuring-routes)
-  2. [Configuring Encoders](#configuring-encoders)
+   1. [Configuring Routes](#configuring-routes)
+   2. [Configuring Encoders](#configuring-encoders)
 
 <h1 id="basics">Basics</h1>
 

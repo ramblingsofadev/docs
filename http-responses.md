@@ -3,12 +3,12 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Creating Responses](#creating-responses)
-  1. [Response Headers](#response-headers)
-  2. [Response Bodies](#response-bodies)
+   1. [Response Headers](#response-headers)
+   2. [Response Bodies](#response-bodies)
 4. [JSON Responses](#json-responses)
 5. [Redirect Responses](#redirect-responses)
 6. [Setting Cookies](#setting-response-cookies)
-  1. [Deleting Cookies](#deleting-response-cookies)
+   1. [Deleting Cookies](#deleting-response-cookies)
 7. [Writing Responses](#writing-responses)
 8. [Serializing Responses](#serializing-responses)
 

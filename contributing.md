@@ -2,25 +2,25 @@
 
 ## Table of Contents
 1. [Bugs](#bugs)
-  1. [Reporting a Bug](#reporting-bug)
-  2. [Fixing a Bug](#fixing-bug)
+   1. [Reporting a Bug](#reporting-bug)
+   2. [Fixing a Bug](#fixing-bug)
 2. [Features](#features)
 3. [Security Vulnerabilities](#security-vulnerabilities)
 4. [Coding Style](#coding-style)
-  1. [PHPDoc](#phpdoc)
+   1. [PHPDoc](#phpdoc)
 5. [Naming Conventions](#naming-conventions)
-  1. [Variables](#variables)
-  2. [Functions/Methods](#functions-methods)
-  3. [Constants](#constants)
-  4. [Namespaces](#namespaces)
-  5. [Classes](#classes)
-  6. [Abstract Classes](#abstract-classes)
-  7. [Interfaces](#interfaces)
-  8. [Traits](#traits)
+   1. [Variables](#variables)
+   2. [Functions/Methods](#functions-methods)
+   3. [Constants](#constants)
+   4. [Namespaces](#namespaces)
+   5. [Classes](#classes)
+   6. [Abstract Classes](#abstract-classes)
+   7. [Interfaces](#interfaces)
+   8. [Traits](#traits)
 
 <h1 id="bugs">Bugs</h1>
 
-Before you attempt to write a bug fix, first read the [documentation](/docs) to see if you're perhaps using Aphiria incorrectly.
+Before you attempt to write a bug fix, first read the documentation to see if you're perhaps using Aphiria incorrectly.
 
 <h2 id="reporting-bug">Reporting a Bug</h2>
 

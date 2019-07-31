@@ -2,25 +2,25 @@
 
 ## Table of Contents
 1. [Basics](#basics)
-  1. [Route Variables](#route-variables)
-  2. [Optional Route Parts](#optional-route-parts)
-  3. [Route Builders](#route-builders)
-  4. [Route Annotations](#route-annotations)
-  5. [Using Aphiria's Net Library](#using-aphirias-net-library)
-  6. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
+   1. [Route Variables](#route-variables)
+   2. [Optional Route Parts](#optional-route-parts)
+   3. [Route Builders](#route-builders)
+   4. [Route Annotations](#route-annotations)
+   5. [Using Aphiria's Net Library](#using-aphirias-net-library)
+   6. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
 2. [Route Actions](#route-actions)
 3. [Binding Middleware](#binding-middleware)
-  1. [Middleware Attributes](#middleware-attributes)
+   1. [Middleware Attributes](#middleware-attributes)
 4. [Grouping Routes](#grouping-routes)
 5. [Custom Constraints](#custom-constraints)
-  1. [Example - Versioned API](#versioned-api-example)
-  2. [Getting Headers in PHP](#getting-php-headers)
+   1. [Example - Versioned API](#versioned-api-example)
+   2. [Getting Headers in PHP](#getting-php-headers)
 6. [Route Variable Rules](#route-variable-rules)
-  1. [Built-In Rules](#built-in-rules)
-  2. [Making Your Own Custom Rules](#making-your-own-custom-rules)
+   1. [Built-In Rules](#built-in-rules)
+   2. [Making Your Own Custom Rules](#making-your-own-custom-rules)
 7. [Caching](#caching)
-  1. [Route Caching](#route-caching)
-  2. [Trie Caching](#trie-caching)
+   1. [Route Caching](#route-caching)
+   2. [Trie Caching](#trie-caching)
 8. [Matching Algorithm](#matching-algorithm)
 
 <h1 id="basics">Basics</h1>
@@ -31,13 +31,13 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
 
 * It isn't coupled to _any_ library/framework
 * It supports things that other route matching libraries do not support, like:
-    * [Binding framework-agnostic middleware to routes](#binding-middleware)
-    * [The ability to add custom matching rules on route variables](#route-variable-rules)
-    * [The ability to match on header values](#custom-constraints), which makes things like versioning your routes a cinch
-    * [Binding controller methods and closures to the route action](#route-actions)
+  * [Binding framework-agnostic middleware to routes](#binding-middleware)
+  * [The ability to add custom matching rules on route variables](#route-variable-rules)
+  * [The ability to match on header values](#custom-constraints), which makes things like versioning your routes a cinch
+  * [Binding controller methods and closures to the route action](#route-actions)
 * It is fast
-    * With 400 routes, it takes ~0.0025ms to match any route (**~200% faster than FastRoute**)
-    * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
+  * With 400 routes, it takes ~0.0025ms to match any route (**~200% faster than FastRoute**)
+  * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
 * It is built to support the latest PHP 7.4 features
 
@@ -137,13 +137,13 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  To add a route builder, call `RouteBuilderRegistry::map()`, which accepts the following parameters:
 
 * `string|array $httpMethods`
-    * The HTTP method or list of methods to match on (eg `'GET'` or `['POST', 'GET']`)
+  * The HTTP method or list of methods to match on (eg `'GET'` or `['POST', 'GET']`)
 * `string $pathTemplate`
-    * The path for this route ([read about syntax](#route-variables))
+  * The path for this route ([read about syntax](#route-variables))
 * `string|null $hostTemplate` (optional)
-    * The optional host template for this route  ([read about syntax](#route-variables))
+  * The optional host template for this route  ([read about syntax](#route-variables))
 * `bool $isHttpsOnly` (optional)
-    * Whether or not this route is HTTPS-only
+  * Whether or not this route is HTTPS-only
 
 `RouteBuilderRegistry::map()` returns an instance of `RouteBuilder`.
 
@@ -407,19 +407,19 @@ $routes->group(
 This creates two routes with a host suffix of _example.com_ and a route prefix of _users/_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  `RouteGroupOptions::__construct()` accepts the following parameters:
 
 * `string $pathTemplate`
-    * The path for routes in this group ([read about syntax](#route-variables))
-    * This value is prefixed to the paths of all routes within the group
+  * The path for routes in this group ([read about syntax](#route-variables))
+  * This value is prefixed to the paths of all routes within the group
 * `string|null $hostTemplate` (optional)
-    * The optional host template for routes in this group  ([read about syntax](#route-variables))
-    * This value is suffixed to the hosts of all routes within the group
+  * The optional host template for routes in this group  ([read about syntax](#route-variables))
+  * This value is suffixed to the hosts of all routes within the group
 * `bool $isHttpsOnly` (optional)
-    * Whether or not the routes in this group are HTTPS-only
+  * Whether or not the routes in this group are HTTPS-only
 * `IRouteConstraint[] $constraints` (optional)
 * `array $attributes` (optional)
-    * The mapping of route attribute names => values
-    * These attribute can be used with [custom constraint](#custom-constraints) matching
+  * The mapping of route attribute names => values
+  * These attribute can be used with [custom constraint](#custom-constraints) matching
 * `MiddlewareBinding[] $middleware` (optional)
-    * The list of middleware bindings for routes in this group
+  * The list of middleware bindings for routes in this group
 
 It is possible to nest route groups.
 
@@ -628,6 +628,6 @@ Rather than the typical regex approach to route matching, we decided to go with 
 The matching algorithm goes as follows:
 
 1. Incoming request data is passed to a `TrieRouteMatcher::matchRoute()`, which loops through each segment of the URI path and proceeds only if there is either a literal or variable match in the URI tree
-  * If there's a match, then we scan all child nodes against the next segment of the URI path and repeat step 1 until we don't find a match or we've matched the entire URI path
-  * `TrieRouteMatcher::matchRoute()` uses <a href="http://php.net/manual/en/language.generators.syntax.php" target="_blank">generators</a> so we only descend the URI tree as many times as we need to find a match candidate
+   * If there's a match, then we scan all child nodes against the next segment of the URI path and repeat step 1 until we don't find a match or we've matched the entire URI path
+   * `TrieRouteMatcher::matchRoute()` uses <a href="http://php.net/manual/en/language.generators.syntax.php" target="_blank">generators</a> so we only descend the URI tree as many times as we need to find a match candidate
 2. If the match candidate passes constraint checks (eg HTTP method constraints), then it's our matching route, and we're done.  Otherwise, repeat step 1, which will yield the next possible match candidate.

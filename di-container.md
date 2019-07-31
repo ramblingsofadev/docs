@@ -140,4 +140,4 @@ final class UserBootstrapper extends Bootstrapper
 }
 ```
 
-For more info on bootstrappers, [read their documentation](bootstrappers).
+For more info on bootstrappers, [read their documentation](bootstrappers.md).

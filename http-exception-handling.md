@@ -3,7 +3,7 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Customizing Exception Responses](#customizing-exception-responses)
-  1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
+   1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
 3. [Logging](#logging)
 
 <h1 id="basics">Basics</h1>
@@ -23,7 +23,7 @@ $exceptionHandler = new ExceptionHandler($exceptionResponseFactory);
 $exceptionHandler->registerWithPhp();
 ```
 
-By default, `ExceptionHandler` will convert any exception to a 500 response and use [content negotiation](content-negotiation) to determine the best format for the response body.  However, you can [customize your exception responses](#customizing-exception-responses).
+By default, `ExceptionHandler` will convert any exception to a 500 response and use [content negotiation](content-negotiation.md) to determine the best format for the response body.  However, you can [customize your exception responses](#customizing-exception-responses).
 
 <h1 id="customizing-exception-responses">Customizing Exception Responses</h1>
 

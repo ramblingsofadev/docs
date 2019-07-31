@@ -65,4 +65,4 @@ That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it
 
 <h1 id="using-app-builders">Using App Builders</h1>
 
-The [configuration](configuration) library provides helper methods to simplify building your application, including registering your bootstrappers.  Refer to [its documentation](configuration#configuring-bootstrappers) to learn more about it.
+The [configuration](configuration.md) library provides helper methods to simplify building your application, including registering your bootstrappers.  Refer to [its documentation](configuration.md#configuring-bootstrappers) to learn more about it.

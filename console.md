@@ -3,24 +3,24 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Running Commands](#running-commands)
-  1. [Getting Help](#getting-help)
+   1. [Getting Help](#getting-help)
 3. [Creating Commands](#creating-commands)
-  1. [Registering Commands](#registering-commands)
-  2. [Arguments](#arguments)
-  3. [Options](#options)
-  4. [Calling From Code](#calling-from-code)
+   1. [Registering Commands](#registering-commands)
+   2. [Arguments](#arguments)
+   3. [Options](#options)
+   4. [Calling From Code](#calling-from-code)
 6. [Prompts](#prompts)
-  1. [Confirmation](#confirmation)
-  2. [Multiple Choice](#multiple-choice)
+   1. [Confirmation](#confirmation)
+   2. [Multiple Choice](#multiple-choice)
 7. [Output](#output)
 8. [Formatters](#formatters)
-  1. [Padding](#padding)
-  2. [Tables](#tables)
-  3. [Progress Bars](#progress-bars)
+   1. [Padding](#padding)
+   2. [Tables](#tables)
+   3. [Progress Bars](#progress-bars)
 9. [Style Elements](#style-elements)
-  1. [Built-In Elements](#built-in-elements)
-  2. [Custom Elements](#custom-elements)
-  3. [Overriding Built-In Elements](#overriding-built-in-elements)
+   1. [Built-In Elements](#built-in-elements)
+   2. [Custom Elements](#custom-elements)
+   3. [Overriding Built-In Elements](#overriding-built-in-elements)
   
 <h1 id="basics">Basics</h1>
 
@@ -103,7 +103,7 @@ $input->options['optionName']; // The value of 'optionName'
 
 Before you can use the example command, you must register it so that the `Kernel` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
-> **Note:** If you're using the configuration library, refer to [its documentation](configuration#configuring-console-commands) to learn how to register your commands to your app.
+> **Note:** If you're using the configuration library, refer to [its documentation](configuration.md#configuring-console-commands) to learn how to register your commands to your app.
 
 ```php
 use Aphiria\Console\Commands\CommandRegistry;
@@ -272,23 +272,23 @@ If the `$choices` array is associative, then the keys will map to values rather 
 Outputs allow you to write messages to an end user.  The different outputs include:
 
 1. `Aphiria\Console\Output\ConsoleOutput`
-    * Used to write messages to the console
-    * The output used by default
+   * Used to write messages to the console
+   * The output used by default
 2. `Aphiria\Console\Output\SilentOutput`
-    * Used when we don't want any messages to be written
-    * Useful for when one command calls another
+   * Used when we don't want any messages to be written
+   * Useful for when one command calls another
 
 Each output offers three methods:
 
 1. `readLine()`
-    * Reads a line of input
+   * Reads a line of input
 1. `write()`
-    * Writes a message to the existing line
+   * Writes a message to the existing line
 2. `writeln()`
-    * Writes a message to a new line
+   * Writes a message to a new line
 3. `clear()`
-    * Clears the current screen
-    * Only works in `ConsoleOutput`
+   * Clears the current screen
+   * Only works in `ConsoleOutput`
 
 <h1 id="formatters">Formatters</h1>
 
@@ -320,11 +320,11 @@ Jim    - Gaffigan - pale
 There are a few useful functions for customizing the padding formatter:
 
 * `setEolChar()`
-    * Sets the end-of-line character
+  * Sets the end-of-line character
 * `setPadAfter()`
-    * Sets whether to pad before or after strings
+  * Sets whether to pad before or after strings
 * `setPaddingString()`
-    * Sets the padding string
+  * Sets the padding string
 
 <h2 id="tables">Tables</h2>
 
@@ -371,17 +371,17 @@ This will return:
 There are a few useful functions for customizing the look of tables:
 
 * `setCellPaddingString()`
-    * Sets the cell padding string
+  * Sets the cell padding string
 * `setEolChar()`
-    * Sets the end-of-line character
+  * Sets the end-of-line character
 * `setHorizontalBorderChar()`
-    * Sets the horizontal border character
+  * Sets the horizontal border character
 * `setIntersectionChar()`
-    * Sets the row/column intersection character
+  * Sets the row/column intersection character
 * `setPadAfter()`
-    * Sets whether to pad before or after strings
+  * Sets whether to pad before or after strings
 * `setVerticalBorderChar()`
-    * Sets the vertical border character
+  * Sets the vertical border character
     
 <h2 id="progress-bars">Progress Bars</h2>
 

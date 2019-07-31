@@ -3,12 +3,12 @@
 ## Table of Contents
 1. [Requirements](#requirements)
 2. [Installing](#installing)
-  1. [Libraries](#libraries)
+   1. [Libraries](#libraries)
 3. [Server Config](#server-config)
-  1. [PHP Built-in Web Server Config](#php-built-in-web-server-config)
-  2. [Apache Config](#apache-config)
-  3. [Nginx Config](#nginx-config)
-  4. [Caddy Config](#caddy-config)
+   1. [PHP Built-in Web Server Config](#php-built-in-web-server-config)
+   2. [Apache Config](#apache-config)
+   3. [Nginx Config](#nginx-config)
+   4. [Caddy Config](#caddy-config)
 4. [Versioning](#versioning)
 
 <h1 id="requirements">Requirements</h1>

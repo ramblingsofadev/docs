@@ -3,23 +3,23 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Parameter Resolution](#parameter-resolution)
-  1. [Request Bodies](#request-body-parameters)
-  2. [URI Parameters](#uri-parameters)
-  3. [Arrays in Request Bodies](#arrays-in-request-bodies)
+   1. [Request Bodies](#request-body-parameters)
+   2. [URI Parameters](#uri-parameters)
+   3. [Arrays in Request Bodies](#arrays-in-request-bodies)
 3. [Parsing Request Data](#parsing-request-data)
 4. [Formatting Response Data](#formatting-response-data)
 5. [Closure Controllers](#closure-controllers)
 6. [Controller Dependencies](#controller-dependencies)
 7. [Middleware](#middleware)
-    1. [Configuring Middleware](#configuring-middleware)
+   1. [Configuring Middleware](#configuring-middleware)
 8. [API Kernel](#api-kernel)
 9. [Exception Handling](#exception-handling)
-    1. [Customizing Exception Responses](#customizing-exception-responses)
-    2. [Logging](#logging)
+   1. [Customizing Exception Responses](#customizing-exception-responses)
+   2. [Logging](#logging)
 
 <h1 id="basics">Basics</h1>
 
-A controller contains the methods that are invoked when a [request comes through](routing).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to create a user.  Simple:
+A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to create a user.  Simple:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
@@ -38,7 +38,7 @@ final class UserController extends Controller
 }
 ```
 
-Aphiria will see the `User` method parameter and [automatically deserialize the request body to an instance of `User`](#parameter-resolution) (which can be a POPO) using [content negotiation](content-negotiation).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses content negotiation to determine the media type to (de)serialize to (eg JSON).
+Aphiria will see the `User` method parameter and [automatically deserialize the request body to an instance of `User`](#parameter-resolution) (which can be a POPO) using [content negotiation](content-negotiation.md).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses content negotiation to determine the media type to (de)serialize to (eg JSON).
 
 You can also be a bit more explicit and return a response yourself.  For example, the following controller method is functionally identical to the previous example:
 

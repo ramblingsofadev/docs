@@ -3,14 +3,14 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Serializers](#serializers)
-  1. [Form URL-Encoded Serializer](#form-url-encoded-serializer)
-  2. [JSON Serializer](#json-serializer)
-  3. [Arrays of Values](#arrays-of-values)
+   1. [Form URL-Encoded Serializer](#form-url-encoded-serializer)
+   2. [JSON Serializer](#json-serializer)
+   3. [Arrays of Values](#arrays-of-values)
 3. [Encoders](#encoders)
-  1. [Default Encoders](#default-encoders)
-  2. [Object Encoder](#object-encoder)
-  3. [Custom Encoders](#custom-encoders)
-  4. [DateTime Encoder](#datetime-encoder)
+   1. [Default Encoders](#default-encoders)
+   2. [Object Encoder](#object-encoder)
+   3. [Custom Encoders](#custom-encoders)
+   4. [DateTime Encoder](#datetime-encoder)
 
 <h1 id="basics">Basics</h1>
 

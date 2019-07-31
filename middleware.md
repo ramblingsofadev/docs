@@ -2,9 +2,9 @@
 
 ## Table of Contents
 1. [Basics](#basics)
-  1. [Manipulating the Request](#manipulating-the-request)
-  2. [Manipulating the Response](#manipulating-the-response)
-  3. [Middleware Attributes](#middleware-attributes)
+   1. [Manipulating the Request](#manipulating-the-request)
+   2. [Manipulating the Response](#manipulating-the-response)
+   3. [Middleware Attributes](#middleware-attributes)
 2. [Executing Middleware](#executing-middleware)
 
 <h1 id="basics">Basics</h1>

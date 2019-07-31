@@ -3,12 +3,12 @@
 ## Table of Contents
 1. [Basics](#basics)
 2. [Creating Requests](#creating-requests)
-  1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)
-  2. [Trusted Proxies](#trusted-proxies)
+   1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)
+   2. [Trusted Proxies](#trusted-proxies)
 3. [Headers](#headers)
 4. [Bodies](#bodies)
-  1. [String Bodies](#string-bodies)
-  2. [Stream Bodies](#stream-bodies)
+   1. [String Bodies](#string-bodies)
+   2. [Stream Bodies](#stream-bodies)
 5. [URIs](#uris)
 6. [Getting POST Data](#getting-post-data)
 7. [Getting Query String Data](#getting-query-string-data)
@@ -18,9 +18,9 @@
 11. [Header Parameters](#header-parameters)
 12. [Serializing Requests](#serializing-requests)
 13. [Multipart Requests](#multipart-requests)
-  1. [Saving Uploaded Files](#saving-uploaded-files)
-  2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
-  3. [Creating Multipart Requests](#creating-multipart-requests)
+    1. [Saving Uploaded Files](#saving-uploaded-files)
+    2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
+    3. [Creating Multipart Requests](#creating-multipart-requests)
 
 <h1 id="basics">Basics</h1>
 

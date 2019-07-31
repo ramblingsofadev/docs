@@ -11,12 +11,12 @@
 Content negotiation is a process between the client and server to determine how to best process a request and serve content back to the client.  This negotiation is typically done via headers, where the client says "Here's the type of content I'd prefer (eg JSON, XMl, etc)", and the server trying to accommodate the client's preferences.  For example, the process can involve negotiating the following for requests and responses per the <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec12.html" target="_blank">HTTP spec</a>:
 
 * Content type
-    * Controlled by the `Content-Type` and `Accept` headers
-    * Dictates the [media type formatter](#media-type-formatters) to use
+  * Controlled by the `Content-Type` and `Accept` headers
+  * Dictates the [media type formatter](#media-type-formatters) to use
 * Character encoding
-    * Controlled by the `Content-Type` and `Accept-Charset` headers
+  * Controlled by the `Content-Type` and `Accept-Charset` headers
 * Language
-    * Controlled by the `Content-Language` and `Accept-Language` headers
+  * Controlled by the `Content-Language` and `Accept-Language` headers
 
 > **Note:** `ContentNegotiator` uses language tags from <a href="https://tools.ietf.org/html/rfc5646" target="_blank">RFC 5646</a>, and follows the lookup rules in <a href="https://tools.ietf.org/html/rfc4647#section-3.4" target="_blank">RFC 4647 Section 3.4</a>.
 
