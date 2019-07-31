@@ -140,7 +140,7 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 
 Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  To add a route builder, call `RouteBuilderRegistry::map()`, which accepts the following parameters:
 
-* `string|array $httpMethods`
+* `string|string[] $httpMethods`
   * The HTTP method or list of methods to match on (eg `'GET'` or `['POST', 'GET']`)
 * `string $pathTemplate`
   * The path for this route ([read about syntax](#route-variables))
