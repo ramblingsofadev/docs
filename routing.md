@@ -6,6 +6,10 @@
    2. [Optional Route Parts](#optional-route-parts)
    3. [Route Builders](#route-builders)
    4. [Route Annotations](#route-annotations)
+      1. [Example](#route-annotations-example)
+      2. [Route Groups](#route-annotation-groups)
+      3. [Middleware](#route-annotation-middleware)
+      4. [Scanning For Annotations](#scanning-for-annotations)
    5. [Using Aphiria's Net Library](#using-aphirias-net-library)
    6. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
 2. [Route Actions](#route-actions)
@@ -242,7 +246,7 @@ The following properties can be set in `@RouteGroup`:
 * `attributes` - The key-value pairs of metadata that applies to all routes
 * `constraints` - The list of `@RouteConstraint` options to apply to all routes
   
-<h3 id="middleware">Middleware</h3>
+<h3 id="route-annotation-middleware">Middleware</h3>
 
 Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
 
