@@ -5,8 +5,9 @@
   1. [Route Variables](#route-variables)
   2. [Optional Route Parts](#optional-route-parts)
   3. [Route Builders](#route-builders)
-  4. [Using Aphiria's Net Library](#using-aphirias-net-library)
-  4. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
+  4. [Route Annotations](#route-annotations)
+  5. [Using Aphiria's Net Library](#using-aphirias-net-library)
+  6. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
 2. [Route Actions](#route-actions)
 3. [Binding Middleware](#binding-middleware)
   1. [Middleware Attributes](#middleware-attributes)
@@ -145,6 +146,150 @@ Route builders give you a fluent syntax for mapping your routes to closures or c
     * Whether or not this route is HTTPS-only
 
 `RouteBuilderRegistry::map()` returns an instance of `RouteBuilder`.
+
+<h2 id="annotations">Annotations</h2>
+
+Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
+
+To use route annotations, install the route-annotations library by including the following in your _composer.json_:
+
+```bash
+"aphiria/route-annotations": "1.0.*"
+```
+
+> **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
+
+<h3 id="route-annotation-example">Example</h3>
+
+Let's actually define a route:
+
+```php
+use Aphiria\Api\Controllers\Controller;
+use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\RouteAnnotations\Annotations\Put;
+use App\Users\Http\Middleware\Authorization;
+use App\Users\User;
+
+class UserController extends Controller
+{
+    /**
+     * @Put("users/:id")
+     * @Middleware(Authorization::class)
+     */
+    public function updateUser(User $user): IHttpResponseMessage
+    {
+        // ...
+    }
+}
+```
+
+> **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `@Controller` annotation.
+
+The following HTTP methods have route annotations:
+
+* `@Any` - Permits any HTTP method
+* `@Delete`
+* `@Get`
+* `@Head`
+* `@Options`
+* `@Patch`
+* `@Post`
+* `@Put`
+* `@Trace`
+
+Each of the above annotations take in the route path as the first parameter, and optionally let you define any of the following properties:
+
+* `host` - The host name for the route
+* `name` - The name of the route
+* `isHttpsOnly` - Whether or not the route is HTTPS only
+* `attributes` - The key-value pairs of route metadata
+* `constraints` - The list of `@RouteConstraint` options to apply
+  * `@RouteConstraint` takes in the name of the constraint class and `constructorParams`, which is the list of parameters to pass into the constraint constructor
+
+<h3 id="route-annotation-groups">Route Groups</h3>
+
+Just like with our [route builders](#grouping-routes), we can also group routes with annotations:
+
+```php
+use Aphiria\Api\Controllers\Controller;
+use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\RouteAnnotations\Annotations\RouteGroup;
+use App\Users\Http\Middleware\Authorization;
+use App\Users\User;
+
+/**
+ * @RouteGroup("users")
+ */
+class UserController extends Controller
+{
+    /**
+     * @Put(":id")
+     * @Middleware(Authorization::class)
+     */
+    public function createUser(User $user): IHttpResponseMessage
+    {
+        // ...
+    }
+}
+```
+
+When our routes get compiled, `users` will be prefixed to the path of any route within the controller.
+
+The following properties can be set in `@RouteGroup`:
+
+* `host` - The host name to suffix to the host of any routes contained in the controller
+* `isHttpsOnly` - Whether or not all the routes are HTTPS only
+* `attributes` - The key-value pairs of metadata that applies to all routes
+* `constraints` - The list of `@RouteConstraint` options to apply to all routes
+  
+<h3 id="middleware">Middleware</h3>
+
+Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
+
+* `attributes` - The key-value pairs of metadata for the middleware
+
+<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](configuration.md) library provides a convenience method for this:
+
+```php
+use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\RouteAnnotations\IRouteAnnotationRegistrant;
+use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
+
+// Assume we already have $container set up
+$routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATHS_TO_SCAN_FOR_CONTROLLERS']);
+$container->bindInstance(IRouteAnnotationRegistrant::class, $routeAnnotationRegistrant);
+
+(new AphiriaComponentBuilder($container))
+    ->withRoutingComponent($appBuilder)
+    ->withRouteAnnotations($appBuilder);
+```
+
+If you're not using the configuration library, you can manually configure the router to scan for annotations:
+
+```php
+use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\LazyRouteFactory;
+use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
+
+$routeFactory = new LazyRouteFactory(function () {
+    $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATHS_TO_SCAN_FOR_CONTROLLERS']);
+    $routes = new RouteBuilderRegistry();
+    $routeAnnotationRegistrant->registerRoutes($routes);
+    
+    return $routes->buildAll();
+});
+$routeMatcher = new TrieRouteMatcher((new TrieFactory($routeFactory))->createTree());
+
+// Find a matching route
+$result = $routeMatcher->matchRoute(
+    $_SERVER['REQUEST_METHOD'],
+    $_SERVER['HTTP_HOST'],
+    $_SERVER['REQUEST_URI']
+);
+```
 
 <h2 id="using-aphirias-net-library">Using Aphiria's Net Library</h2>
 

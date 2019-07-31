@@ -33,7 +33,7 @@ This will disable automatically parsing POST data into `$_POST` and uploaded fil
 
 Aphiria can be easily installed using Composer:
 
-```php
+```bash
 composer create-project aphiria/app --prefer-dist
 ```
 
