@@ -32,17 +32,17 @@ If you're already using the <a href="https://github.com/aphiria/app" target="_bl
 #!/usr/bin/env php
 <?php
 
+use Aphiria\Console\App;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\Console\Kernel;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $commands = new CommandRegistry();
 
-// TODO: Actually register your commands here
+// Register your commands here...
 
 global $argv;
-exit((new Kernel($commands))->handle($argv));
+exit((new App($commands))->handle($argv));
 ```
 
 Now, you're set to start [running commands](#running-commands).
@@ -101,13 +101,13 @@ $input->options['optionName']; // The value of 'optionName'
 
 <h2 id="registering-commands">Registering Commands</h2>
 
-Before you can use the example command, you must register it so that the `Kernel` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
+Before you can use the example command, you must register it so that the `App` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
 > **Note:** If you're using the configuration library, refer to [its documentation](configuration.md#configuring-console-commands) to learn how to register your commands to your app.
 
 ```php
+use Aphiria\Console\App;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\Console\Kernel;
 
 $commands = new CommandRegistry();
 $commands->registerCommand(
@@ -115,9 +115,9 @@ $commands->registerCommand(
     fn () => $greetingCommandHandler
 );
 
-// Actually run the kernel
+// Actually run the application
 global $argv;
-exit((new Kernel($commands))->handle($argv));
+exit((new App($commands))->handle($argv));
 ```
 
 To call this command, run this from the command line:
@@ -181,14 +181,14 @@ $option = new Option('foo', 'f', $types, 'The foo option');
 
 <h2 id="calling-from-code">Calling From Code</h2>
 
-It's possible to call a command from another command by using `Kernel`:
+It's possible to call a command from another command by using `App`:
 
 ```php
 use Aphiria\Console\Input\Input;
 use Aphiria\Console\Output\IOutput;
 
-$commandHandler = function (Input $input, IOutput $output) use ($kernel) {
-    $kernel->handle('foo arg1 --option1=value', $output);
+$commandHandler = function (Input $input, IOutput $output) use ($app) {
+    $app->handle('foo arg1 --option1=value', $output);
     
     // Do other stuff...
 };
@@ -196,7 +196,7 @@ $commandHandler = function (Input $input, IOutput $output) use ($kernel) {
 // Register your commands...
 ```
 
-Alternatively, if your handler is a class, you could inject the kernel via the constructor:
+Alternatively, if your handler is a class, you could inject the app via the constructor:
 
 ```php
 use Aphiria\Console\Commands\ICommandBus;
@@ -206,16 +206,16 @@ use Aphiria\Console\Output\IOutput;
 
 final class FooCommandHandler implements ICommandHandler
 {
-    private ICommandBus $kernel;
+    private ICommandBus $app;
     
-    public function __construct(ICommandBus $kernel)
+    public function __construct(ICommandBus $app)
     {
-        $this->kernel = $kernel;
+        $this->app = $app;
     }
     
     public function handle(Input $input, IOutput $output)
     {
-        $this->kernel->handle('foo arg1 --option1=value', $output);
+        $this->app->handle('foo arg1 --option1=value', $output);
     
         // Do other stuff...
     };
@@ -498,9 +498,9 @@ $elements->registerElement(
 $outputCompiler = new OutputCompiler($elements);
 $output = new ConsoleOutput($outputCompiler);
 
-// Now, pass it into the kernel (assume it's already set up)
+// Now, pass it into the app (assume it's already set up)
 global $argv;
-exit($kernel->handle($argv, $output));
+exit($app->handle($argv, $output));
 ```
 
 <h2 id="overriding-built-in-elements">Overriding Built-In Elements</h2>
