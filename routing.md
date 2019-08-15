@@ -297,7 +297,7 @@ $result = $routeMatcher->matchRoute(
 
 <h2 id="using-aphirias-net-library">Using Aphiria's Net Library</h2>
 
-You can use [Aphiria's net library](http-requests) to route the request instead of relying on PHP's superglobals:
+You can use [Aphiria's net library](http-requests.md) to route the request instead of relying on PHP's superglobals:
 
 ```php
 use Aphiria\Net\Http\RequestFactory;
@@ -315,7 +315,7 @@ $result = $routeMatcher->matchRoute(
 
 <h2 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h2>
 
-[Aphiria's configuration library](configuration) simplifies how you register routes.  Refer to [its documentation](configuration#configuring-routes) for more info.
+[Aphiria's configuration library](configuration.md) simplifies how you register routes.  Refer to [its documentation](configuration#configuring-routes) for more info.
 
 <h1 id="route-actions">Route Actions</h1>
 
