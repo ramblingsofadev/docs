@@ -2,28 +2,84 @@
 
 ## Table of Contents
 1. [Basics](#basics)
-2. [Customizing Exception Responses](#customizing-exception-responses)
+   1. [Creating Response For Exceptions](#creating-responses-for-exceptions)
+2. [Handling Exceptions During Request Handling](#handling-exceptions-during-request-handling)
+3. [Global Exception Handling](#global-exception-handling)
+   1. [Throwing Errors As Exceptions](#throwing-errors-as-exceptions)
+4. [Customizing Exception Responses](#customizing-exception-responses)
    1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
-3. [Logging](#logging)
+5. [Logging](#logging)
 
 <h1 id="basics">Basics</h1>
 
-Sometimes, your application is going to throw an unhandled exception or shut down unexpectedly.  When this happens, instead of showing an ugly PHP error, you can convert it to a nicely-formatted response.  To get set up, you can simply instantiate `ExceptionHandler` and register it with PHP:
+Sometimes, your application is going to throw an unhandled exception or shut down unexpectedly.  When this happens, instead of showing an ugly PHP error, you can convert it to a nicely-formatted response.  You can configure Aphiria to [handle exceptions thrown while handling HTTP requests](#handling-exceptions-during-request-handling) via middleware as well as [handle any unhandled exceptions anywhere in your application lifespan](#global-exception-handling).  However, you are not obligated to use Aphiria's exception handlers - you may use any that you'd like.
+
+The first thing we need to do is set up a factory that can create HTTP responses from exceptions using [content negotiation](content-negotiation.md):
 
 ```php
-use Aphiria\Api\Exceptions\{ExceptionHandler, ExceptionResponseFactory};
+use Aphiria\Exceptions\ExceptionResponseFactory;
 use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
 
 // Assume the content negotiator was already set up
 $exceptionResponseFactory = new ExceptionResponseFactory(
     new NegotiatedResponseFactory($contentNegotiator)
 );
-
-$exceptionHandler = new ExceptionHandler($exceptionResponseFactory);
-$exceptionHandler->registerWithPhp();
 ```
 
-By default, `ExceptionHandler` will convert any exception to a 500 response and use [content negotiation](content-negotiation.md) to determine the best format for the response body.  However, you can [customize your exception responses](#customizing-exception-responses).
+Now, let's start handling some exceptions.
+
+<h1 id="handling-exceptions-during-request-handling">Handling Exceptions During Request Handling</h1>
+
+We can use middleware to catch any exceptions that might be thrown while handling a request.  Let's look at an example that uses the [configuration library](#configuration.md):
+
+```php
+use Aphiria\Exceptions\ExceptionLogger;
+use Aphiria\Exceptions\IExceptionLogger;
+use Aphiria\Exceptions\Middleware\ExceptionHandler;
+
+// Assume our container and application builder are already set up
+$container->bindInstance(IExceptionLogger::class, new ExceptionLogger());
+$container->bindInstance(IExceptionResponseFactory::class, $exceptionResponseFactory);
+
+// ...
+
+$appBuilder->withGlobalMiddleware(fn () => [
+    new MiddlewareBinding(ExceptionHandler::class)
+]);
+
+// ...
+```
+
+Now, whenever an exception is thrown later on down the middleware pipeline, our `ExceptionHandler` middleware will catch it, [log it](#logging), and return a response.
+
+<h1 id="global-exception-handling">Global Exception Handling</h1>
+
+Sometimes, exceptions or PHP errors can be thrown before we even get to the middleware pipeline.  In this case, it's a good idea to set up a global exception handler with PHP.
+
+```php
+use Aphiria\Exceptions\ExceptionLogger;
+use Aphiria\Exceptions\GlobalExceptionHandler;
+
+$globalExceptionHandler = new GlobalExceptionHandler(
+    $exceptionResponseFactory,
+    new ExceptionLogger()
+);
+
+// Let PHP know to use this as our exception and error handler:
+$globalExceptionHandler->registerWithPhp();
+```
+
+<h2 id="throwing-errors-as-exceptions">Throwing Errors As Exceptions</h2>
+
+You can configure the global exception handler to rethrow PHP errors as an `ErrorException` by specifying a bit-wise list of error levels:
+
+```php
+$globalExceptionHandler = new GlobalExceptionHandler(
+    $exceptionResponseFactory,
+    null,
+    E_ALL & ~(E_DEPRECATED | E_USER_DEPRECATED)
+);
+```
 
 <h1 id="customizing-exception-responses">Customizing Exception Responses</h1>
 
@@ -32,7 +88,7 @@ You might find yourself wanting to map a particular exception to a certain respo
 As an example, let's say that you want to return a 404 response when an `EntityNotFound` exception is thrown:
 
 ```php
-use Aphiria\Api\Exceptions\{ExceptionResponseFactory, ExceptionResponseFactoryRegistry};
+use Aphiria\Exceptions\{ExceptionResponseFactory, ExceptionResponseFactoryRegistry};
 use Aphiria\Net\Http\Response;
 
 // Register your custom exception response factories
@@ -48,9 +104,7 @@ $exceptionResponseFactory = new ExceptionResponseFactory(
     $exceptionResponseFactories
 );
 
-// Add it to the exception handler
-$exceptionHandler = new ExceptionHandler($exceptionResponseFactory);
-$exceptionHandler->registerWithPhp();
+// Pass the factory to your middleware and global exception handler...
 ```
 
 That's it.  Now, whenever an unhandled `EntityNotFound` exception is thrown, your application will return a 404 response.  You can also register multiple exception factories at once.  Just pass in an array, keyed by exception type:
@@ -69,7 +123,9 @@ use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
 
 // Assume the content negotiator was already set up
 $negotiatedResponseFactory = new NegotiatedResponseFactory($contentNegotiator);
+
 // ...
+
 $exceptionResponseFactories->registerFactory(
     EntityNotFound::class,
     function (EntityNotFound $ex, ?IHttpRequestMessage $request) use ($negotiatedResponseFactory) {
@@ -106,38 +162,32 @@ $exceptionResponseFactories->registerFactory(
 
 <h1 id="logging">Logging</h1>
 
-Unless you specify otherwise, a <a href="https://github.com/Seldaek/monolog" target="_blank">Monolog</a> logger to log all exceptions to the PHP error log.  However, you can override this with any PSR-3 logger:
+`IExceptionLogger` contains methods to handle logging both PHP errors and exceptions.  `ExceptionLogger` is enabled by default, and uses <a href="https://github.com/Seldaek/monolog" target="_blank">Monolog</a> to do the actual logging.
 
 ```php
-use Aphiria\Api\Exceptions\ExceptionResponseFactory;
-use Aphiria\Net\Http\ContentNegotiation\ContentNegotiator;
-use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\JsonMediaTypeFormatter;
-use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
+use Aphiria\Exceptions\ExceptionLogger;
+
+$exceptionLogger = new ExceptionLogger();
+
+// Inject the logger into your exception handlers...
+```
+
+You can specify your own custom logger that implements the PSR-3 `LoggerInterface`:
+
+```php
+use Aphiria\Exceptions\ExceptionResponseFactory;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
 
-// First, set up the factory that will create exception responses
-$exceptionResponseFactory = new ExceptionResponseFactory(
-    new NegotiatedResponseFactory(
-        new ContentNegotiator([
-            new JsonMediaTypeFormatter()
-        ])
-    )
-);
-
-// Next, set up our logger
 $logger = new Logger('app');
 $logger->pushHandler(new SyslogHandler());
-
-// Now, set up our exception handler
-$exceptionHandler = new ExceptionHandler($exceptionResponseFactory, $logger);
-$exceptionHandler->registerWithPhp();
+$exceptionLogger = new ExceptionLogger($logger);
 ```
 
 It's possible to specify some rules around the <a href="https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel" target="_blank">PSR-3 log level</a> that an exception returns.  This could be useful for things like logging 500s as critical, but everything else as warnings.  Let's look at an example:
 
 ```php
-use Aphiria\Api\Exceptions\ExceptionLogLevelFactoryRegistry;
+use Aphiria\Exceptions\ExceptionLogLevelFactoryRegistry;
 
 $exceptionLogLevelFactories = new ExceptionLogLevelFactoryRegistry();
 $exceptionLogLevelFactories->registerFactory(
@@ -150,12 +200,12 @@ $exceptionLogLevelFactories->registerFactory(
         return LogLevel::WARNING;
     }
 );
-$exceptionHandler = new ExceptionHandler(
-    $exceptionResponseFactory,
-    null, 
+$exceptionLogger = new ExceptionLogger(
+    null,
     $exceptionLogLevelFactories
 );
-$exceptionHandler->registerWithPhp();
+
+// Inject the logger into your exception handlers...
 ```
 
 > **Note:** You can register many factories at once using `ExceptionLogLevelFactoryRegistry::registerManyFactories()`.
@@ -163,8 +213,7 @@ $exceptionHandler->registerWithPhp();
 Passing in an array of PSR-3 log levels will cause only those levels to be logged:
 
 ```php
-$exceptionHandler = new ExceptionHandler(
-    $exceptionResponseFactory,
+$exceptionLogger = new ExceptionLogger(
     null,
     null,
     [LogLevel::CRITICAL, LogLevel::EMERGENCY]
@@ -176,12 +225,10 @@ By default, `LogLevel::ERROR`, `LogLevel::CRITICAL`, `LogLevel::ALERT`, and `Log
 You can also control the level of PHP errors that are logged by specifying a bitwise value similar to what's in your _php.ini_:
 
 ```php
-$exceptionHandler = new ExceptionHandler(
-    $exceptionResponseFactory, 
+$exceptionLogger = new ExceptionLogger(
     null, 
-    null,
+    null, 
     null,
     E_ALL & ~E_NOTICE
 );
-$exceptionHandler->registerWithPhp();
 ```
