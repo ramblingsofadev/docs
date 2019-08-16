@@ -192,6 +192,8 @@ $requestHandler = $appBuilder->buildApiApplication();
 
 These methods will set up components for your [exception handlers](http-exception-handling.md), [routes](#configuring-routes), and [encoders](#configuring-encoders).
 
+> **Note:** If you use Aphiria's exception handler library, it's highly recommended that you include it before building any other Aphiria components so that the exception handler middleware is registered first.
+
 <h2 id="configuring-routes">Configuring Routes</h2>
 
 You can manually register routes to your application:
