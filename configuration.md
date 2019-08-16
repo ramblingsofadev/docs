@@ -16,7 +16,7 @@
 
 <h1 id="basics">Basics</h1>
 
-Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, and console commands.  It even lets you centralize the configuration of entire [modules](#modules) of code.
+Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, and exception handlers.  It even lets you centralize the configuration of entire [modules](#modules) of code.
 
 <h1 id="application-builders">Application Builders</h1>
 
@@ -171,7 +171,7 @@ Now, your entire user module is configured and ready to go.
 
 <h1 id="using-aphiria-components">Using Aphiria Components</h1>
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), or [encoder](serialization.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [encoder](serialization.md), or [exception handling](http-exception-handling.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -180,6 +180,7 @@ use Opulence\Ioc\Container;
 // Assume we already have an app builder
 $container = new Container;
 (new AphiriaComponentBuilder($container))
+    ->withExceptionHandlers($appBuilder)
     ->withRoutingComponent($appBuilder)
     ->withRouteAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
@@ -189,7 +190,7 @@ $container = new Container;
 $requestHandler = $appBuilder->buildApiApplication();
 ```
 
-These methods will set up components for your [routes](#configuring-routes) and [encoders](#configuring-encoders).
+These methods will set up components for your [exception handlers](http-exception-handling.md), [routes](#configuring-routes), and [encoders](#configuring-encoders).
 
 <h2 id="configuring-routes">Configuring Routes</h2>
 
