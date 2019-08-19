@@ -18,12 +18,8 @@ The first thing we need to do is set up a factory that can create HTTP responses
 
 ```php
 use Aphiria\Exceptions\ExceptionResponseFactory;
-use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
 
-// Assume the content negotiator was already set up
-$exceptionResponseFactory = new ExceptionResponseFactory(
-    new NegotiatedResponseFactory($contentNegotiator)
-);
+$exceptionResponseFactory = new ExceptionResponseFactory();
 ```
 
 Now, let's start handling some exceptions.
@@ -89,13 +85,13 @@ As an example, let's say that you want to return a 404 response when an `EntityN
 
 ```php
 use Aphiria\Exceptions\{ExceptionResponseFactory, ExceptionResponseFactoryRegistry};
-use Aphiria\Net\Http\Response;
 
 // Register your custom exception response factories
 $exceptionResponseFactories = new ExceptionResponseFactoryRegistry();
 $exceptionResponseFactories->registerFactory(
     EntityNotFound::class,
-    fn (EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(HttpStatusCodes::HTTP_NOT_FOUND)
+    fn (EntityNotFound $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) =>
+        $responseFactory->createResponse($request, 404, null, null)
 );
 
 // Assume the content negotiator was already set up
@@ -107,36 +103,15 @@ $exceptionResponseFactory = new ExceptionResponseFactory(
 // Pass the factory to your middleware and global exception handler...
 ```
 
-That's it.  Now, whenever an unhandled `EntityNotFound` exception is thrown, your application will return a 404 response.  You can also register multiple exception factories at once.  Just pass in an array, keyed by exception type:
+That's it.  Now, whenever an unhandled `EntityNotFound` exception is thrown, your application will return a 404 response that uses [content negotiation](content-negotiation.md).  You can also register multiple exception factories at once.  Just pass in an array, keyed by exception type:
 
 ```php
 $exceptionResponseFactories->registerManyFactories([
-    EntityNotFound::class => fn (EntityNotFound $ex, ?IHttpRequestMessage $request) => new Response(404),
+    EntityNotFound::class => fn (EntityNotFound $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory)
+        $responseFactory->createResponse($request, 404, null, null),
     // ...
 ]);
 ```
-
-If you want to take advantage of automatic content negotiation, you can use a `NegotiatedResponseFactory` in your factory:
-
-```php
-use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
-
-// Assume the content negotiator was already set up
-$negotiatedResponseFactory = new NegotiatedResponseFactory($contentNegotiator);
-
-// ...
-
-$exceptionResponseFactories->registerFactory(
-    EntityNotFound::class,
-    function (EntityNotFound $ex, ?IHttpRequestMessage $request) use ($negotiatedResponseFactory) {
-        $error = new MyErrorObject('Entity not found');
-    
-        return $negotiatedResponseFactory->createResponse($request, 404, null, $error);
-    }
-);
-```
-
-If an unhandled `EntityNotFound` exception was thrown, your exception factory will use content negotiation to serialize `MyErrorObject` in the response body.
 
 <h2 id="using-classes-to-create-exception-responses">Using Classes to Create Exception Responses</h2>
 
@@ -156,7 +131,8 @@ final class WhoopsResponseFactory
 
 $exceptionResponseFactories->registerFactory(
     Exception::class,
-    fn (Exception $ex, ?IHttpRequestMessage $request) => (new WhoopsResponseFactory)->createResponse($ex, $request)
+    fn (Exception $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
+        => (new WhoopsResponseFactory)->createResponse($ex, $request)
 );
 ```
 
