@@ -2,6 +2,7 @@
 
 ## Table of Contents
 1. [Basics](#basics)
+   1. [Application Builders vs Bootstrappers](#application-builders-vs-bootstrappers)
 2. [Application Builders](#application-builders)
    1. [Building API Apps](#building-api-apps)
    2. [Building Console Apps](#building-console-apps)
@@ -19,6 +20,10 @@
 <h1 id="basics">Basics</h1>
 
 Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, and exception handlers.  It even lets you centralize the configuration of entire [modules](#modules) of code.
+
+<h2 id="application-builders-vs-bootstrappers">Application Builders vs Bootstrappers</h2>
+
+Before we dive too deep, you might be asking yourself "What's the difference between [application builders](#application-builders) and [bootstrappers](bootstrappers.md)?".  Bootstrappers are where you bind your dependencies to the DI container so that the container can resolve them - that's it.  Application builders, on the other hand, are where you can configure a [module](#modules) of your domain with shared resources, such as a [router](#configuring-routes) or even [bootstrappers](#configuring-bootstrappers) themselves.  This is really the heart of Aphiria - your app should be nothing but a collection of modules that are capable of configuring themselves.
 
 <h1 id="application-builders">Application Builders</h1>
 
