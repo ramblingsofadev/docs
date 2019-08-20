@@ -13,6 +13,8 @@
 5. [Using Aphiria Components](#using-aphiria-components)
    1. [Configuring Routes](#configuring-routes)
    2. [Configuring Encoders](#configuring-encoders)
+   3. [Configuring Exception Log Levels](#configuring-exception-log-levels)
+   4. [Configuring Exception Responses](#configuring-exception-responses)
 
 <h1 id="basics">Basics</h1>
 
@@ -181,6 +183,8 @@ use Opulence\Ioc\Container;
 $container = new Container;
 (new AphiriaComponentBuilder($container))
     ->withExceptionHandlers($appBuilder)
+    ->withExceptionLogLevelFactories($appBuilder)
+    ->withExceptionResponseFactories($appBuilder)
     ->withRoutingComponent($appBuilder)
     ->withRouteAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
@@ -199,6 +203,10 @@ These methods will set up components for your [exception handlers](http-exceptio
 You can manually register routes to your application:
 
 ```php
+(new AphiriaComponentBuilder($container))
+    ->withRoutingComponent($appBuilder);
+
+// Then, inside your module:
 $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
     $routes->map('GET', 'users/:id')
         ->toMethod(UserController::class, 'getUserById');
@@ -214,6 +222,10 @@ Due to how lazy route creation works, your routes will only be built if they nee
 Sometimes our models require some custom encoding logic when serializing and deserializing them.  Let's configure an encoder for a user model:
 
 ```php
+(new AphiriaComponentBuilder($container))
+    ->withEncoderComponent($appBuilder);
+
+// Then, inside your module:
 $appBuilder->withComponent('encoders', function (EncoderRegistry $encoders) {
     $encoders->registerEncoder(User::class, new class() implements IEncoder {
         public function decode($userHash, string $type, EncodingContext $context)
@@ -226,5 +238,40 @@ $appBuilder->withComponent('encoders', function (EncoderRegistry $encoders) {
             return ['id' => $user->getId(), 'email' => $user->getEmail()];
         }
     });
+});
+```
+
+<h2 id="configuring-exception-log-levels">Configuring Exception Log Levels</h2>
+
+Typically, uncaught exceptions get logged as `LogLevel::ERROR`.  However, there might be exceptions that warrant a higher or lower level.  For example, if you receive an exception that a database table is gone, you might want to log a `LogLevel::EMERGECNCY`.
+
+```php
+(new AphiriaComponentBuilder($container))
+    ->withExceptionLogLevelFactories($appBuilder);
+
+// Then, inside your module:
+$appBuilder->withComponent('exceptionLogLevelFactories', function (ExceptionLogLevelFactoryRegistry $factories) {
+    $factories->registerFactory(
+        DbTableNotFoundException::class,
+        fn (DbTableNotFoundException $ex) => LogLevel::EMERGENCY
+    );
+});
+```
+
+<h2 id="configuring-exception-responses">Configuring Exception Responses</h2>
+
+Aphiria has an easy way to map your module's exceptions to HTTP responses:
+
+```php
+(new AphiriaComponentBuilder($container))
+    ->withExceptionResponseFactories($appBuilder);
+
+// Then, inside your module:
+$appBuilder->withComponent('exceptionResponseFactories', function (ExceptionResponseFactoryRegistry $factories) {
+    $factories->registerFactory(
+        UserNotFoundException::class,
+        fn (UserNotFoundException $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
+            => $responseFactory->createResponse($request, 404, null, null)
+    );
 });
 ```
