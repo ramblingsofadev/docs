@@ -271,7 +271,7 @@ $appBuilder->withComponent('exceptionResponseFactories', function (ExceptionResp
     $factories->registerFactory(
         UserNotFoundException::class,
         fn (UserNotFoundException $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
-            => $responseFactory->createResponse($request, 404, null, null)
+            => $responseFactory->createResponse($request, 404)
     );
 });
 ```
