@@ -31,8 +31,8 @@ Before we dive too deep, you might be asking yourself "What's the difference bet
 
 ```php
 use Aphiria\Configuration\ApplicationBuilder;
-use Opulence\Ioc\Bootstrappers\Inspections\BindingInspectorBootstrapperDispatcher;
-use Opulence\Ioc\Container;
+use Aphiria\DependencyInjection\Bootstrappers\Inspections\BindingInspectorBootstrapperDispatcher;
+use Aphiria\DependencyInjection\Container;
 
 $container = new Container();
 $bootstrapperDispatcher = new BindingInspectorBootstrapperDispatcher($container);
@@ -182,7 +182,7 @@ The configuration library isn't strictly tied to Aphiria's [routing](routing.md)
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
-use Opulence\Ioc\Container;
+use Aphiria\DependencyInjection\Container;
 
 // Assume we already have an app builder
 $container = new Container;

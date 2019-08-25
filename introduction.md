@@ -6,7 +6,7 @@
 
 <h1 id="basics">Basics</h1>
 
-Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries, and also builds on top of some libraries from <a href="https://www.opulencephp.com" target="_blank">Opulence</a>.  For example, need an endpoint to create a user object?  Simple.
+Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries.  For example, need an endpoint to create a user object?  Simple.
 
 ```php
 final class UserController extends Controller

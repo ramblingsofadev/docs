@@ -90,7 +90,7 @@ $request = $factory->createRequestFromSuperglobals($_SERVER);
 
 <h1 id="headers">Headers</h1>
 
-Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\HttpHeaders`, which extends  [`Opulence\Collections\HashTable`](https://www.opulencephp.com/docs/1.1/collections#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
+Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\HttpHeaders`, which extends  [`Aphiria\Collections\HashTable`](https://www.opulencephp.com/docs/1.1/collections#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
 
 * `getFirst(string $name): mixed`
 * `tryGetFirst(string $name, &$value): bool`

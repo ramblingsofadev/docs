@@ -12,9 +12,9 @@
 A dependency injection (DI) container gives you a way of telling your app "When you need an instance of `IFoo`, use this implementation".
 
 ```php
+use Aphiria\DependencyInjection\Container;
 use App\UserService;
 use App\IUserService;
-use Opulence\Ioc\Container;
 
 $container = new Container();
 $container->bindInstance(IUserService::class, new UserService());
@@ -127,8 +127,8 @@ The container will scan `UserService::__construct()`, see the `IUserRepository` 
 A bootstrapper is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a bootstrapper called `UserBootstrapper` to centralize all the bindings related to your user domain.
 
 ```php
-use Opulence\Ioc\Bootstrappers\Bootstrapper;
-use Opulence\Ioc\IContainer;
+use Aphiria\DependencyInjection\Bootstrappers\Bootstrapper;
+use Aphiria\DependencyInjection\IContainer;
 
 final class UserBootstrapper extends Bootstrapper
 {

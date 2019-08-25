@@ -10,8 +10,8 @@
 A bootstrapper is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a bootstrapper called `UserBootstrapper` to centralize all the bindings related to your user domain.
 
 ```php
-use Opulence\Ioc\Bootstrappers\Bootstrapper;
-use Opulence\Ioc\IContainer;
+use Aphiria\DependencyInjection\Bootstrappers\Bootstrapper;
+use Aphiria\DependencyInjection\IContainer;
 
 final class UserBootstrapper extends Bootstrapper
 {
@@ -44,9 +44,9 @@ Rather than having to dispatch _every_ bootstrapper on every request, you can us
 Let's build on the `UserBootstrapper` from the [previous example](#basics) and set up our app to inspect its bindings:
 
 ```php
-use Opulence\Ioc\Bootstrappers\Inspection\BindingInspectorBootstrapperDispatcher;
-use Opulence\Ioc\Bootstrappers\Inspection\Caching\FileBootstrapperBindingCache;
-use Opulence\Ioc\Container;
+use Aphiria\DependencyInjection\Bootstrappers\Inspection\BindingInspectorBootstrapperDispatcher;
+use Aphiria\DependencyInjection\Bootstrappers\Inspection\Caching\FileBootstrapperBindingCache;
+use Aphiria\DependencyInjection\Container;
 
 $bootstrappers = [new UserBootstrapper()];
 $container = new Container();

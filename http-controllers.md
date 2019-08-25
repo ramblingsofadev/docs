@@ -222,11 +222,11 @@ Closures support the same [parameter resolution](#parameter-resolution) features
 
 <h1 id="controller-dependencies">Controller Dependencies</h1>
 
-The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' constructors for dependencies, resolve them, and then instantiate your controllers with those dependencies.  Dependency resolvers simply need to implement `IDependencyResolver`.  To make it easy for users of Opulence's DI container, you can use `ContainerDependencyResolver`.
+The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' constructors for dependencies, resolve them, and then instantiate your controllers with those dependencies.  Dependency resolvers simply need to implement `IDependencyResolver`.  To make it easy for users of Aphiria's DI container, you can use `ContainerDependencyResolver`.
 
 ```php
 use Aphiria\Api\ContainerDependencyResolver;
-use Opulence\Ioc\Container;
+use Aphiria\DependencyInjection\Container;
 
 $container = new Container();
 $dependencyResolver = new ContainerDependencyResolver($container);
