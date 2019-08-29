@@ -118,7 +118,7 @@ final class RoleMiddleware extends AttributeMiddleware
 To actually specify `role`, pass it into your route configuration:
 
 ```php
-$routes->map('GET', 'foo')
+$routes->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withMiddleware(RoleMiddleware::class, ['role' => 'admin']);
 ```

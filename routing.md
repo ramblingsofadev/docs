@@ -57,7 +57,7 @@ use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
 // Register the routes
 $routeFactory = new LazyRouteFactory(function () {
     $routes = new RouteBuilderRegistry();
-    $routes->map('GET', '/books/:bookId')
+    $routes->get('/books/:bookId')
         ->toMethod(BookController::class, 'getBooksById')
         ->withMiddleware(AuthMiddleware::class);
         
@@ -138,18 +138,27 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 
 <h2 id="route-builders">Route Builders</h2>
 
-Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  To add a route builder, call `RouteBuilderRegistry::map()`, which accepts the following parameters:
+Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
+  
+ ```php
+$routes->delete('/foo');
+$routes->get('/foo');
+$routes->options('/foo');
+$routes->patch('/foo');
+$routes->post('/foo');
+$routes->put('/foo');
+```
 
-* `string|string[] $httpMethods`
-  * The HTTP method or list of methods to match on (eg `'GET'` or `['POST', 'GET']`)
+Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
+
 * `string $pathTemplate`
   * The path for this route ([read about syntax](#route-variables))
 * `string|null $hostTemplate` (optional)
   * The optional host template for this route  ([read about syntax](#route-variables))
 * `bool $isHttpsOnly` (optional)
   * Whether or not this route is HTTPS-only
-
-`RouteBuilderRegistry::map()` returns an instance of `RouteBuilder`.
+  
+ You can also call `RouteBuilderRegistry::map()` and pass in the HTTP method(s) you'd like to map to.
 
 <h2 id="route-annotations">Route Annotations</h2>
 
@@ -323,11 +332,11 @@ Aphiria supports mapping routes to both controller methods and to closures:
 
 ```php
 // Map to a controller method
-$routes->map('GET', 'users/:userId')
+$routes->get('users/:userId')
     ->toMethod(UserController::class, 'getUserById');
 
 // Map to a closure
-$routes->map('GET', 'users/:userId/name')
+$routes->get('users/:userId/name')
     ->toClosure(function () {
         // Handle the request...
     });
@@ -342,7 +351,7 @@ Middleware are a great way to modify both the request and the response on an end
 To bind a single middleware class to your route, call:
 
 ```php
-$routes->map('GET', 'foo')
+$routes->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withMiddleware(FooMiddleware::class);
 ```
@@ -350,7 +359,7 @@ $routes->map('GET', 'foo')
 To bind many middleware classes, call:
 
 ```php
-$routes->map('GET', 'foo')
+$routes->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         FooMiddleware::class,
@@ -365,13 +374,13 @@ Under the hood, these class names get converted to instances of `MiddlewareBindi
 Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `AuthMiddleware`, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
 
 ```php
-$routes->map('GET', 'foo')
+$routes->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withMiddleware(AuthMiddleware::class, ['role' => 'admin']);
 
 // Or
 
-$routes->map('GET', 'foo')
+$routes->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         new MiddlewareBinding(AuthMiddleware::class, ['role' => 'admin']),
@@ -399,10 +408,10 @@ $routes->group(
     new RouteGroupOptions('courses/:courseId', 'example.com'),
     function (RouteBuilderRegistry $routes) {
         // This route's path will use the group's path
-        $routes->map('GET', '')
+        $routes->get('')
             ->toMethod(CourseController::class, 'getCourseById');
 
-        $routes->map('GET', '/professors')
+        $routes->get('/professors')
             ->toMethod(CourseController::class, 'getCourseProfessors');
     }
 );
@@ -437,13 +446,13 @@ Let's say your app sends an API version header, and you want to match an endpoin
 
 ```php
 // This route will require an API-VERSION value of 'v1.0'
-$routes->map('GET', 'comments')
+$routes->get('comments')
     ->toMethod(CommentController::class, 'getAllComments1_0')
     ->withAttribute('API-VERSION', 'v1.0')
     ->withConstraint(new ApiVersionConstraint);
 
 // This route will require an API-VERSION value of 'v2.0'
-$routes->map('GET', 'comments')
+$routes->get('comments')
     ->toMethod(CommentController::class, 'getAllComments2_0')
     ->withAttribute('API-VERSION', 'v2.0')
     ->withConstraint(new ApiVersionConstraint);
@@ -564,7 +573,7 @@ use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
 
 $routeFactory = new LazyRouteFactory(function () {
     $routes = new RouteBuilderRegistry();
-    $routes->map('parts/:serialNumber(minLength(6))')
+    $routes->get('parts/:serialNumber(minLength(6))')
         ->toMethod(PartController::class, 'getPartBySerialNumber');
         
     return $routes->buildAll();

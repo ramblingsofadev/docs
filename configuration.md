@@ -152,7 +152,7 @@ final class UserModuleBuilder implements IModuleBuilder
         $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
             // Let's prefix all our routes with 'users'
             $routes->group(new RouteGroupOptions('users'), function (RouteBuilderRegistry $routes) {
-                $routes->map('GET', '/:id')
+                $routes->get('/:id')
                     ->toMethod(UserController::class, 'getUserById');
             });
         });
@@ -213,7 +213,7 @@ You can manually register routes to your application:
 
 // Then, inside your module:
 $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
-    $routes->map('GET', 'users/:id')
+    $routes->get('users/:id')
         ->toMethod(UserController::class, 'getUserById');
 });
 ```

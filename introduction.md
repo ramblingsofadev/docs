@@ -33,7 +33,7 @@ Let's actually configure our app to include this endpoint.  Let's say we need a 
 ```php
 $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
 $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
-    $routes->map('POST', '')
+    $routes->post('')
         ->toMethod(UserController::class, 'createUser');
 });
 ```
