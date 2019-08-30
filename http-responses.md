@@ -12,7 +12,7 @@
 7. [Writing Responses](#writing-responses)
 8. [Serializing Responses](#serializing-responses)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Responses are HTTP messages that are sent by servers back to the client.  They contain the following methods:
 
@@ -24,7 +24,7 @@ Responses are HTTP messages that are sent by servers back to the client.  They c
 * `setBody(IHttpBody $body): void`
 * `setStatusCode(int $statusCode, ?string $reasonPhrase = null): void`
 
-<h1 id="creating-responses">Creating Responses</h1>
+<h2 id="creating-responses">Creating Responses</h2>
 
 Creating a response is easy:
 
@@ -42,7 +42,7 @@ $response = new Response(404);
 $response->setStatusCode(404);
 ```
 
-<h2 id="response-headers">Response Headers</h2>
+<h3 id="response-headers">Response Headers</h3>
 
 You can set response [headers](#http-headers) via `Response::getHeaders()`:
 
@@ -50,7 +50,7 @@ You can set response [headers](#http-headers) via `Response::getHeaders()`:
 $response->getHeaders()->add('Content-Type', 'application/json');
 ```
 
-<h2 id="response-bodies">Response Bodies</h2>
+<h3 id="response-bodies">Response Bodies</h3>
 
 You can pass the [body](#http-bodies) via the response constructor or via `Response::setBody()`:
 
@@ -60,7 +60,7 @@ $response = new Response(200, null, new StringBody('foo'));
 $response->setBody(new StringBody('foo'));
 ```
 
-<h1 id="json-responses">JSON Responses</h1>
+<h2 id="json-responses">JSON Responses</h2>
 
 Aphiria provides an easy way to create common responses.  For example, to create a JSON response, use `ResponseFormatter`:
 
@@ -74,7 +74,7 @@ $response = new Response();
 
 This will set the contents of the response, as well as the appropriate `Content-Type` headers.
 
-<h1 id="redirect-responses">Redirect Responses</h1>
+<h2 id="redirect-responses">Redirect Responses</h2>
 
 You can also create a redirect response:
 
@@ -86,7 +86,7 @@ $response = new Response();
 (new ResponseFormatter)->redirectToUri($response, 'http://example.com');
 ```
 
-<h1 id="setting-response-cookies">Setting Cookies</h1>
+<h2 id="setting-response-cookies">Setting Cookies</h2>
 
 Cookies are headers that are automatically appended to each request from the client to the server.  To set one, use `ResponseFormatter`:
 
@@ -117,7 +117,7 @@ public function __construct(
 
 Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
 
-<h2 id="deleting-response-cookies">Deleting Cookies</h2>
+<h3 id="deleting-response-cookies">Deleting Cookies</h3>
 
 To delete a cookie on the client, call
 
@@ -125,7 +125,7 @@ To delete a cookie on the client, call
 (new ResponseFormatter)->deleteCookie($response, 'userid');
 ```
 
-<h1 id="writing-responses">Writing Responses</h1>
+<h2 id="writing-responses">Writing Responses</h2>
 
 Once you're ready to start sending the response back to the client, you can use `ResponseWriter`:
 
@@ -142,7 +142,7 @@ $outputStream = new Stream(fopen('path/to/output', 'w'));
 (new ResponseWriter($outputStream))->writeResponse($response);
 ```
 
-<h1 id="serializing-responses">Serializing Responses</h1>
+<h2 id="serializing-responses">Serializing Responses</h2>
 
 Aphiria can serialize responses per <a href="https://tools.ietf.org/html/rfc7230#section-3" target="_blank">RFC 7230</a>:
 

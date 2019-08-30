@@ -22,7 +22,7 @@
     2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
     3. [Creating Multipart Requests](#creating-multipart-requests)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Requests are HTTP messages sent by clients to servers.  They contain the following methods:
 
@@ -36,7 +36,7 @@ Requests are HTTP messages sent by clients to servers.  They contain the followi
 
 > **Note:** The properties dictionary is a useful place to store metadata about a request, eg route variables.
 
-<h1 id="creating-requests">Creating Requests</h1>
+<h2 id="creating-requests">Creating Requests</h2>
 
 Creating a request is easy:
 
@@ -66,7 +66,7 @@ $request = new Request('POST', new Uri('https://example.com'), null, $body);
 $request->setBody($body);
 ```
 
-<h2 id="creating-requests-from-superglobals">Creating Requests From Superglobals</h2>
+<h3 id="creating-requests-from-superglobals">Creating Requests From Superglobals</h3>
 
 PHP has superglobal arrays that store information about the requests.  They're a mess, architecturally-speaking.  Aphiria attempts to insulate developers from the nastiness of superglobals by giving you a simple method to create requests and responses.  To create a request, use `RequestFactory`:
 
@@ -78,7 +78,7 @@ $request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
 
 Aphiria reads all the information it needs from the `$_SERVER` superglobal - it doesn't need the others.
 
-<h2 id="trusted-proxies">Trusted Proxies</h2>
+<h3 id="trusted-proxies">Trusted Proxies</h3>
 
 If you're using a load balancer or some sort of proxy server, you'll need to add it to the list of trusted proxies.  You can also use your proxy to set custom, trusted headers.  You may specify them in the factory constructor:
 
@@ -88,7 +88,7 @@ $factory = new RequestFactory(['192.168.1.1'], ['HTTP_CLIENT_IP' => 'X-My-Proxy-
 $request = $factory->createRequestFromSuperglobals($_SERVER);
 ```
 
-<h1 id="headers">Headers</h1>
+<h2 id="headers">Headers</h2>
 
 Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\HttpHeaders`, which extends  [`Aphiria\Collections\HashTable`](https://www.opulencephp.com/docs/1.1/collections#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
 
@@ -97,7 +97,7 @@ Headers provide metadata about the HTTP message.  In Aphiria, they're implemente
 
 > **Note:** Header names that are passed into the methods in `HttpHeaders` are automatically normalized to Train-Case.  In other words, `foo_bar` will become `Foo-Bar`.
 
-<h1 id="bodies">Bodies</h1>
+<h2 id="bodies">Bodies</h2>
 
 HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IHttpBody`.  They provide a few methods to read and write their contents to streams and to strings:
 
@@ -106,7 +106,7 @@ HTTP bodies contain data associated with the HTTP message, and are optional.  Th
 * `readAsString(): string`
 * `writeToStream(IStream $stream): void`
 
-<h2 id="string-bodies">String Bodies</h2>
+<h3 id="string-bodies">String Bodies</h3>
 
 HTTP bodies are most commonly represented as strings.  Aphiria makes it easy to create a string body via `StringBody`:
 
@@ -116,7 +116,7 @@ use Aphiria\Net\Http\StringBody;
 $body = new StringBody('foo');
 ```
 
-<h2 id="stream-bodies">Stream Bodies</h2>
+<h3 id="stream-bodies">Stream Bodies</h3>
 
 Sometimes, bodies might be too big to hold entirely in memory.  This is where `StreamBody` comes in handy:
 
@@ -128,7 +128,7 @@ $stream = new Stream(fopen('foo.txt', 'r+'));
 $body = new StreamBody($stream);
 ```
 
-<h1 id="uris">URIs</h1>
+<h2 id="uris">URIs</h2>
 
 A URI identifies a resource, typically over a network.  They contain such information as the scheme, host, port, path, query string, and fragment.  Aphiria represents them in `Aphiria\Net\Uri`, and they include the following methods:
 
@@ -151,7 +151,7 @@ use Aphiria\Net\Uri;
 $uri = new Uri('https://example.com/foo?bar=baz#blah');
 ```
 
-<h1 id="getting-post-data">Getting POST Data</h1>
+<h2 id="getting-post-data">Getting POST Data</h2>
 
 In vanilla PHP, you can read URL-encoded form data via the `$_POST` superglobal.  Aphiria gives you a helper to parse the body of form requests into a [dictionary](https://www.opulencephp.com/docs/1.1/collections#hash-tables).
 
@@ -163,7 +163,7 @@ $formInput = (new RequestParser)->readAsFormInput($request);
 echo $formInput->get('email'); // "foo@bar.com"
 ```
 
-<h1 id="getting-query-string-data">Getting Query String Data</h1>
+<h2 id="getting-query-string-data">Getting Query String Data</h2>
 
 In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphiria, it's stored in the request's URI.  `Uri::getQueryString()` returns the raw query string - to return it as an [immutable dictionary](https://www.opulencephp.com/docs/1.1/collections#immutable-hash-tables), use `RequestParser`:
 
@@ -175,7 +175,7 @@ $queryStringParams = (new RequestParser)->parseQueryString($request);
 echo $queryStringParams->get('foo'); // "bar"
 ```
 
-<h1 id="json-requests">JSON Requests</h1>
+<h2 id="json-requests">JSON Requests</h2>
 
 To check if a request is a JSON request, call
 
@@ -193,7 +193,7 @@ use Aphiria\Net\Http\Formatting\RequestParser;
 $json = (new RequestParser)->readAsJson($request);
 ```
 
-<h1 id="getting-request-cookies">Getting Cookies</h1>
+<h2 id="getting-request-cookies">Getting Cookies</h2>
 
 Aphiria has a helper to grab cookies from request headers as an [immutable dictionary](https://www.opulencephp.com/docs/1.1/collections#immutable-hash-tables):
 
@@ -204,7 +204,7 @@ $cookies = (new RequestParser)->parseCookies($request);
 $cookies->get('userid');
 ```
 
-<h1 id="getting-client-ip-address">Getting Client IP Address</h1>
+<h2 id="getting-client-ip-address">Getting Client IP Address</h2>
 
 If you use the [`RequestFactory`](#creating-request-from-superglobals) to create your request, the client IP address will be added to the request property `CLIENT_IP_ADDRESS`.  To make it easier to grab this value, you can use `RequestParser` to retrieve it:
 
@@ -216,7 +216,7 @@ $clientIPAddress = (new RequestParser)->getClientIPAddress($request);
 
 > **Note:** This will take into consideration any [trusted proxy header values](#trusted-proxies) when determining the original client IP address.
 
-<h1 id="header-parameters">Header Parameters</h1>
+<h2 id="header-parameters">Header Parameters</h2>
 
 Some header values are semicolon delimited, eg `Content-Type: text/html; charset=utf-8`.  It's sometimes convenient to grab those key => value pairs:
 
@@ -227,7 +227,7 @@ echo $contentTypeValues->get('text/html'); // null
 echo $contentTypeValues->get('charset'); // "utf-8"
 ```
 
-<h1 id="serializing-requests">Serializing Requests</h1>
+<h2 id="serializing-requests">Serializing Requests</h2>
 
 You can serialize a request per <a href="https://tools.ietf.org/html/rfc7230#section-3" target="_blank">RFC 7230</a> by casting it to a string:
 
@@ -258,7 +258,7 @@ The following request target types may be used:
 * <a href="https://tools.ietf.org/html/rfc7230#section-5.3.3" target="_blank">`RequestTargetTypes::AUTHORITY_FORM`</a>
 * <a href="https://tools.ietf.org/html/rfc7230#section-5.3.1" target="_blank">`RequestTargetTypes::ORIGIN_FORM`</a>
 
-<h1 id="multipart-requests">Multipart Requests</h1>
+<h2 id="multipart-requests">Multipart Requests</h2>
 
 Multipart requests contain multiple bodies, each with headers.  That's actually how file uploads work - each file gets a body with headers indicating the name, type, and size of the file.  Aphiria can parse these multipart bodies into a `MultipartBody`, which extends [`StreamBody`](#stream-bodies).  It contains additional methods to get the boundary and the list of `MultipartBodyPart` objects that make up the body:
 
@@ -286,7 +286,7 @@ Each `MultipartBodyPart` contains the following methods:
 * `getBody(): ?IHttpBody`
 * `getHeaders(): HttpHeaders`
 
-<h2 id="saving-uploaded-files">Saving Uploaded Files</h2>
+<h3 id="saving-uploaded-files">Saving Uploaded Files</h3>
 
 To save a multipart body's parts to files in a memory-efficient manner, read each part as a stream and copy it to the destination path:
 
@@ -298,7 +298,7 @@ foreach ($multipartBody->getParts() as $multipartBodyPart) {
 }
 ```
 
-<h2 id="getting-mime-type-of-body">Getting the MIME Type of the Body</h2>
+<h3 id="getting-mime-type-of-body">Getting the MIME Type of the Body</h3>
 
 To grab the MIME type of an HTTP body, call
 
@@ -306,7 +306,7 @@ To grab the MIME type of an HTTP body, call
 (new RequestParser)->getMimeType($multipartBodyPart);
 ```
 
-<h2 id="creating-multipart-requests">Creating Multipart Requests</h2>
+<h3 id="creating-multipart-requests">Creating Multipart Requests</h3>
 
 The Net library makes it straightforward to create a multipart request manually.  The following example creates a request to upload two images:
 

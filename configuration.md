@@ -17,15 +17,15 @@
    3. [Configuring Exception Log Levels](#configuring-exception-log-levels)
    4. [Configuring Exception Responses](#configuring-exception-responses)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, and exception handlers.  It even lets you centralize the configuration of entire [modules](#modules) of code.
 
-<h2 id="application-builders-vs-bootstrappers">Application Builders vs Bootstrappers</h2>
+<h3 id="application-builders-vs-bootstrappers">Application Builders vs Bootstrappers</h3>
 
 Before we dive too deep, you might be asking yourself "What's the difference between [application builders](#application-builders) and [bootstrappers](bootstrappers.md)?".  Bootstrappers are where you bind your dependencies to the DI container so that the container can resolve them - that's it.  Application builders, on the other hand, are where you can configure a [module](#modules) of your domain with shared resources, such as a [router](#configuring-routes) or even [bootstrappers](#configuring-bootstrappers) themselves.  This is really the heart of Aphiria - your app should be nothing but a collection of modules that are capable of configuring themselves.
 
-<h1 id="application-builders">Application Builders</h1>
+<h2 id="application-builders">Application Builders</h2>
 
 `ApplicationBuilder` provides all the functionality you'll need to configure your application logic:
 
@@ -41,7 +41,7 @@ $appBuilder = new ApplicationBuilder($container, $bootstrapperDispatcher);
 
 Once you're done configuring your [bootstrappers](#configuring-bootstrappers), [routes](#configuring-routes), and [console commands](#configuring-console-commands), you can go ahead and build your application.
 
-<h2 id="building-api-apps">Building API Apps</h2>
+<h3 id="building-api-apps">Building API Apps</h3>
 
 Let's create an API app:
 
@@ -51,7 +51,7 @@ $requestHandler = $appBuilder->buildApiApplication();
 
 `$requestHandler` will be an instance of `IRequestHandler`.  Building your API will also dispatch bootstrappers and build your components.
 
-<h2 id="building-console-apps">Building Console Apps</h2>
+<h3 id="building-console-apps">Building Console Apps</h3>
 
 Let's create a console app:
 
@@ -61,7 +61,7 @@ $kernel = $appBuilder->buildConsoleApplication();
 
 `$kernel` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
 
-<h2 id="configuring-bootstrappers">Configuring Bootstrappers</h2>
+<h3 id="configuring-bootstrappers">Configuring Bootstrappers</h3>
 
 Let's take a look at how to configure bootstrappers:
 
@@ -69,7 +69,7 @@ Let's take a look at how to configure bootstrappers:
 $appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
 ```
 
-<h2 id="configuring-middleware">Configuring Middleware</h2>
+<h3 id="configuring-middleware">Configuring Middleware</h3>
 
 You can configure your app to have global middleware, which doesn't have to be coupled to any particular middleware library implementation.  Simply set up a `MiddlewareBinding` with the class name and any attributes (optional):
 
@@ -83,7 +83,7 @@ $appBuilder->withGlobalMiddleware(fn () => [
 
 Now, the `AuthMiddleware` will be run on every single request in your application.
 
-<h2 id="configuring-console-commands">Configuring Console Commands</h2>
+<h3 id="configuring-console-commands">Configuring Console Commands</h3>
 
 Now, we'll add some console commands:
 
@@ -97,7 +97,7 @@ $appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
 });
 ```
 
-<h1 id="components">Components</h1>
+<h2 id="components">Components</h2>
 
 A component is a singular piece of your app, eg a [router](#configuring-routes), and is smaller in scope than a [module](#module).  Components are configured after bootstrappers are run, and are a convenient place to finish setting up your application before it runs.
 
@@ -135,7 +135,7 @@ $appBuilder->withRoutes(function (Router $router) {
 
 This is semantically identical to our previous example that called `withComponent('routes', ...)`.
 
-<h1 id="modules">Modules</h1>
+<h2 id="modules">Modules</h2>
 
 A module is a chunk of your domain.  For example, if you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate bootstrappers, routes, and console commands.  So, why not bundle all the configuration logic by module?
 
@@ -176,7 +176,7 @@ $requestHandler = $appBuilder->buildApiApplication();
 
 Now, your entire user module is configured and ready to go.
 
-<h1 id="using-aphiria-components">Using Aphiria Components</h1>
+<h2 id="using-aphiria-components">Using Aphiria Components</h2>
 
 The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [encoder](serialization.md), or [exception handling](http-exception-handling.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
@@ -203,7 +203,7 @@ These methods will set up components for your [exception handlers](http-exceptio
 
 > **Note:** If you use Aphiria's exception handler library, it's highly recommended that you include it before building any other Aphiria components so that the exception handler middleware is registered first.
 
-<h2 id="configuring-routes">Configuring Routes</h2>
+<h3 id="configuring-routes">Configuring Routes</h3>
 
 You can manually register routes to your application:
 
@@ -222,7 +222,7 @@ Due to how lazy route creation works, your routes will only be built if they nee
 
 > **Note:** If you're using route annotations, those routes will be combined with any manually-registered routes.
 
-<h2 id="configuring-encoders">Configuring Encoders</h2>
+<h3 id="configuring-encoders">Configuring Encoders</h3>
 
 Sometimes our models require some custom encoding logic when serializing and deserializing them.  Let's configure an encoder for a user model:
 
@@ -246,7 +246,7 @@ $appBuilder->withComponent('encoders', function (EncoderRegistry $encoders) {
 });
 ```
 
-<h2 id="configuring-exception-log-levels">Configuring Exception Log Levels</h2>
+<h3 id="configuring-exception-log-levels">Configuring Exception Log Levels</h3>
 
 Typically, uncaught exceptions get logged as `LogLevel::ERROR`.  However, there might be exceptions that warrant a higher or lower level.  For example, if you receive an exception that a database table is gone, you might want to log a `LogLevel::EMERGECNCY`.
 
@@ -263,7 +263,7 @@ $appBuilder->withComponent('exceptionLogLevelFactories', function (ExceptionLogL
 });
 ```
 
-<h2 id="configuring-exception-responses">Configuring Exception Responses</h2>
+<h3 id="configuring-exception-responses">Configuring Exception Responses</h3>
 
 Aphiria has an easy way to map your module's exceptions to HTTP responses:
 

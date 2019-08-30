@@ -11,7 +11,7 @@
    4. [Caddy Config](#caddy-config)
 4. [Versioning](#versioning)
 
-<h1 id="requirements">Requirements</h1>
+<h2 id="requirements">Requirements</h2>
 
 * PHP &ge; 7.4.0
 * OpenSSL
@@ -29,7 +29,7 @@ This will disable automatically parsing POST data into `$_POST` and uploaded fil
 
 > **Note:** If you're developing any non-Aphiria applications on your web server, use <a href="http://php.net/manual/en/configuration.file.per-user.php" target="_blank">_.user.ini_</a> to limit this setting to only your Aphiria application.  Alternatively, you can add `php_value enable_post_data_reading 0` to an _.htaccess_ file or to your _httpd.conf_.
 
-<h1 id="installing">Installing</h1>
+<h2 id="installing">Installing</h2>
 
 Aphiria can be easily installed using Composer:
 
@@ -41,7 +41,7 @@ Be sure to [configure your server](#server-config) to finish the installation.  
 
 > **Note:** You can <a href="https://getcomposer.org/download/" target="_blank">download Composer from here</a>.
 
-<h4 id="libraries">Libraries</h4>
+<h5 id="libraries">Libraries</h5>
 
 Aphiria is broken into various libraries, each of which can be installed individually:
 
@@ -53,14 +53,14 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/router
 * aphiria/serialization
 
-<h1 id="server-config">Server Config</h1>
+<h2 id="server-config">Server Config</h2>
 
 * Aphiria's _tmp_ directory needs to be writable from PHP
 * The document root needs to be set to Aphiria's _public_ directory (usually _/var/www/html/public_ or */var/www/html/YOUR_SITE_NAME/public*)
 
 > **Note:** You must set `YOUR_SITE_DOMAIN` and `YOUR_SITE_DIRECTORY` with the appropriate values in the configs below.
 
-<h4 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h4>
+<h5 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h5>
 
 To run Aphiria locally, run the following in a terminal:
 
@@ -70,7 +70,7 @@ php -S localhost:80 -t public localhost_router.php
     
 This will run PHP's built-in web server. The site will be accessible at http://localhost.
 
-<h4 id="apache-config">Apache Config</h4>
+<h5 id="apache-config">Apache Config</h5>
 
 Create a virtual host in your Apache config with the following settings:
 
@@ -94,7 +94,7 @@ Create a virtual host in your Apache config with the following settings:
 </VirtualHost>
 ```
 
-<h4 id="nginx-config">Nginx Config</h4>
+<h5 id="nginx-config">Nginx Config</h5>
 
 Add the following to your Nginx config:
 
@@ -123,7 +123,7 @@ server {
 }
 ```
 
-<h4 id="caddy-config">Caddy Config</h4>
+<h5 id="caddy-config">Caddy Config</h5>
 
 Add the following to your Caddyfile config:
 
@@ -141,6 +141,6 @@ YOUR_SITE_DOMAIN:80 {
 }
 ```
 
-<h1 id="versioning">Versioning</h1>
+<h2 id="versioning">Versioning</h2>
 
 Aphiria follows semantic versioning 2.0.0.  For more information on semantic versioning, check out its <a href="http://semver.org/" title="Semantic versioning documentation" target="_blank">documentation</a>.

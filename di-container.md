@@ -7,7 +7,7 @@
 4. [Auto-Wiring](#auto-wiring)
 5. [Bootstrappers](#bootstrappers)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 A dependency injection (DI) container gives you a way of telling your app "When you need an instance of `IFoo`, use this implementation".
 
@@ -25,7 +25,7 @@ $container->bindInstance(IUserService::class, new UserService());
 $userService = $container->resolve(IUserService::class);
 ```
 
-<h1 id="bindings">Bindings</h1>
+<h2 id="bindings">Bindings</h2>
 
 A binding is a way of telling the container what instance to use when resolving an interface.  There are a few different ways of registering bindings:
 
@@ -82,7 +82,7 @@ if (!$container->tryResolve(IUserService::class, $userService)) {
 // ...
 ```
 
-<h1 id="targeted-bindings">Targeted Bindings</h1>
+<h2 id="targeted-bindings">Targeted Bindings</h2>
 
 If you only want to use a specific binding when resolving a type, you can use what's called a targeted binding.  Let's say that `UserService` looked like this:
 
@@ -111,7 +111,7 @@ $container->for(
 
 Calling `$container->resolve(UserService::class)` will now automatically inject an instance of `UserRepository`.
 
-<h1 id="auto-wiring">Auto-Wiring</h1>
+<h2 id="auto-wiring">Auto-Wiring</h2>
 
 Auto-wiring is when you let the container use reflection to scan the constructor and attempt to automatically instantiate each parameter.  Let's build off of the [targeted binding example](#targeted-bindings).
 
@@ -122,7 +122,7 @@ $userService = $container->resolve(UserService::class);
 
 The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and either check to see if it has a binding or attempt to auto-wire an instance of it if possible.
 
-<h1 id="bootstrappers">Bootstrappers</h1>
+<h2 id="bootstrappers">Bootstrappers</h2>
 
 A bootstrapper is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a bootstrapper called `UserBootstrapper` to centralize all the bindings related to your user domain.
 

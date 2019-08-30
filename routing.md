@@ -27,7 +27,7 @@
    2. [Trie Caching](#trie-caching)
 8. [Matching Algorithm](#matching-algorithm)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 This library is a routing library.  In other words, it lets you map URIs to actions, and attempts to match an input request to ones of those routes.
 
@@ -108,7 +108,7 @@ If `$result->methodIsAllowed` is `false`, you can return a 405 response with a l
 header('Allow', implode(', ', $result->allowedMethods));
 ```
 
-<h2 id="route-variables">Route Variables</h2>
+<h3 id="route-variables">Route Variables</h3>
 
 Aphiria provides a simple syntax for your URIs.  To capture variables in your route, use `:varName`, eg:
 
@@ -121,7 +121,7 @@ If you'd like to use [rules](#route-variable-rules), then put them in parenthese
 :varName(rule1,rule2(param1,param2))
 ```
 
-<h2 id="optional-route-parts">Optional Route Parts</h2>
+<h3 id="optional-route-parts">Optional Route Parts</h3>
 
 If part of your route is optional, then surround it with brackets.  For example, the following will match both _archives/2017_ and _archives/2017/7_:
 ```php
@@ -136,7 +136,7 @@ archives/:year[/:month[/:day]]
 
 This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 
-<h2 id="route-builders">Route Builders</h2>
+<h3 id="route-builders">Route Builders</h3>
 
 Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
   
@@ -160,7 +160,7 @@ Each method returns an instance of `RouteBuilder`, and accepts the following par
   
  You can also call `RouteBuilderRegistry::map()` and pass in the HTTP method(s) you'd like to map to.
 
-<h2 id="route-annotations">Route Annotations</h2>
+<h3 id="route-annotations">Route Annotations</h3>
 
 Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
@@ -172,7 +172,7 @@ To use route annotations, install the route-annotations library by including the
 
 > **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
 
-<h3 id="route-annotation-example">Example</h3>
+<h4 id="route-annotation-example">Example</h4>
 
 Let's actually define a route:
 
@@ -219,7 +219,7 @@ Each of the above annotations take in the route path as the first parameter, and
 * `constraints` - The list of `@RouteConstraint` options to apply
   * `@RouteConstraint` takes in the name of the constraint class and `constructorParams`, which is the list of parameters to pass into the constraint constructor
 
-<h3 id="route-annotation-groups">Route Groups</h3>
+<h4 id="route-annotation-groups">Route Groups</h4>
 
 Just like with our [route builders](#grouping-routes), we can also group routes with annotations:
 
@@ -255,13 +255,13 @@ The following properties can be set in `@RouteGroup`:
 * `attributes` - The key-value pairs of metadata that applies to all routes
 * `constraints` - The list of `@RouteConstraint` options to apply to all routes
   
-<h3 id="route-annotation-middleware">Middleware</h3>
+<h4 id="route-annotation-middleware">Middleware</h4>
 
 Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
 
 * `attributes` - The key-value pairs of metadata for the middleware
 
-<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+<h4 id="scanning-for-annotations">Scanning For Annotations</h4>
 
 Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](configuration.md) library provides a convenience method for this:
 
@@ -304,7 +304,7 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h2 id="using-aphirias-net-library">Using Aphiria's Net Library</h2>
+<h3 id="using-aphirias-net-library">Using Aphiria's Net Library</h3>
 
 You can use [Aphiria's net library](http-requests.md) to route the request instead of relying on PHP's superglobals:
 
@@ -322,11 +322,11 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h2 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h2>
+<h3 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h3>
 
 [Aphiria's configuration library](configuration.md) simplifies how you register routes.  Refer to [its documentation](configuration#configuring-routes) for more info.
 
-<h1 id="route-actions">Route Actions</h1>
+<h2 id="route-actions">Route Actions</h2>
 
 Aphiria supports mapping routes to both controller methods and to closures:
 
@@ -344,7 +344,7 @@ $routes->get('users/:userId/name')
 
 To determine the type of action (controller method or closure) the matched route uses, check `RouteAction::usesMethod()`.
 
-<h1 id="binding-middleware">Binding Middleware</h1>
+<h2 id="binding-middleware">Binding Middleware</h2>
 
 Middleware are a great way to modify both the request and the response on an endpoint.  Aphiria lets you define middleware on your endpoints without binding you to any particular library/framework's middleware implementations.
 
@@ -369,7 +369,7 @@ $routes->get('foo')
 
 Under the hood, these class names get converted to instances of `MiddlewareBinding`.  
 
-<h2 id="middleware-attributes">Middleware Attributes</h2>
+<h3 id="middleware-attributes">Middleware Attributes</h3>
 
 Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `AuthMiddleware`, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
 
@@ -397,7 +397,7 @@ foreach ($result->middlewareBindings as $middlewareBinding) {
 }
 ```
 
-<h1 id="grouping-routes">Grouping Routes</h1>
+<h2 id="grouping-routes">Grouping Routes</h2>
 
 Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  You can group these routes together using `RouteBuilderRegistry::group()` and specifying the options to apply to all routes within the group:
 
@@ -436,11 +436,11 @@ This creates two routes with a host suffix of _example.com_ and a route prefix o
 
 It is possible to nest route groups.
 
-<h1 id="custom-constraints">Custom Constraints</h1>
+<h2 id="custom-constraints">Custom Constraints</h2>
 
 Sometimes, you might find it useful to add some custom logic for matching routes.  This could involve enforcing anything from only allowing certain HTTP methods for a route (eg `HttpMethodRouteConstraint`) or only allowing HTTPS requests to a particular endpoint.  Let's go into some concrete examples...
 
-<h2 id="versioned-api-example">Example - Versioned API</h2>
+<h3 id="versioned-api-example">Example - Versioned API</h3>
 
 Let's say your app sends an API version header, and you want to match an endpoint that supports that version.  You could do this by using a route "attribute" and a route constraint.  Let's create some routes that have the same path, but support different versions of the API:
 
@@ -487,7 +487,7 @@ final class ApiVersionConstraint implements IRouteConstraint
 
 If we hit _/comments_ with an "API-VERSION" header value of "v2.0", we'd match the second route in our example.
 
-<h2 id="getting-php-headers">Getting Headers in PHP</h2>
+<h3 id="getting-php-headers">Getting Headers in PHP</h3>
 
 PHP is irritatingly difficult to extract headers from `$_SERVER`.  If you're using a library/framework to grab headers, then use that.  Otherwise, you can use the `HeaderParser`:
 
@@ -497,7 +497,7 @@ use Aphiria\Routing\Requests\HeaderParser;
 $headers = (new HeaderParser)->parseHeaders($_SERVER);
 ```
 
-<h1 id="route-variable-rules">Route Variable Rules</h2>
+<h2 id="route-variable-rules">Route Variable Rules</h3>
 
 You can enforce certain rules to pass before matching on a route.  These rules come after variables, and must be enclosed in parentheses.  For example, if you want an integer to fall between two values, you can specify a route of
 
@@ -507,7 +507,7 @@ You can enforce certain rules to pass before matching on a route.  These rules c
 
 > **Note:** If a rule does not require any parameters, then the parentheses after the rule slug are optional.
 
-<h2 id="built-in-rules">Built-In Rules</h2>
+<h3 id="built-in-rules">Built-In Rules</h3>
 
 The following rules are built-into Aphiria:
 
@@ -522,7 +522,7 @@ The following rules are built-into Aphiria:
 * `regex(string $regex)`
 * `uuidv4`
 
-<h2 id="making-your-own-custom-rules">Making Your Own Custom Rules</h2>
+<h3 id="making-your-own-custom-rules">Making Your Own Custom Rules</h3>
 
 You can register your own rule by implementing `IRule`.  Let's make a rule that enforces a certain minimum string length:
 
@@ -586,11 +586,11 @@ $routeMatcher = new TrieRouteMatcher($trieFactory->createTree());
 
 Our route will now enforce a serial number with minimum length 6.
 
-<h1 id="caching">Caching</h1>
+<h2 id="caching">Caching</h2>
 
 The process of building your routes and compiling the trie is a relatively slow process, and isn't necessary in a production environment where route definitions aren't changing.  Aphiria provides both the ability to cache the results of your route builders and the compiled trie.
 
-<h2 id="route-caching">Route Caching</h2>
+<h3 id="route-caching">Route Caching</h3>
 
 To enable caching, pass in an `IRouteCache` (`FileRouteCache` is provided) to the second parameter of `LazyRouteFactory`:
 
@@ -619,7 +619,7 @@ $routeFactory = new LazyRouteFactory(
 );
 ```
 
-<h2 id="trie-caching">Trie Caching</h2>
+<h3 id="trie-caching">Trie Caching</h3>
 
 To enable caching, pass in an `ITrieCache` (`FileTrieCache` comes with Aphiria) to your trie factory (passing in `null` will disable caching).  If you want to enable caching for a particular environment, you could do so:
 
@@ -634,7 +634,7 @@ $trieFactory = new TrieFactory($routeFactory, $trieCache);
 // Finish setting up your route matcher...
 ```
 
-<h1 id="matching-algorithm">Matching Algorithm</h1>
+<h2 id="matching-algorithm">Matching Algorithm</h2>
 
 Rather than the typical regex approach to route matching, we decided to go with a <a href="https://en.wikipedia.org/wiki/Trie" target="_blank">trie-based</a> approach.  Each node maps to a segment in the path, and could either contain a literal or a variable value.  We try to proceed down the tree to match what's in the request URI, always giving preference to literal matches over variable ones, even if variable segments are declared first in the routing config.  This logic not only applies to the first segment, but recursively to all subsequent segments.  The benefit to this approach is that it doesn't matter what order routes are defined.  Additionally, literal segments use simple hash table lookups.  What determines performance is the length of a path and the number of variable segments.
 

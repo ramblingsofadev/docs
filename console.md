@@ -22,7 +22,7 @@
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
   
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Console applications are great for administrative tasks and code generation.  With Aphiria, you can easily create your own console commands, display question prompts, and use HTML-like syntax for output styling.
 
@@ -47,11 +47,11 @@ exit((new App($commands))->handle($argv));
 
 Now, you're set to start [running commands](#running-commands).
 
-<h1 id="running-commands">Running Commands</h1>
+<h2 id="running-commands">Running Commands</h2>
 
 To run commands, type `php aphiria COMMAND_NAME` into a terminal from the directory that Aphiria is installed in.
 
-<h2 id="getting-help">Getting Help</h2>
+<h3 id="getting-help">Getting Help</h3>
 
 To get help with any command, use the help command:
 
@@ -59,7 +59,7 @@ To get help with any command, use the help command:
 php aphiria help COMMAND_NAME
 ```
 
-<h1 id="creating-commands">Creating Commands</h1>
+<h2 id="creating-commands">Creating Commands</h2>
 
 In Aphiria, a command defines the name, [arguments](#arguments), and [options](#options) that make up a command.  Each command has a command handler, which is what actually processes a command.
 
@@ -99,7 +99,7 @@ $input->options['optionName']; // The value of 'optionName'
 
 > **Note:** `$input->options` stores option values by their long names.  Do not try to access them by their short names.
 
-<h2 id="registering-commands">Registering Commands</h2>
+<h3 id="registering-commands">Registering Commands</h3>
 
 Before you can use the example command, you must register it so that the `App` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
@@ -132,7 +132,7 @@ This will output:
 HELLO, DAVE
 ```
 
-<h2 id="arguments">Arguments</h2>
+<h3 id="arguments">Arguments</h3>
 
 Console commands can accept arguments from the user.  Arguments can be required, optional, and/or arrays.  You specify the type by bitwise OR-ing the different arguments types.  Array arguments allow a variable number of arguments to be passed in, like "php aphiria foo arg1 arg2 arg3 ...".  The only catch is that array arguments must be the last argument defined for the command.
 
@@ -150,22 +150,22 @@ $argument = new Argument('foo', $type, 'The foo argument');
 
 >**Note:** Like array arguments, optional arguments must appear after any required arguments.
 
-<h2 id="options">Options</h2>
+<h3 id="options">Options</h3>
 
 You might want different behavior in your command depending on whether or not an option is set.  This is possible using `Aphiria\Console\Input\Option`.  Options have two formats:
 
 1. Short, eg "-h"
 2. Long, eg "--help"
 
-<h3 id="short-names">Short Names</h3>
+<h4 id="short-names">Short Names</h4>
 
 Short option names are always a single letter.  Multiple short options can be grouped together.  For example, `-rf` means that options with short codes "r" and "f" have been specified.  The default value will be used for short options.
 
-<h3 id="long-names">Long Names</h3>
+<h4 id="long-names">Long Names</h4>
 
 Long option names can specify values in two ways:  `--foo=bar` or `--foo bar`.  If you only specify `--foo` for an optional-value option, then the default value will be used.
 
-<h3 id="array-options">Array Options</h3>
+<h4 id="array-options">Array Options</h4>
 
 Options can be arrays, eg `--foo=bar --foo=baz` will set the "foo" option to `["bar", "baz"]`.
 
@@ -179,7 +179,7 @@ $type = OptionTypes::IS_ARRAY | OptionTypes::REQUIRED_VALUE;
 $option = new Option('foo', 'f', $types, 'The foo option');
 ```
 
-<h2 id="calling-from-code">Calling From Code</h2>
+<h3 id="calling-from-code">Calling From Code</h3>
 
 It's possible to call a command from another command by using `App`:
 
@@ -226,11 +226,11 @@ If you want to call the other command but not write its output, use the `Aphiria
 
 > **Note:** If a command is being called by a lot of other commands, it might be best to refactor its actions into a separate class.  This way, it can be used by multiple commands without the extra overhead of calling console commands through PHP code.
 
-<h1 id="prompts">Prompts</h1>
+<h2 id="prompts">Prompts</h2>
 
 Prompts are great for asking users for input beyond what is accepted by arguments.  For example, you might want to confirm with a user before doing an administrative task, or you might ask her to select from a list of possible choices.  Prompts accept `Aphiria\Console\Output\Prompts\Question` objects.
 
-<h2 id="confirmation">Confirmation</h2>
+<h3 id="confirmation">Confirmation</h3>
 
 To ask a user to confirm an action with a simple "y" or "yes", use an `Aphiria\Console\Output\Prompts\Confirmation`:
 
@@ -243,7 +243,7 @@ $prompt = new Prompt();
 $prompt->ask(new Confirmation('Are you sure you want to continue?'), $output);
 ```
 
-<h2 id="multiple-choice">Multiple Choice</h2>
+<h3 id="multiple-choice">Multiple Choice</h3>
 
 Multiple choice questions are great for listing choices that might otherwise be difficult for a user to remember.  An `Aphiria\Console\Output\Prompts\MultipleChoice` accepts question text and a list of choices:
 
@@ -267,7 +267,7 @@ Select your favorite airplane
 
 If the `$choices` array is associative, then the keys will map to values rather than 1)...N).
 
-<h1 id="output">Output</h1>
+<h2 id="output">Output</h2>
 
 Outputs allow you to write messages to an end user.  The different outputs include:
 
@@ -290,11 +290,11 @@ Each output offers three methods:
    * Clears the current screen
    * Only works in `ConsoleOutput`
 
-<h1 id="formatters">Formatters</h1>
+<h2 id="formatters">Formatters</h2>
 
 Formatters are great for nicely-formatting output to the console.
 
-<h2 id="padding">Padding</h2>
+<h3 id="padding">Padding</h3>
 
 The `Aphiria\Console\Output\Formatters\PaddingFormatter` formatter allows you to create column-like output.  It accepts an array of column values.  The second parameter is a callback that will format each row's contents.  Let's look at an example:
 
@@ -326,7 +326,7 @@ There are a few useful functions for customizing the padding formatter:
 * `setPaddingString()`
   * Sets the padding string
 
-<h2 id="tables">Tables</h2>
+<h3 id="tables">Tables</h3>
 
 ASCII tables are a great way to show tabular data in a console.  To create a table, use `Aphiria\Console\Output\Formatters\TableFormatter`:
 
@@ -383,7 +383,7 @@ There are a few useful functions for customizing the look of tables:
 * `setVerticalBorderChar()`
   * Sets the vertical border character
     
-<h2 id="progress-bars">Progress Bars</h2>
+<h3 id="progress-bars">Progress Bars</h3>
 
 Progress bars a great way to visually indicate to a user the progress of a long-running task, like this one:
 
@@ -427,7 +427,7 @@ $progressBar->complete();
 
 Each time progress is made, the formatter will be updated, and will draw a new bar.
 
-<h3 id="customizing-progress-bars">Customizing Progress Bars</h3>
+<h4 id="customizing-progress-bars">Customizing Progress Bars</h4>
 
 You may customize the characters used in your progress bar via:
 
@@ -454,7 +454,7 @@ $formatter = new ProgressBarFormatter(
 );
 ```
 
-<h1 id="style-elements">Style Elements</h1>
+<h2 id="style-elements">Style Elements</h2>
 
 Aphiria supports HTML-like style elements to perform basic output formatting like background color, foreground color, boldening, and underlining.  For example, writing:
 
@@ -470,7 +470,7 @@ Aphiria supports HTML-like style elements to perform basic output formatting lik
 
 ..., which will output an underlined string where "Dave" is both bold AND underlined.
 
-<h2 id="built-in-elements">Built-In Elements</h2>
+<h3 id="built-in-elements">Built-In Elements</h3>
 
 The following elements come built-into Aphiria:
 * &lt;success&gt;&lt;/success&gt;
@@ -482,7 +482,7 @@ The following elements come built-into Aphiria:
 * &lt;b&gt;&lt;/b&gt;
 * &lt;u&gt;&lt;/u&gt;
 
-<h2 id="custom-elements">Custom Elements</h2>
+<h3 id="custom-elements">Custom Elements</h3>
 
 You can create your own style elements.  Elements are registered to `Aphiria\Console\Output\Compilers\Elements\ElementRegistry`.
 
@@ -503,7 +503,7 @@ global $argv;
 exit($app->handle($argv, $output));
 ```
 
-<h2 id="overriding-built-in-elements">Overriding Built-In Elements</h2>
+<h3 id="overriding-built-in-elements">Overriding Built-In Elements</h3>
 
 To override a built-in element, just re-register it:
 

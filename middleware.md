@@ -7,7 +7,7 @@
    3. [Middleware Attributes](#middleware-attributes)
 2. [Executing Middleware](#executing-middleware)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 The middleware library provides developers a way of defining route middleware for their applications.  Middleware are simply layers of request processing before and after a controller action is invoked.  This is extremely useful for actions like authorization, logging, and request/response decoration.
 
@@ -30,7 +30,7 @@ interface IMiddleware
 3. Optionally manipulates the response returned by the next request handler
 4. Returns the response
 
-<h2 id="manipulating-the-request">Manipulating the Request</h2>
+<h3 id="manipulating-the-request">Manipulating the Request</h3>
 
 To manipulate the request before it gets to the controller, make changes to it before calling `$next($request)`:
 
@@ -51,7 +51,7 @@ final class RequestManipulator implements IMiddleware
 }
 ```
 
-<h2 id="manipulating-the-response">Manipulating the Response</h2>
+<h3 id="manipulating-the-response">Manipulating the Response</h3>
 
 To manipulate the response after the controller has done its work, do the following:
 
@@ -74,7 +74,7 @@ final class ResponseManipulator implements IMiddleware
 }
 ```
 
-<h2 id="middleware-attributes">Middleware Attributes</h2>
+<h3 id="middleware-attributes">Middleware Attributes</h3>
 
 Occasionally, you'll find yourself wanting to pass primitive values to middleware to indicate something such as a required role to execute an action.  In these cases, your middleware should extend `Aphiria\Middleware\AttributeMiddleware`:
 
@@ -123,7 +123,7 @@ $routes->get('foo')
     ->withMiddleware(RoleMiddleware::class, ['role' => 'admin']);
 ```
 
-<h1 id="executing-middleware">Executing Middleware</h1>
+<h2 id="executing-middleware">Executing Middleware</h2>
 
 Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline (as in Aphiria's <a href="https://github.com/aphiria/api" target="_blank">API library</a>).  You can create this pipeline using `MiddlewarePipelineFactory`:
 

@@ -17,7 +17,7 @@
    1. [Customizing Exception Responses](#customizing-exception-responses)
    2. [Logging](#logging)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to create a user.  Simple:
 
@@ -96,11 +96,11 @@ final class UserController extends Controller
 }
 ```
 
-<h1 id="parameter-resolution">Parameter Resolution</h1>
+<h2 id="parameter-resolution">Parameter Resolution</h2>
 
 Your controller methods will frequently need to do things like deserialize the request body or read route/query string values.  Aphiria simplifies this process enormously by allowing your method signatures to be expressive.  
 
-<h2 id="request-body-parameters">Request Bodies</h2>
+<h3 id="request-body-parameters">Request Bodies</h3>
 
 Object type hints are always assumed to be the request body, and can be automatically deserialized to any POPO:
 
@@ -120,7 +120,7 @@ final class UserController extends Controller
 
 This works for any media type (eg JSON) that you've registered to your [content negotiator](content-negotiation).
 
-<h2 id="uri-parameters">URI Parameters</h2>
+<h3 id="uri-parameters">URI Parameters</h3>
 
 Aphiria also supports resolving scalar parameters in your controller methods.  It will scan route variables, and then, if no matches are found, the query string for scalar parameters.  For example, this method will grab `includeDeletedUsers` from the query string and cast it to a `bool`:
 
@@ -139,7 +139,7 @@ final class UserController extends Controller
 
 Nullable parameters and parameters with default values are also supported.  If a query string parameter is optional, it _must_ be either nullable or have a default value.
 
-<h2 id="arrays-in-request-bodies">Arrays in Request Bodies</h2>
+<h3 id="arrays-in-request-bodies">Arrays in Request Bodies</h3>
 
 Request bodies might contain an array of values.  Because PHP doesn't support generics or typed arrays, you cannot use type-hints alone to deserialize arrays of values.  However, it's still easy to do within your controller methods:
 
@@ -158,7 +158,7 @@ final class UserController extends Controller
 }
 ```
 
-<h1 id="parsing-request-data">Parsing Request Data</h1>
+<h2 id="parsing-request-data">Parsing Request Data</h2>
 
 Your controllers might need to do more advanced reading of request data, such as reading cookies, reading multipart bodies, or determining the content type of the request.  To simplify this kind of work, an instance of `RequestParser` is set in your controller:
 
@@ -181,7 +181,7 @@ final class JsonPrettifierController extends Controller
 }
 ```
 
-<h1 id="formatting-response-data">Formatting Response Data</h1>
+<h2 id="formatting-response-data">Formatting Response Data</h2>
 
 If you need to write data back to the response, eg cookies or creating a redirect, an instance of `ResponseFormatter` is available in the controller:
 
@@ -209,7 +209,7 @@ final class LoginController extends Controller
 }
 ```
 
-<h1 id="closure-controllers">Closure Controllers</h1>
+<h2 id="closure-controllers">Closure Controllers</h2>
 
 Sometimes, a controller class is overkill for a route that does very little.  In this case, you can use a `Closure` when defining your routes:
 
@@ -220,7 +220,7 @@ Sometimes, a controller class is overkill for a route that does very little.  In
 
 Closures support the same [parameter resolution](#parameter-resolution) features as controller methods.  Here's the cool part - Aphiria will bind an instance of `Controller` to your closure, which means you can use [all the methods](#controllers), [request parsers](#parsing-request-data), and [response formatters](#formatting-response-data) available inside of `Controller` via `$this`.
 
-<h1 id="controller-dependencies">Controller Dependencies</h1>
+<h2 id="controller-dependencies">Controller Dependencies</h2>
 
 The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' constructors for dependencies, resolve them, and then instantiate your controllers with those dependencies.  Dependency resolvers simply need to implement `IDependencyResolver`.  To make it easy for users of Aphiria's DI container, you can use `ContainerDependencyResolver`.
 

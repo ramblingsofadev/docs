@@ -10,7 +10,7 @@
    1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
 5. [Logging](#logging)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Sometimes, your application is going to throw an unhandled exception or shut down unexpectedly.  When this happens, instead of showing an ugly PHP error, you can convert it to a nicely-formatted response.  You can configure Aphiria to [handle exceptions thrown while handling HTTP requests](#handling-exceptions-during-request-handling) via middleware as well as [handle any unhandled exceptions anywhere in your application lifespan](#global-exception-handling).  However, you are not obligated to use Aphiria's exception handlers - you may use any that you'd like.
 
@@ -24,7 +24,7 @@ $exceptionResponseFactory = new ExceptionResponseFactory();
 
 Now, let's start handling some exceptions.
 
-<h1 id="handling-exceptions-during-request-handling">Handling Exceptions During Request Handling</h1>
+<h2 id="handling-exceptions-during-request-handling">Handling Exceptions During Request Handling</h2>
 
 We can use middleware to catch any exceptions that might be thrown while handling a request.  Let's look at an example that uses the [configuration library](#configuration.md):
 
@@ -48,7 +48,7 @@ $appBuilder->withGlobalMiddleware(fn () => [
 
 Now, whenever an exception is thrown later on down the middleware pipeline, our `ExceptionHandler` middleware will catch it, [log it](#logging), and return a response.
 
-<h1 id="global-exception-handling">Global Exception Handling</h1>
+<h2 id="global-exception-handling">Global Exception Handling</h2>
 
 Sometimes, exceptions or PHP errors can be thrown before we even get to the middleware pipeline.  In this case, it's a good idea to set up a global exception handler with PHP.
 
@@ -65,7 +65,7 @@ $globalExceptionHandler = new GlobalExceptionHandler(
 $globalExceptionHandler->registerWithPhp();
 ```
 
-<h2 id="throwing-errors-as-exceptions">Throwing Errors As Exceptions</h2>
+<h3 id="throwing-errors-as-exceptions">Throwing Errors As Exceptions</h3>
 
 You can configure the global exception handler to rethrow PHP errors as an `ErrorException` by specifying a bit-wise list of error levels:
 
@@ -77,7 +77,7 @@ $globalExceptionHandler = new GlobalExceptionHandler(
 );
 ```
 
-<h1 id="customizing-exception-responses">Customizing Exception Responses</h1>
+<h2 id="customizing-exception-responses">Customizing Exception Responses</h2>
 
 You might find yourself wanting to map a particular exception to a certain response.  In this case, you can use an exception response factory.  They are closures that take in the exception and the request, and return a response.
 
@@ -113,7 +113,7 @@ $exceptionResponseFactories->registerManyFactories([
 ]);
 ```
 
-<h2 id="using-classes-to-create-exception-responses">Using Classes to Create Exception Responses</h2>
+<h3 id="using-classes-to-create-exception-responses">Using Classes to Create Exception Responses</h3>
 
 Sometimes, the logic inside your exception response factory might get a little too complicated to be easily readable in a `Closure`.  In this case, you can also use a POPO to encapsulate your response creation logic:
 
@@ -136,7 +136,7 @@ $exceptionResponseFactories->registerFactory(
 );
 ```
 
-<h1 id="logging">Logging</h1>
+<h2 id="logging">Logging</h2>
 
 `IExceptionLogger` contains methods to handle logging both PHP errors and exceptions.  `ExceptionLogger` is enabled by default, and uses <a href="https://github.com/Seldaek/monolog" target="_blank">Monolog</a> to do the actual logging.
 

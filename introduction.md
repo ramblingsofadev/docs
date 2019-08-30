@@ -4,7 +4,7 @@
 1. [Basics](#basics)
 2. [Another PHP Framework?](#another-php-framework)
 
-<h1 id="basics">Basics</h1>
+<h2 id="basics">Basics</h2>
 
 Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries.  For example, need an endpoint to create a user object?  Simple.
 
@@ -40,7 +40,7 @@ $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
 
 Our [application builder](configuration.md) simplifies registering all [bootstrappers](bootstrappers.md), [routes](routing.md), and [console commands](console.md) in an [area of your domain](configuration.md#modules).
 
-<h1 id="another-php-framework">Another PHP Framework?</h1>
+<h2 id="another-php-framework">Another PHP Framework?</h2>
 
 Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks (even Opulence), and usually found at least one major problem with them all:
  
