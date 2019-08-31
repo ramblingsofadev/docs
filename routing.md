@@ -498,7 +498,7 @@ use Aphiria\Routing\Requests\HeaderParser;
 $headers = (new HeaderParser)->parseHeaders($_SERVER);
 ```
 
-<h2 id="route-variable-rules">Route Variable Rules</h3>
+<h2 id="route-variable-rules">Route Variable Rules</h2>
 
 You can enforce certain rules to pass before matching on a route.  These rules come after variables, and must be enclosed in parentheses.  For example, if you want an integer to fall between two values, you can specify a route of
 
