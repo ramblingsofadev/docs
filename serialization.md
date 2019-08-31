@@ -1,6 +1,7 @@
-# Serialization
+<h1 id="doc-title">Serialization</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Serializers](#serializers)
    1. [Form URL-Encoded Serializer](#form-url-encoded-serializer)

@@ -1,6 +1,7 @@
-# Introduction
+<h1 id="doc-title">Introduction</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Another PHP Framework?](#another-php-framework)
 
@@ -54,4 +55,4 @@ I spent months sketching out the ideal syntax.  As I waded into the depths of de
 * I'd need a whole library dedicated to the serializing and deserializing of POPOs with no/minimal configuration
 * The Opulence router would need to be rewritten to keep up with the speed of the latest routing libraries
 
-After more than a year of development, a whole new framework was emerging - Aphiria.  I honestly believe it is the most intuitive, expressive PHP framework to date.  It enables developers to build powerful APIs without getting in the way.  I invite you to browse [some of the documentation](http-controllers.md) and see for yourself.
+After more than a year of development, a whole new framework was emerging - Aphiria.  I honestly believe it is the most intuitive, expressive PHP framework to date.  It enables developers to build powerful APIs without getting in the way.  I invite you to browse [some of the documentation](controllers.md) and see for yourself.

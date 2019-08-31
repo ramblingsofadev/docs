@@ -1,6 +1,7 @@
-# Contributing
+<h1 id="doc-title">Contributing</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Bugs](#bugs)
    1. [Reporting a Bug](#reporting-bug)
    2. [Fixing a Bug](#fixing-bug)

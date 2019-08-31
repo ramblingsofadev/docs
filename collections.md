@@ -1,6 +1,7 @@
-# Collections
+<h1 id="doc-title">Collections</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Introduction](#introduction)
 2. [Key-Value Pairs](#key-value-pairs)
 3. [Array Lists](#array-lists)

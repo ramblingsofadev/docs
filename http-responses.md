@@ -1,6 +1,7 @@
-# HTTP Responses
+<h1 id="doc-title">HTTP Responses</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Creating Responses](#creating-responses)
    1. [Response Headers](#response-headers)

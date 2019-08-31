@@ -1,6 +1,7 @@
-# HTTP Requests
+<h1 id="doc-title">HTTP Requests</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Creating Requests](#creating-requests)
    1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)

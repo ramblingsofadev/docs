@@ -1,6 +1,7 @@
-# DI Container
+<h1 id="doc-title">DI Container</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Bindings](#bindings)
 3. [Targeted Bindings](#targeted-bindings)

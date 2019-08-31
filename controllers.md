@@ -1,6 +1,7 @@
-# HTTP Controllers
+<h1 id="doc-title">Controllers</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Parameter Resolution](#parameter-resolution)
    1. [Request Bodies](#request-body-parameters)

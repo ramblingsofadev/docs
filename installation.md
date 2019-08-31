@@ -1,6 +1,7 @@
-# Installing
+<h1 id="doc-title">Installing</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Requirements](#requirements)
 2. [Installing](#installing)
    1. [Libraries](#libraries)

@@ -1,6 +1,7 @@
-# Bootstrappers
+<h1 id="doc-title">Bootstrappers</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Inspection Bindings](#inspection-bindings)
 3. [Using App Builders](#using-app-builders)

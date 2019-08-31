@@ -1,6 +1,7 @@
-# HTTP Exception Handling
+<h1 id="doc-title">HTTP Exception Handling</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
    1. [Creating Response For Exceptions](#creating-responses-for-exceptions)
 2. [Handling Exceptions During Request Handling](#handling-exceptions-during-request-handling)

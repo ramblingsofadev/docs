@@ -1,6 +1,7 @@
-# Configuration
+<h1 id="doc-title">Configuration</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
    1. [Application Builders vs Bootstrappers](#application-builders-vs-bootstrappers)
 2. [Application Builders](#application-builders)

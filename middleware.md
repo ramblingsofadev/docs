@@ -1,6 +1,7 @@
-# Middleware
+<h1 id="doc-title">Middleware</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
    1. [Manipulating the Request](#manipulating-the-request)
    2. [Manipulating the Response](#manipulating-the-response)

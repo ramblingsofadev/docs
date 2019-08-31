@@ -1,6 +1,7 @@
-# Console
+<h1 id="doc-title">Console</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Running Commands](#running-commands)
    1. [Getting Help](#getting-help)

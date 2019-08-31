@@ -1,6 +1,7 @@
-# Content Negotiation
+<h1 id="doc-title">Content Negotiation</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
 2. [Negotiating Requests](#negotiating-requests)
 3. [Negotiating Responses](#negotiating-responses)

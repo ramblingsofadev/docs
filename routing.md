@@ -1,6 +1,7 @@
-# Routing
+<h1 id="doc-title">Routing</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Basics](#basics)
    1. [Route Variables](#route-variables)
    2. [Optional Route Parts](#optional-route-parts)

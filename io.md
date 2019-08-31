@@ -1,6 +1,7 @@
-# Input/Output
+<h1 id="doc-title">Input/Output</h1>
 
-## Table of Contents
+<h2 id="table-of-contents">Table of Contents</h2>
+
 1. [Introduction](#introduction)
 2. [File System](#file-system)
     1. [Reading a File](#reading-a-file)
