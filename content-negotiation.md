@@ -127,4 +127,4 @@ Aphiria provides the following formatters out of the box:
 * `JsonMediaTypeFormatter`
 * `PlainTextMediaTypeFormatter`
 
-Under the hood, `FormUrlEncodedMediaTypeFormatter` and `JsonMediaTypeFormatter` use Aphiria's <a href="https://github.com/aphiria/serialization" target="_blank">serialization library</a> to (de)serialize values.  `HtmlMediaTypeFormatter` and `PlainTextMediaTypeFormatter` only handle strings - they do not deal with objects or arrays.
+Under the hood, `FormUrlEncodedMediaTypeFormatter` and `JsonMediaTypeFormatter` use Aphiria's [serialization library](serialization.md) to (de)serialize values.  `HtmlMediaTypeFormatter` and `PlainTextMediaTypeFormatter` only handle strings - they do not deal with objects or arrays.

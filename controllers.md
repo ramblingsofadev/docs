@@ -11,12 +11,6 @@
 4. [Formatting Response Data](#formatting-response-data)
 5. [Closure Controllers](#closure-controllers)
 6. [Controller Dependencies](#controller-dependencies)
-7. [Middleware](#middleware)
-   1. [Configuring Middleware](#configuring-middleware)
-8. [API Kernel](#api-kernel)
-9. [Exception Handling](#exception-handling)
-   1. [Customizing Exception Responses](#customizing-exception-responses)
-   2. [Logging](#logging)
 
 <h2 id="basics">Basics</h2>
 

@@ -126,7 +126,7 @@ $routes->get('foo')
 
 <h2 id="executing-middleware">Executing Middleware</h2>
 
-Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline (as in Aphiria's <a href="https://github.com/aphiria/api" target="_blank">API library</a>).  You can create this pipeline using `MiddlewarePipelineFactory`:
+Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline.  You can create this pipeline using `MiddlewarePipelineFactory`:
 
 ```php
 use Aphiria\Middleware\MiddlewarePipelineFactory;
