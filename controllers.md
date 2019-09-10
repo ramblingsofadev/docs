@@ -51,7 +51,7 @@ final class UserController extends Controller
 }
 ```
 
-The `ok()` helper method uses a `NegotiatedResponseFactory` to build a response using the current request and [content negotiation](content-negotiation).  You can pass in a POPO as the response body, and the factory will use content negotiation to determine how to serialize it.
+The `ok()` helper method uses a `NegotiatedResponseFactory` to build a response using the current request and [content negotiation](content-negotiation.md).  You can pass in a POPO as the response body, and the factory will use content negotiation to determine how to serialize it.
 
 The following helper methods come bundled with `Controller`:
 
@@ -113,7 +113,7 @@ final class UserController extends Controller
 }
 ```
 
-This works for any media type (eg JSON) that you've registered to your [content negotiator](content-negotiation).
+This works for any media type (eg JSON) that you've registered to your [content negotiator](content-negotiation.md).
 
 <h3 id="uri-parameters">URI Parameters</h3>
 

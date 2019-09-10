@@ -325,7 +325,7 @@ $result = $routeMatcher->matchRoute(
 
 <h3 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h3>
 
-[Aphiria's configuration library](configuration.md) simplifies how you register routes.  Refer to [its documentation](configuration#configuring-routes) for more info.
+[Aphiria's configuration library](configuration.md) simplifies how you register routes.  Refer to [its documentation](configuration.md#configuring-routes) for more info.
 
 <h2 id="route-actions">Route Actions</h2>
 
