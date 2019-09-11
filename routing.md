@@ -272,7 +272,7 @@ use Aphiria\RouteAnnotations\IRouteAnnotationRegistrant;
 use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
 
 // Assume we already have $container set up
-$routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATHS_TO_SCAN_FOR_CONTROLLERS']);
+$routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
 $container->bindInstance(IRouteAnnotationRegistrant::class, $routeAnnotationRegistrant);
 
 (new AphiriaComponentBuilder($container))
@@ -289,7 +289,7 @@ use Aphiria\Routing\LazyRouteFactory;
 use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
 
 $routeFactory = new LazyRouteFactory(function () {
-    $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATHS_TO_SCAN_FOR_CONTROLLERS']);
+    $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
     $routes = new RouteBuilderRegistry();
     $routeAnnotationRegistrant->registerRoutes($routes);
     
@@ -641,7 +641,7 @@ Rather than the typical regex approach to route matching, we decided to go with 
 
 The matching algorithm goes as follows:
 
-1. Incoming request data is passed to a `TrieRouteMatcher::matchRoute()`, which loops through each segment of the URI path and proceeds only if there is either a literal or variable match in the URI tree
+1. Incoming request data is passed to `TrieRouteMatcher::matchRoute()`, which loops through each segment of the URI path and proceeds only if there is either a literal or variable match in the URI tree
    * If there's a match, then we scan all child nodes against the next segment of the URI path and repeat step 1 until we don't find a match or we've matched the entire URI path
    * `TrieRouteMatcher::matchRoute()` uses <a href="http://php.net/manual/en/language.generators.syntax.php" target="_blank">generators</a> so we only descend the URI tree as many times as we need to find a match candidate
 2. If the match candidate passes constraint checks (eg HTTP method constraints), then it's our matching route, and we're done.  Otherwise, repeat step 1, which will yield the next possible match candidate.

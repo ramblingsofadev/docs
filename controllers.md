@@ -168,7 +168,8 @@ final class JsonPrettifierController extends Controller
             return $this->badRequest();
         }
         
-        $prettyJson = json_encode($this->request->getBody()->readAsString(), JSON_PRETTY_PRINT);
+        $bodyAsString = $this->request->getBody()->readAsString();
+        $prettyJson = json_encode($bodyAsString, JSON_PRETTY_PRINT);
         $response = new Response(200, null, new StringBody($prettyJson));
         
         return $response;
@@ -185,12 +186,12 @@ final class LoginController extends Controller
 {
     // ...
 
-    public function logIn(LoginRequest $loginRequest): IHttpResponseMessage
+    public function logIn(Login $login): IHttpResponseMessage
     {
         $authResults = null;
         
         // Assume this logic resides in your application
-        if (!$this->authenticator->tryLogin($loginRequest->username, $loginRequest->password, $authResults)) {
+        if (!$this->authenticator->tryLogin($login->username, $login->password, $authResults)) {
             return $this->unauthorized();
         }
         

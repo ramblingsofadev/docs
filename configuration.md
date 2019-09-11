@@ -256,12 +256,15 @@ Typically, uncaught exceptions get logged as `LogLevel::ERROR`.  However, there 
     ->withExceptionLogLevelFactories($appBuilder);
 
 // Then, inside your module:
-$appBuilder->withComponent('exceptionLogLevelFactories', function (ExceptionLogLevelFactoryRegistry $factories) {
-    $factories->registerFactory(
-        DbTableNotFoundException::class,
-        fn (DbTableNotFoundException $ex) => LogLevel::EMERGENCY
-    );
-});
+$appBuilder->withComponent(
+    'exceptionLogLevelFactories', 
+    function (ExceptionLogLevelFactoryRegistry $factories) {
+        $factories->registerFactory(
+            DbTableNotFoundException::class,
+            fn (DbTableNotFoundException $ex) => LogLevel::EMERGENCY
+        );
+    }
+);
 ```
 
 <h3 id="configuring-exception-responses">Configuring Exception Responses</h3>
@@ -273,11 +276,14 @@ Aphiria has an easy way to map your module's exceptions to HTTP responses:
     ->withExceptionResponseFactories($appBuilder);
 
 // Then, inside your module:
-$appBuilder->withComponent('exceptionResponseFactories', function (ExceptionResponseFactoryRegistry $factories) {
-    $factories->registerFactory(
-        UserNotFoundException::class,
-        fn (UserNotFoundException $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
-            => $responseFactory->createResponse($request, 404)
-    );
-});
+$appBuilder->withComponent(
+    'exceptionResponseFactories',
+    function (ExceptionResponseFactoryRegistry $factories) {
+        $factories->registerFactory(
+            UserNotFoundException::class,
+            fn (UserNotFoundException $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
+                => $responseFactory->createResponse($request, 404)
+        );
+    }
+);
 ```
