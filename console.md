@@ -104,7 +104,7 @@ $input->options['optionName']; // The value of 'optionName'
 
 Before you can use the example command, you must register it so that the `App` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
-> **Note:** If you're using the configuration library, refer to [its documentation](configuration.md#configuring-console-commands) to learn how to register your commands to your app.
+> **Note:** If you're using the configuration library, refer to [its documentation](configuring.md#configuring-console-commands) to learn how to register your commands to your app.
 
 ```php
 use Aphiria\Console\App;

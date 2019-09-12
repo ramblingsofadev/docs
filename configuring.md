@@ -1,4 +1,4 @@
-<h1 id="doc-title">Configuration</h1>
+<h1 id="doc-title">Configuring</h1>
 
 <h2 id="table-of-contents">Table of Contents</h2>
 

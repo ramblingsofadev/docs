@@ -39,7 +39,7 @@ $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
 });
 ```
 
-Our [application builder](configuration.md) simplifies registering all [bootstrappers](bootstrappers.md), [routes](routing.md), and [console commands](console.md) in an [area of your domain](configuration.md#modules).
+Our [application builder](configuring.md) simplifies registering all [bootstrappers](bootstrappers.md), [routes](routing.md), and [console commands](console.md) in an [area of your domain](configuring.md#modules).
 
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 
