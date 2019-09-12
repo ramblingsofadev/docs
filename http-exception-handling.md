@@ -27,7 +27,7 @@ Now, let's start handling some exceptions.
 
 <h2 id="handling-exceptions-during-request-handling">Handling Exceptions During Request Handling</h2>
 
-We can use middleware to catch any exceptions that might be thrown while handling a request.  Let's look at an example that uses the [configuration library](#configuration.md):
+We can use middleware to catch any exceptions that might be thrown while handling a request.  Let's look at an example that uses the [configuration library](configuring.md):
 
 ```php
 use Aphiria\Exceptions\ExceptionLogger;
