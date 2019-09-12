@@ -56,7 +56,7 @@ To run commands, type `php aphiria COMMAND_NAME` into a terminal from the direct
 
 To get help with any command, use the help command:
 
-```
+```bash
 php aphiria help COMMAND_NAME
 ```
 
@@ -123,7 +123,7 @@ exit((new App($commands))->handle($argv));
 
 To call this command, run this from the command line:
 
-```
+```bash
 php aphiria greet Dave -y
 ```
 
