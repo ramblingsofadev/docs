@@ -47,10 +47,15 @@ Be sure to [configure your server](#server-config) to finish the installation.  
 Aphiria is broken into various libraries, each of which can be installed individually:
 
 * aphiria/api
+* aphiria/collections
 * aphiria/configuration
 * aphiria/console
+* aphiria/dependency-injection
+* aphiria/exceptions
+* aphiria/io
 * aphiria/middleware
 * aphiria/net
+* aphiria/route-annotations
 * aphiria/router
 * aphiria/serialization
 
@@ -65,7 +70,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 
 To run Aphiria locally, run the following in a terminal:
 
-```
+```bash
 php -S localhost:80 -t public localhost_router.php
 ```
     
@@ -75,7 +80,7 @@ This will run PHP's built-in web server. The site will be accessible at http://l
 
 Create a virtual host in your Apache config with the following settings:
 
-```
+```apacheconf
 <VirtualHost *:80>
     ServerName YOUR_SITE_DOMAIN
     DocumentRoot YOUR_SITE_DIRECTORY/public
@@ -99,7 +104,7 @@ Create a virtual host in your Apache config with the following settings:
 
 Add the following to your Nginx config:
 
-```
+```nginx
 server {
     listen 80;
     server_name YOUR_SITE_DOMAIN;
@@ -128,7 +133,7 @@ server {
 
 Add the following to your Caddyfile config:
 
-```
+```caddyfile
 YOUR_SITE_DOMAIN:80 {
     rewrite {
         r .*
