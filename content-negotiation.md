@@ -1,11 +1,15 @@
 <h1 id="doc-title">Content Negotiation</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
 2. [Negotiating Requests](#negotiating-requests)
 3. [Negotiating Responses](#negotiating-responses)
 4. [Media Type Formatters](#media-type-formatters)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

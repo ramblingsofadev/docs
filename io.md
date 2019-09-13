@@ -1,5 +1,7 @@
 <h1 id="doc-title">Input/Output</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Introduction](#introduction)
@@ -34,6 +36,8 @@
     5. [Copying to Another Stream](#copying-to-another-stream)
     6. [Closing a Stream](#closing-stream)
     7. [Multi-Streams](#multi-streams)
+
+</section>
 
 <h2 id="introduction">Introduction</h2>
 

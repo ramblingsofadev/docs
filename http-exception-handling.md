@@ -1,5 +1,7 @@
 <h1 id="doc-title">HTTP Exception Handling</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -10,6 +12,8 @@
 4. [Customizing Exception Responses](#customizing-exception-responses)
    1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
 5. [Logging](#logging)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

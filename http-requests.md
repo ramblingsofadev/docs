@@ -1,5 +1,7 @@
 <h1 id="doc-title">HTTP Requests</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -22,6 +24,8 @@
     1. [Saving Uploaded Files](#saving-uploaded-files)
     2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
     3. [Creating Multipart Requests](#creating-multipart-requests)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

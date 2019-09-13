@@ -1,5 +1,7 @@
 <h1 id="doc-title">Contributing</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Bugs](#bugs)
@@ -18,6 +20,8 @@
    6. [Abstract Classes](#abstract-classes)
    7. [Interfaces](#interfaces)
    8. [Traits](#traits)
+
+</section>
 
 <h2 id="bugs">Bugs</h2>
 

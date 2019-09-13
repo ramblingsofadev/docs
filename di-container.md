@@ -1,5 +1,7 @@
 <h1 id="doc-title">DI Container</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -7,6 +9,8 @@
 3. [Targeted Bindings](#targeted-bindings)
 4. [Auto-Wiring](#auto-wiring)
 5. [Bootstrappers](#bootstrappers)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

@@ -1,5 +1,7 @@
 <h1 id="doc-title">Configuring</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -17,6 +19,8 @@
    2. [Configuring Encoders](#configuring-encoders)
    3. [Configuring Exception Log Levels](#configuring-exception-log-levels)
    4. [Configuring Exception Responses](#configuring-exception-responses)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

@@ -1,10 +1,14 @@
 <h1 id="doc-title">Bootstrappers</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
 2. [Inspection Bindings](#inspection-bindings)
 3. [Using App Builders](#using-app-builders)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

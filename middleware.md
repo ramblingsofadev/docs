@@ -1,5 +1,7 @@
 <h1 id="doc-title">Middleware</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -7,6 +9,8 @@
    2. [Manipulating the Response](#manipulating-the-response)
    3. [Middleware Attributes](#middleware-attributes)
 2. [Executing Middleware](#executing-middleware)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

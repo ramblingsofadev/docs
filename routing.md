@@ -1,6 +1,7 @@
 <h1 id="doc-title">Routing</h1>
 
-<section class="toc">
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -28,6 +29,7 @@
    1. [Route Caching](#route-caching)
    2. [Trie Caching](#trie-caching)
 8. [Matching Algorithm](#matching-algorithm)
+
 </section>
 
 <h2 id="basics">Basics</h2>

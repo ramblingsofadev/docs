@@ -1,5 +1,7 @@
 <h1 id="doc-title">Controllers</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -11,6 +13,8 @@
 4. [Formatting Response Data](#formatting-response-data)
 5. [Closure Controllers](#closure-controllers)
 6. [Controller Dependencies](#controller-dependencies)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

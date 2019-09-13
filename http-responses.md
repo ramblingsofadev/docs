@@ -1,5 +1,7 @@
 <h1 id="doc-title">HTTP Responses</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
@@ -12,6 +14,8 @@
    1. [Deleting Cookies](#deleting-response-cookies)
 7. [Writing Responses](#writing-responses)
 8. [Serializing Responses](#serializing-responses)
+
+</section>
 
 <h2 id="basics">Basics</h2>
 

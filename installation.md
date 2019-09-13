@@ -1,5 +1,7 @@
 <h1 id="doc-title">Installing</h1>
 
+<section class="toc" markdown="1">
+
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Requirements](#requirements)
@@ -11,6 +13,8 @@
    3. [Nginx Config](#nginx-config)
    4. [Caddy Config](#caddy-config)
 4. [Versioning](#versioning)
+
+</section>
 
 <h2 id="requirements">Requirements</h2>
 
