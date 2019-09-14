@@ -133,7 +133,7 @@ Sometimes, bodies might be too big to hold entirely in memory.  This is where `S
 use Aphiria\IO\Streams\Stream;
 use Aphiria\Net\Http\StreamBody;
 
-$stream = new Stream(fopen('foo.txt', 'r+'));
+$stream = new Stream(fopen('foo.txt', 'r+b'));
 $body = new StreamBody($stream);
 ```
 
@@ -303,7 +303,7 @@ To save a multipart body's parts to files in a memory-efficient manner, read eac
 foreach ($multipartBody->getParts() as $multipartBodyPart) {
     $bodyStream = $multipartBodyPart->getBody()->readAsStream();
     $bodyStream->rewind();
-    $bodyStream->copyToStream(new Stream(fopen('path/to/copy/to/' . uniqid(), 'w')));
+    $bodyStream->copyToStream(new Stream(fopen('path/to/copy/to/' . uniqid(), 'wb')));
 }
 ```
 
@@ -331,13 +331,13 @@ use Aphiria\Net\Uri;
 $image1Headers = new HttpHeaders();
 $image1Headers->add('Content-Disposition', 'form-data; name="image1"; filename="foo.png"');
 $image1Headers->add('Content-Type', 'image/png');
-$image1Body = new StreamBody(fopen('path/to/foo.png', 'r'));
+$image1Body = new StreamBody(fopen('path/to/foo.png', 'rb'));
 
 // Build the second image's headers and body
 $image2Headers = new HttpHeaders();
 $image2Headers->add('Content-Disposition', 'form-data; name="image2"; filename="bar.png"');
 $image2Headers->add('Content-Type', 'image/png');
-$image2Body = new StreamBody(fopen('path/to/bar.png', 'r'));
+$image2Body = new StreamBody(fopen('path/to/bar.png', 'rb'));
 
 // Build the request's headers and body
 $body = new MultipartBody([

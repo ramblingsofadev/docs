@@ -147,7 +147,7 @@ use Aphiria\Net\Http\ResponseWriter;
 By default, this will write the response to the `php://output` stream.  You can override the stream it writes to via the constructor:
 
 ```php
-$outputStream = new Stream(fopen('path/to/output', 'w'));
+$outputStream = new Stream(fopen('path/to/output', 'wb'));
 (new ResponseWriter($outputStream))->writeResponse($response);
 ```
 

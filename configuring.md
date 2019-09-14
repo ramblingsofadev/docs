@@ -65,10 +65,10 @@ $requestHandler = $appBuilder->buildApiApplication();
 Let's create a console app:
 
 ```php
-$kernel = $appBuilder->buildConsoleApplication();
+$app = $appBuilder->buildConsoleApplication();
 ```
 
-`$kernel` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
+`$app` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
 
 <h3 id="configuring-bootstrappers">Configuring Bootstrappers</h3>
 

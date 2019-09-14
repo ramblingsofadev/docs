@@ -205,7 +205,7 @@ Here's how you can create a stream:
 ```php
 use Aphiria\IO\Streams\Stream;
 
-$stream = new Stream(fopen('path/to/file', 'r+'));
+$stream = new Stream(fopen('path/to/file', 'r+b'));
 ```
 
 <h3 id="reading-from-stream">Reading from a Stream</h3>
@@ -258,15 +258,15 @@ $stream->getLength();
 
 If it is not knowable, then `getLength()` will return `null`.
 
-> **Note:** If you happen to know the length of the stream ahead of time, you can pass it into the constructor, eg `new Stream(fopen('path/to/file', 'r+'), 2056)`.  If you write anything to the stream, then the length is recalculated.
+> **Note:** If you happen to know the length of the stream ahead of time, you can pass it into the constructor, eg `new Stream(fopen('path/to/file', 'r+b'), 2056)`.  If you write anything to the stream, then the length is recalculated.
 
 <h3 id="copying-to-another-stream">Copying to Another Stream</h3>
 
 Sometimes, you'll need to copy one stream to another.  One example would be writing a response body's stream to the `php://output` stream.  You can do this via
 
 ```php
-$destinationStream = new Stream(fopen('php://output', 'r+'));
-$sourceStream = new Stream(fopen('path/to/file', 'r+'));
+$destinationStream = new Stream(fopen('php://output', 'r+b'));
+$sourceStream = new Stream(fopen('path/to/file', 'r+b'));
 $sourceStream->copyToStream($destinationStream);
 ```
 
