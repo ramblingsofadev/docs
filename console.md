@@ -106,6 +106,8 @@ $input->arguments['argName']; // The value of 'argName'
 $input->options['optionName']; // The value of 'optionName'
 ```
 
+If you're checking to see if an option that does not have a value is set, use `array_key_exists('optionName', $input->options)` - the value will be `null`, and `isset()` will return `false`.
+
 > **Note:** `$input->options` stores option values by their long names.  Do not try to access them by their short names.
 
 <h3 id="registering-commands">Registering Commands</h3>
