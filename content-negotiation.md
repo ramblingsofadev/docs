@@ -51,7 +51,7 @@ Now you're ready to start [negotiating](#negotiating-requests).
 
 Let's build off of the [previous example](#basics) and negotiate a request.  Let's assume the raw request looked something like this:
 
-```
+```http
 POST https://example.com/users HTTP/1.1
 Content-Type: application/json; charset=utf-8
 Content-Language: en-US
@@ -104,7 +104,7 @@ $response = $responseFactory->createResponse($request, 200, null, $user);
 
 Our response will look something like the following:
 
-```
+```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 Content-Language: en-US
