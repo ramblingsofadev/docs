@@ -41,9 +41,7 @@ A binding is a way of telling the container what instance to use when resolving 
 ```php
 // Whenever you need IUserService, always use the same instance of UserService
 $container->bindInstance(IUserService::class, new UserService());
-```
 
-```php
 // Whenever you need IUserService, run the factory to get a new instance
 $container->bindFactory(IUserService::class, fn () => new UserService());
 
@@ -56,9 +54,7 @@ $container->bindFactory(IUserService::class, fn () => new UserService(), true);
 ```php
 // Whenever you need IUserService, use auto-wiring to return the same instance of UserService
 $container->bindSingleton(IUserService::class, UserService::class);
-```
 
-```php
 // Whenever you need IUserService, use auto-wiring to return a new instance of UserService
 $container->bindPrototype(IUserService::class, UserService::class);
 ```
