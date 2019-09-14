@@ -1,6 +1,8 @@
 <h1 id="doc-title">Collections</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -15,7 +17,9 @@
 9. [Immutable Hash Tables](#immutable-hash-tables)
 10. [Immutable Hash Sets](#immutable-hash-sets)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="introduction">Introduction</h2>
 

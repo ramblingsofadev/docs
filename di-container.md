@@ -1,6 +1,8 @@
 <h1 id="doc-title">DI Container</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -10,7 +12,9 @@
 4. [Auto-Wiring](#auto-wiring)
 5. [Bootstrappers](#bootstrappers)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 

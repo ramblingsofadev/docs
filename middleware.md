@@ -1,6 +1,8 @@
 <h1 id="doc-title">Middleware</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -10,7 +12,9 @@
    3. [Middleware Attributes](#middleware-attributes)
 2. [Executing Middleware](#executing-middleware)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 

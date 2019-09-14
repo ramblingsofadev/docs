@@ -1,13 +1,17 @@
 <h1 id="doc-title">Introduction</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
 2. [Another PHP Framework?](#another-php-framework)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 

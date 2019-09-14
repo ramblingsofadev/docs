@@ -1,6 +1,8 @@
 <h1 id="doc-title">Routing</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -30,7 +32,9 @@
    2. [Trie Caching](#trie-caching)
 8. [Matching Algorithm](#matching-algorithm)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 
@@ -45,7 +49,7 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
   * [The ability to match on header values](#custom-constraints), which makes things like versioning your routes a cinch
   * [Binding controller methods and closures to the route action](#route-actions)
 * It is fast
-  * With 400 routes, it takes ~0.0025ms to match any route (**~200% faster than FastRoute**)
+  * With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
 * It is built to support the latest PHP 7.4 features

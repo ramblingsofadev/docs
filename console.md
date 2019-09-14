@@ -1,6 +1,8 @@
 <h1 id="doc-title">Console</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -25,7 +27,9 @@
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
 
-</section>
+</div>
+
+</nav>
   
 <h2 id="basics">Basics</h2>
 

@@ -1,6 +1,8 @@
 <h1 id="doc-title">HTTP Exception Handling</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -13,7 +15,9 @@
    1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
 5. [Logging](#logging)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 

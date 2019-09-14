@@ -1,6 +1,8 @@
 <h1 id="doc-title">Contributing</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -21,7 +23,9 @@
    7. [Interfaces](#interfaces)
    8. [Traits](#traits)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="bugs">Bugs</h2>
 

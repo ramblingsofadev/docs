@@ -1,6 +1,8 @@
 <h1 id="doc-title">Controllers</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -14,7 +16,9 @@
 5. [Closure Controllers](#closure-controllers)
 6. [Controller Dependencies](#controller-dependencies)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="basics">Basics</h2>
 

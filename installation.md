@@ -1,6 +1,8 @@
 <h1 id="doc-title">Installing</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -14,7 +16,9 @@
    4. [Caddy Config](#caddy-config)
 4. [Versioning](#versioning)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="requirements">Requirements</h2>
 

@@ -1,6 +1,8 @@
 <h1 id="doc-title">Input/Output</h1>
 
-<section class="toc" markdown="1">
+<nav class="toc-nav" markdown="1">
+
+<div class="toc-nav-contents" markdown="1">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
@@ -37,7 +39,9 @@
     6. [Closing a Stream](#closing-stream)
     7. [Multi-Streams](#multi-streams)
 
-</section>
+</div>
+
+</nav>
 
 <h2 id="introduction">Introduction</h2>
 
