@@ -272,7 +272,7 @@ Middleware can be defined via the `@Middleware` attribute.  The first value must
 
 <h4 id="scanning-for-annotations">Scanning For Annotations</h4>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](configuring.md) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -333,7 +333,7 @@ $result = $routeMatcher->matchRoute(
 
 <h3 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h3>
 
-[Aphiria's configuration library](configuring.md) simplifies how you register routes.  Refer to [its documentation](configuring.md#configuring-routes) for more info.
+[Aphiria's configuration library](application-builders.md) simplifies how you register routes.  Refer to [its documentation](application-builders.md#configuring-routes) for more info.
 
 <h2 id="route-actions">Route Actions</h2>
 

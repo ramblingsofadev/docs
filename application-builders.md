@@ -1,4 +1,4 @@
-<h1 id="doc-title">Configuring</h1>
+<h1 id="doc-title">Application Builders</h1>
 
 <nav class="toc-nav" markdown="1">
 

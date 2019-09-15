@@ -34,7 +34,7 @@ final class UserController extends Controller
     
     public function createUser(User $user): User
     {
-        $this->userService->createUser($user);
+        $this->users->createUser($user);
 
         return $user;
     }
@@ -52,7 +52,7 @@ final class UserController extends Controller
     
     public function createUser(User $user): IHttpResponseMessage
     {
-        $this->userService->createUser($user);
+        $this->users->createUser($user);
 
         return $this->ok($user);
     }
@@ -90,7 +90,7 @@ final class UserController extends Controller
     
     public function getUserById(int $userId): IHttpResponseMessage
     {
-        $user = $this->userService->getUserById($userId);
+        $user = $this->users->getUserById($userId);
         $headers = new HttpHeaders();
         $headers->add('Cache-Control', 'no-cache');
         
@@ -112,11 +112,11 @@ final class UserController extends Controller
 {
     // ...
     
-    public function createUser(User $user): IHttpResponseMessage
+    public function createUser(CreateUserRequest $createUserRequest): IHttpResponseMessage
     {
-        $this->userService->createUser($user);
+        $user = $this->users->createUser($createUserRequest->email, $createUserRequest->password);
         
-        return $this->created();
+        return $this->created("users/{$user->id}", $user);
     }
 }
 ```
@@ -135,7 +135,7 @@ final class UserController extends Controller
     // Assume path and query string is "users?includeDeletedUsers=1"
     public function getAllUsers(bool $includeDeletedUsers): array
     {
-        return $this->userService->getAllUsers($includeDeletedUsers);
+        return $this->users->getAllUsers($includeDeletedUsers);
     }
 }
 ```
@@ -154,7 +154,7 @@ final class UserController extends Controller
     public function createManyUsers(): IHttpResponseMessage
     {
         $users = $this->readRequestBodyAs(User::class . '[]');
-        $this->userService->createManyUsers($users);
+        $this->users->createManyUsers($users);
         
         return $this->created();
     }
