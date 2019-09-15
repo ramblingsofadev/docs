@@ -29,9 +29,9 @@ final class UserController extends Controller
         $this->users = $users;
     }
 
-    public function createUser(CreateUserRequest $createUserRequest): IHttpResponseMessage
+    public function createUser(UserDto $userDto): IHttpResponseMessage
     {
-        $user = $this->users->createUser($createUserRequest->email, $createUserRequest->password);
+        $user = $this->users->createUser($userDto->email, $userDto->password);
         
         return $this->created("users/{$user->id}", $user);
     }
@@ -43,7 +43,7 @@ final class UserController extends Controller
 }
 ```
 
-In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `CreateUserRequest`.  Likewise, Aphiria determines how to serialize the user in `getUser()` to whatever format the client wants (eg JSON).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
+In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `UserDto`.  Likewise, Aphiria determines how to serialize the user in `getUser()` to whatever format the client wants (eg JSON).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
 Now, we'll actually set up our app to include these endpoints.  Let's say we need a [bootstrapper](bootstrappers.md) so that an instance of `IUserService` can be injected into the controller.  Easy.
 
