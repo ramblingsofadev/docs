@@ -6,16 +6,17 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
+1. [What Is It?](#what-is-it)
 2. [Another PHP Framework?](#another-php-framework)
+3. [Getting Started](#getting-started)
 
 </div>
 
 </nav>
 
-<h2 id="basics">Basics</h2>
+<h2 id="what-is-it">What Is It?</h2>
 
-Aphiria is a simple, expressive PHP framework to build APIs with.  It's comprised of several decoupled libraries.  For example, need an endpoint to create a user object?  Simple.
+Aphiria is a suite of decoupled libraries that help developers write expressive REST APIs without bleeding into your application.  For example, need an endpoint to create a user object?  Simple.
 
 ```php
 final class UserController extends Controller
@@ -42,7 +43,7 @@ Let's actually configure our app to include this endpoint.  Let's say we need a 
 ```php
 $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
 $appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
-    $routes->post('')
+    $routes->post('users')
         ->toMethod(UserController::class, 'createUser');
 });
 ```
@@ -64,3 +65,7 @@ I spent months sketching out the ideal syntax.  As I waded into the depths of de
 * The Opulence router would need to be rewritten to keep up with the speed of the latest routing libraries
 
 After more than a year of development, a whole new framework was emerging - Aphiria.  I honestly believe it is the most intuitive, expressive PHP framework to date.  It enables developers to build powerful APIs without getting in the way.  I invite you to browse [some of the documentation](controllers.md) and see for yourself.
+
+<h2 id="getting-started">Getting Started</h2>
+
+To get up and running, follow our [installation guide](installation.md) to create a skeleton app that uses Aphiria.  Then, [learn how to define some routes](routing.md),  [create some controllers](controllers.md), and [configure your dependencies](bootstrappers.md).  From there, you can browse the docs in any order you choose, although the order they're listed in might be the best way to read them.
