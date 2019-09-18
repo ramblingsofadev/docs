@@ -196,7 +196,7 @@ class UserController extends Controller
 {
     /**
      * @Put("users/:id")
-     * @Middleware(Authorization::class)
+     * @Middleware(Authorization::class, attributes={"role"="admin"})
      */
     public function updateUser(User $user): IHttpResponseMessage
     {

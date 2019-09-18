@@ -22,7 +22,7 @@
 
 <h2 id="basics">Basics</h2>
 
-A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to create a user.  Simple:
+A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to get a user.  Simple:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
@@ -32,16 +32,14 @@ final class UserController extends Controller
 {
     // ...
     
-    public function createUser(User $user): User
+    public function getUser(int $id): User
     {
-        $this->users->createUser($user);
-
-        return $user;
+        return $this->users->getUserById($id);
     }
 }
 ```
 
-Aphiria will see the `User` method parameter and [automatically deserialize the request body to an instance of `User`](#parameter-resolution) (which can be a POPO) using [content negotiation](content-negotiation.md).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses content negotiation to determine the media type to (de)serialize to (eg JSON).
+Aphiria will grab the ID from the URI (preference is given to route variables, and then to query string variables).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses [content negotiation](content-negotiation.md) to determine the media type to (de)serialize to (eg JSON).
 
 You can also be a bit more explicit and return a response yourself.  For example, the following controller method is functionally identical to the previous example:
 
@@ -50,9 +48,9 @@ final class UserController extends Controller
 {
     // ...
     
-    public function createUser(User $user): IHttpResponseMessage
+    public function getUser(int $id): IHttpResponseMessage
     {
-        $this->users->createUser($user);
+        $user = $this->users->getUserById($id);
 
         return $this->ok($user);
     }
@@ -60,6 +58,8 @@ final class UserController extends Controller
 ```
 
 The `ok()` helper method uses a `NegotiatedResponseFactory` to build a response using the current request and [content negotiation](content-negotiation.md).  You can pass in a POPO as the response body, and the factory will use content negotiation to determine how to serialize it.
+
+Similarly, Aphiria can [automatically deserialize request bodies](#request-body-parameters).
 
 The following helper methods come bundled with `Controller`:
 
@@ -88,9 +88,9 @@ final class UserController extends Controller
 {
     // ...
     
-    public function getUserById(int $userId): IHttpResponseMessage
+    public function getUser(int $id): IHttpResponseMessage
     {
-        $user = $this->users->getUserById($userId);
+        $user = $this->users->getUserById($id);
         $headers = new HttpHeaders();
         $headers->add('Cache-Control', 'no-cache');
         
@@ -178,7 +178,9 @@ final class JsonPrettifierController extends Controller
         
         $bodyAsString = $this->request->getBody()->readAsString();
         $prettyJson = json_encode($bodyAsString, JSON_PRETTY_PRINT);
-        $response = new Response(200, null, new StringBody($prettyJson));
+        $headers = new HttpHeaders();
+        $headers->add('Content-Type', 'application/json');
+        $response = new Response(200, $headers, new StringBody($prettyJson));
         
         return $response;
     }
@@ -194,7 +196,7 @@ final class LoginController extends Controller
 {
     // ...
 
-    public function logIn(Login $login): IHttpResponseMessage
+    public function logIn(LoginDto $login): IHttpResponseMessage
     {
         $authResults = null;
         
