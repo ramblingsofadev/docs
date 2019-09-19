@@ -166,7 +166,7 @@ final class UserModuleBuilder implements IModuleBuilder
             });
         });
         
-        $appBuilder->withComponent('commands', function (CommandRegistry $commands) {
+        $appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
             $commands->registerCommand(
                 new RunUserReportCommand(),
                 fn () => new RunUserReportCommandHandler()
