@@ -228,14 +228,18 @@ Closures support the same [parameter resolution](#parameter-resolution) features
 
 <h2 id="controller-dependencies">Controller Dependencies</h2>
 
-The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' constructors for dependencies, resolve them, and then instantiate your controllers with those dependencies.  Dependency resolvers simply need to implement `IDependencyResolver`.  To make it easy for users of Aphiria's DI container, you can use `ContainerDependencyResolver`.
+The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' and middleware's constructors for dependencies and instantiate them.  Dependency resolvers simply need to implement `IDependencyResolver`.  To make it easy for users of [Aphiria's DI container](di-container.md), you can inject `ContainerDependencyResolver` into `App` and `Router`.
 
 ```php
+use Aphiria\Api\App;
 use Aphiria\Api\ContainerDependencyResolver;
+use Aphiria\Api\Router;
 use Aphiria\DependencyInjection\Container;
 
 $container = new Container();
 $dependencyResolver = new ContainerDependencyResolver($container);
-```
 
-Once you've instantiated your dependency resolver, pass it into your [request handler](#request-handlers) for auto-wiring.
+// Assume the route matcher was already set up
+$router = new Router($routeMatcher, $dependencyResolver);
+$app = new App($dependencyResolver, $router);
+```
