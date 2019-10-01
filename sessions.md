@@ -18,8 +18,9 @@
    8. [Regenerating the Id](#regenerating-the-id)
 3. [Session Handlers](#session-handlers)
 4. [Using Sessions In Controllers](#using-sessions-in-controllers)
-5. [Id Generators](#id-generators)
-6. [Encrypting Session Data](#encrypting-session-data)
+5. [Middleware](#middleware)
+6. [Id Generators](#id-generators)
+7. [Encrypting Session Data](#encrypting-session-data)
 
 </div>
 
@@ -106,14 +107,14 @@ $session->regenerateId();
 
 <h2 id="session-handlers">Session Handlers</h2>
 
-**Session handlers** are what actually read and write session data from some form of storage, eg text files, cache, or cookies, and are typically invoked in [middleware](middleware.md).  All Aphiria handlers implement `\SessionHandlerInterface` (built-into PHP).  Aphiria has the concept of session "drivers", which represent the storage that powers the handlers.  For example, `FileSessionDriver` stores session data to plain-text files, and `ArraySessionDriver` writes to an in-memory array, which can be useful for development environments.  Aphiria contains a session handler already set up to use a driver:
+**Session handlers** are what actually read and write session data from some form of storage, eg text files, cache, or cookies, and are typically invoked in [middleware](#middleware).  All Aphiria handlers implement `\SessionHandlerInterface` (built-into PHP).  Aphiria has the concept of session "drivers", which represent the storage that powers the handlers.  For example, `FileSessionDriver` stores session data to plain-text files, and `ArraySessionDriver` writes to an in-memory array, which can be useful for development environments.  Aphiria contains a session handler already set up to use a driver:
 
 ```php
 use Aphiria\Sessions\Handlers\FileSessionDriver;
-use Aphiria\Sessions\Handlers\SessionDriverHandler;
+use Aphiria\Sessions\Handlers\DriverSessionHandler;
 
 $driver = new FileSessionDriver('/tmp/sessions');
-$handler = new SessionDriverHandler($driver);
+$handler = new DriverSessionHandler($driver);
 ```
 
 <h2 id="using-sessions-in-controllers">Using Sessions in Controllers</h2>
@@ -146,6 +147,25 @@ class UserController extends Controller
 }
 ```
 
+<h2 id="middleware">Middleware</h2>
+
+Middleware is the best way to handle reading session data from storage and persisting it back to storage at the end of a request.  For convenience, Aphiria provides `Aphiria\Sessions\Middleware\Session` to handle reading and writing session data to cookies.  Let's look at how to configure the middleware:
+
+```php
+use Aphiria\Sessions\Middleware\Session as SessionMiddleware;
+
+// Assume our session and handler are already created...
+$sessionMiddleware = new SessionMiddleware(
+    $session,
+    $sessionHandler,
+    3600, // Session TTL in seconds
+    'sessionid', // The name of the cookie
+    '/' // The path the cookie is valid for
+);
+```
+
+Refer to the [configuration library](application-builders.md#configuring-middleware) for more information on how to register the middleware.
+
 <h2 id="id-generators">Id Generators</h2>
 
 If your session has just started or if its data has been invalidated, a new session Id will need to be generated.  These Ids must be cryptographically secure to prevent session hijacking.  If you're using `Session`, you can either pass in your own Id generator (must implement `IIdGenerator`) or use the default `UuidV4IdGenerator`.
@@ -154,17 +174,17 @@ If your session has just started or if its data has been invalidated, a new sess
 
 <h2 id="encrypting-session-data">Encrypting Session Data</h2>
 
-You might find yourself storing sensitive data in sessions, in which case you'll want to encrypt it.  To do this, pass in an instance of `ISessionEncrypter` to `SessionDriverHandler` (passing in `null` will cause your data to be unencrypted).
+You might find yourself storing sensitive data in sessions, in which case you'll want to encrypt it.  To do this, pass in an instance of `ISessionEncrypter` to `DriverSessionHandler` (passing in `null` will cause your data to be unencrypted).
 
 ```php
-use Aphiria\Sessions\Handlers\SessionDriverHandler;
+use Aphiria\Sessions\Handlers\DriverSessionHandler;
 use Aphiria\Sessions\Handlers\SessionEncrypter;
 
 $driver = new FileSessionDriver('/tmp/sessions');
 $encrypter = new class () implements ISessionEncrypter {
     // Implement ISessionEncrypter...
 };
-$handler = new SessionDriverHandler($driver, $encrypter);
+$handler = new DriverSessionHandler($driver, $encrypter);
 ```
 
 Now, all your session data will be encrypted before being written and decrypted after being read.
