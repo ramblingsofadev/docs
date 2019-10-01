@@ -53,7 +53,7 @@ $response->setStatusCode(404);
 
 <h3 id="response-headers">Response Headers</h3>
 
-You can set response [headers](#http-headers) via `Response::getHeaders()`:
+You can set response [headers](http-requests.md#headers) via `Response::getHeaders()`:
 
 ```php
 $response->getHeaders()->add('Content-Type', 'application/json');
@@ -61,7 +61,7 @@ $response->getHeaders()->add('Content-Type', 'application/json');
 
 <h3 id="response-bodies">Response Bodies</h3>
 
-You can pass the [body](#http-bodies) via the response constructor or via `Response::setBody()`:
+You can pass the [body](http-requests.md#bodies) via the response constructor or via `Response::setBody()`:
 
 ```php
 $response = new Response(200, null, new StringBody('foo'));
