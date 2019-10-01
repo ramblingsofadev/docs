@@ -158,9 +158,9 @@ use Aphiria\Sessions\Middleware\Session as SessionMiddleware;
 $sessionMiddleware = new SessionMiddleware(
     $session,
     $sessionHandler,
-    3600, // Session TTL in seconds
+    3600,        // Session TTL in seconds
     'sessionid', // The name of the cookie
-    '/' // The path the cookie is valid for
+    '/'          // The path the cookie is valid for
 );
 ```
 
