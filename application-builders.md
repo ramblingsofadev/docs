@@ -108,7 +108,7 @@ $appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
 
 <h2 id="components">Components</h2>
 
-A component is a singular piece of your app, eg a [router](#configuring-routes), and is smaller in scope than a [module](#module).  Components are configured after bootstrappers are run, and are a convenient place to finish setting up your application before it runs.
+A component is a singular piece of your app, eg a [router](#configuring-routes), and is smaller in scope than a [module](#modules).  Components are configured after bootstrappers are run, and are a convenient place to finish setting up your application before it runs.
 
 To build a component in your app builder, you must first register a factory for it:
 

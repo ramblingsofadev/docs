@@ -62,6 +62,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/route-annotations
 * aphiria/router
 * aphiria/serialization
+* aphiria/sessions
 
 <h2 id="server-config">Server Config</h2>
 

@@ -19,7 +19,7 @@
 3. [Session Handlers](#session-handlers)
 4. [Using Sessions In Controllers](#using-sessions-in-controllers)
 5. [Middleware](#middleware)
-6. [Id Generators](#id-generators)
+6. [ID Generators](#id-generators)
 7. [Encrypting Session Data](#encrypting-session-data)
 
 </div>
@@ -166,9 +166,9 @@ $sessionMiddleware = new SessionMiddleware(
 
 Refer to the [configuration library](application-builders.md#configuring-middleware) for more information on how to register the middleware.
 
-<h2 id="id-generators">Id Generators</h2>
+<h2 id="id-generators">ID Generators</h2>
 
-If your session has just started or if its data has been invalidated, a new session Id will need to be generated.  These Ids must be cryptographically secure to prevent session hijacking.  If you're using `Session`, you can either pass in your own Id generator (must implement `IIdGenerator`) or use the default `UuidV4IdGenerator`.
+If your session has just started or if its data has been invalidated, a new session ID will need to be generated.  These Ids must be cryptographically secure to prevent session hijacking.  If you're using `Session`, you can either pass in your own ID generator (must implement `IIdGenerator`) or use the default `UuidV4IdGenerator`.
 
 > **Note:** It's recommended you use Aphiria's `UuidV4IdGenerator` unless you know what you're doing.
 
@@ -178,7 +178,7 @@ You might find yourself storing sensitive data in sessions, in which case you'll
 
 ```php
 use Aphiria\Sessions\Handlers\DriverSessionHandler;
-use Aphiria\Sessions\Handlers\SessionEncrypter;
+use Aphiria\Sessions\Handlers\ISessionEncrypter;
 
 $driver = new FileSessionDriver('/tmp/sessions');
 $encrypter = new class () implements ISessionEncrypter {
