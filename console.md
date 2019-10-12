@@ -246,8 +246,8 @@ Prompts are great for asking users for input beyond what is accepted by argument
 To ask a user to confirm an action with a simple "y" or "yes", use an `Aphiria\Console\Output\Prompts\Confirmation`:
 
 ```php
-use Aphiria\Console\Output\Prompts\Prompt;
 use Aphiria\Console\Output\Prompts\Confirmation;
+use Aphiria\Console\Output\Prompts\Prompt;
 
 $prompt = new Prompt();
 // This will return true if the answer began with "y" or "Y"
