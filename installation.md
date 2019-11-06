@@ -59,6 +59,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/io
 * aphiria/middleware
 * aphiria/net
+* aphiria/reflection
 * aphiria/route-annotations
 * aphiria/router
 * aphiria/serialization
