@@ -295,13 +295,13 @@ use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\LazyRouteFactory;
 use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
+use Aphiria\Routing\RouteCollection;
 
-$routeFactory = new LazyRouteFactory(function () {
+$routeFactory = new LazyRouteFactory(function (RouteCollection Routes) {
     $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
-    $routes = new RouteBuilderRegistry();
+    $routeBuilders = new RouteBuilderRegistry();
     $routeAnnotationRegistrant->registerRoutes($routes);
-    
-    return $routes->buildAll();
+    $routes->addMany($routeBuilders->buildAll());
 });
 $routeMatcher = new TrieRouteMatcher((new TrieFactory($routeFactory))->createTrie());
 

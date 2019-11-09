@@ -6,31 +6,87 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Class Finder](#class-finder)
+1. [Type Finder](#type-finder)
+   1. [Finding Classes](#finding-classes)
+   2. [Finding Interfaces](#finding-interfaces)
+   3. [Finding All Types](#finding-all-types)
+   4. [Finding Sub-Types](#finding-sub-types)
 
 </div>
 
 </nav>
 
-<h2 id="class-finder">Class Finder</h2>
+<h2 id="type-finder">Type Finder</h2>
 
-PHP does not provide any native way of finding classes from files unless you've already autoloaded them into memory.  Aphiria's `FileClassFinder` can do just that, though.  You simply pass a directory or list of directories, and it will scan the directories for any classes defined within.
+PHP does not provide any native way of finding types (eg classes and interfaces) from files unless you've already autoloaded them into memory.  Aphiria's `TypeFinder` can do just that, though.  You simply pass a directory or list of directories, and it will scan the directories for any types defined within.  It does this by tokenizing all PHP files and scanning for type definitions.
+
+<h3 id="finding-classes">Finding Classes</h3>
+
+Let's look at an example that finds all classes defined in a particular path.
 
 ```php
-use Aphiria\Reflection\FileClassFinder;
+use Aphiria\Reflection\TypeFinder;
 
-$classFinder = new FileClassFinder();
-$classes = $classFinder->findAllClasses('PATH_TO_SCAN');
+$typeFinder = new TypeFinder();
+$classes = $typeFinder->findAllClasses('PATH_TO_SCAN');
 ```
 
 Or, pass in a list of directories:
 
 ```php
-$classes = $classFinder->findAllClasses(['PATH1_TO_SCAN', 'PATH2_TO_SCAN']);
+$classes = $typeFinder->findAllClasses(['PATH1_TO_SCAN', 'PATH2_TO_SCAN']);
 ```
 
 You can also recursively scan the input directories:
 
 ```php
-$classes = $classFinder->findAllClasses('PATH_TO_SCAN', true);
+$classes = $typeFinder->findAllClasses('PATH_TO_SCAN', true);
+```
+
+By default, abstract classes are not returned in the results, but you may include them:
+
+```php
+$classes = $typeFinder->findAllClasses('PATH_TO_SCAN', false, true);
+```
+
+<h3 id="finding-interfaces">Finding Interfaces</h3>
+
+Just like you can scan for interfaces, you may also scan for interfaces.
+
+```php
+$interfaces = $typeFinder->findAllInterfaces('PATH_TO_SCAN');
+```
+
+Or recursively:
+
+```php
+$interfaces = $typeFinder->findAllInterfaces('PATH_TO_SCAN', true);
+```
+
+<h3 id="finding-all-types">Finding All Types</h3>
+
+If you're simply trying to grab all types, regardless of whether they're a class, abstract class, or interface, there's a method for that:
+
+```php
+$types = $typeFinder->findAllTypes('PATH_TO_SCAN');
+```
+
+Or recursively:
+
+```php
+$types = $typeFinder->findAllTypes('PATH_TO_SCAN', true);
+```
+
+<h3 id="finding-sub-types">Finding Sub Types</h3>
+
+You can grab all sub-types of a parent type:
+
+```php
+$subTypesOfFoo = $typeFinder->findAllSubtypesOfType(Foo::class, 'PATH_TO_SCAN');
+```
+
+Or recursively:
+
+```php
+$subTypesOfFoo = $typeFinder->findAllSubtypesOfType(Foo::class, 'PATH_TO_SCAN', true);
 ```

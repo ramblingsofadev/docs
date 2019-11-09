@@ -14,15 +14,18 @@
    2. [Arguments](#arguments)
    3. [Options](#options)
    4. [Calling From Code](#calling-from-code)
-6. [Prompts](#prompts)
+4. [Command Annotations](#command-annotations)
+    1. [Example](#command-annotation-example)
+    4. [Scanning For Annotations](#scanning-for-annotations)
+5. [Prompts](#prompts)
    1. [Confirmation](#confirmation)
    2. [Multiple Choice](#multiple-choice)
-7. [Output](#output)
-8. [Formatters](#formatters)
+6. [Output](#output)
+7. [Formatters](#formatters)
    1. [Padding](#padding)
    2. [Tables](#tables)
    3. [Progress Bars](#progress-bars)
-9. [Style Elements](#style-elements)
+8. [Style Elements](#style-elements)
    1. [Built-In Elements](#built-in-elements)
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
@@ -236,6 +239,63 @@ final class FooCommandHandler implements ICommandHandler
 If you want to call the other command but not write its output, use the `Aphiria\Console\Output\SilentOutput` output.
 
 > **Note:** If a command is being called by a lot of other commands, it might be best to refactor its actions into a separate class.  This way, it can be used by multiple commands without the extra overhead of calling console commands through PHP code.
+
+<h2 id="command-annotations">Command Annotations</h2>
+
+Sometimes, it's convenient to define your command alongside your command handler so you don't have to jump back and forth remembering what arguments or options your command takes.  Aphiria offers the option to do so via annotations.
+
+<h3 id="command-annotation-example">Command Annotation Example</h3>
+
+Let's look at an example that duplicates the [greeting example from above](#registering-commands):
+
+```php
+/**
+ * @Command(
+ *     "greet", 
+ *     arguments={@Argument("name", type=ArgumentTypes::REQUIRED, description="The name to greet")},
+ *     options={@Option("yell", shortName="y", type=OptionTypes::OPTIONAL_VALUE, description="Yell the greeting?", defaultValue="yes")},
+ *     description="Greets a person"
+ * )
+ */
+final class GreetingCommandHandler implements ICommandHandler
+{
+    public function handle(Input $input, IOutput $output)
+    {
+        // ...
+    }
+}
+```
+
+<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
+
+```php
+use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\ConsoleCommandAnnotations\ICommandAnnotationRegistrant;
+use Aphiria\ConsoleCommandAnnotations\ReflectionCommandAnnotationRegistrant;
+
+// Assume we already have $container set up
+$commandAnnotationRegistrant = new ReflectionCommandAnnotationRegistrant(['PATH_TO_SCAN']);
+$container->bindInstance(ICommandAnnotationRegistrant::class, $commandAnnotationRegistrant);
+
+(new AphiriaComponentBuilder($container))
+    ->withConsoleCommandAnnotations($appBuilder);
+```
+
+If you're not using the configuration library, you can manually configure your app to scan for annotations:
+
+```php
+use Aphiria\ConsoleCommandAnnotations\ReflectionCommandAnnotationRegistrant;
+use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\Console\Commands\LazyCommandRegistryFactory;
+
+$commandFactory = new LazyCommandRegistryFactory(function (CommandRegstry $commands) {
+    $commandAnnotationRegistrant = new ReflectionCommandAnnotationRegistrant(['PATH_TO_SCAN']);
+    $commandAnnotationRegistrant->registerCommands($commands);
+});
+$commands = $commandFactory->createCommands();
+````
 
 <h2 id="prompts">Prompts</h2>
 

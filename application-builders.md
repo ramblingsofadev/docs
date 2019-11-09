@@ -70,6 +70,8 @@ $app = $appBuilder->buildConsoleApplication();
 
 `$app` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
 
+> **Note:** If you're using the [command annotations](console.md#command-annotations), those commands will be registered along with any manually registered ones.
+
 <h3 id="configuring-bootstrappers">Configuring Bootstrappers</h3>
 
 Let's take a look at how to configure bootstrappers:
@@ -187,7 +189,7 @@ Now, your entire user module is configured and ready to go.
 
 <h2 id="using-aphiria-components">Using Aphiria Components</h2>
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [encoder](serialization.md), or [exception handling](http-exception-handling.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [console command annotations](console.md#command-annotations), [encoder](serialization.md), or [exception handling](http-exception-handling.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -201,6 +203,7 @@ $container = new Container;
     ->withExceptionResponseFactories($appBuilder)
     ->withRoutingComponent($appBuilder)
     ->withRouteAnnotations($appBuilder)
+    ->withConsoleCommandAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...
