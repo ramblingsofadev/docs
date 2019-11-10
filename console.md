@@ -126,7 +126,9 @@ use Aphiria\Console\Commands\CommandRegistry;
 $commands = new CommandRegistry();
 $commands->registerCommand(
     $greetingCommand, 
-    fn () => $greetingCommandHandler
+    function () use ($greetingCommandHandler) {
+        return $greetingCommandHandler;
+    }
 );
 
 // Actually run the application
@@ -145,6 +147,8 @@ This will output:
 ```
 HELLO, DAVE
 ```
+
+>> **Note:** Aphiria uses `opis/closure` to serialize and deserialize closures.  At this time, it does not support short closures.  So, any manually registered command handler factories **must** use long-form closures.
 
 <h3 id="arguments">Arguments</h3>
 
