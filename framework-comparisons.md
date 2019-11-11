@@ -19,11 +19,15 @@
    1. [Aphiria](#aphiria-controllers)
    2. [Symfony](#symfony-controllers)
    3. [Laravel](#laravel-controllers)
-4. [Dependency Injection Container](#di-container)
+4. [HTTP Library](#http-library)
+   1. [Aphiria](#aphiria-http-library)
+   2. [Symfony](#symfony-http-library)
+   3. [Laravel](#laravel-http-library)
+5. [Dependency Injection Container](#di-container)
    1. [Aphiria](#aphiria-di-container)
    2. [Symfony](#symfony-di-container)
    3. [Laravel](#laravel-di-container)
-5. [Console](#console)
+6. [Console](#console)
    1. [Aphiria](#aphiria-console)
    2. [Symfony](#symfony-console)
    3. [Laravel](#laravel-console)
@@ -78,8 +82,8 @@ Before we get into library comparisons, let's compare the frameworks at a high l
 
 <h4 id="laravel-general-cons">Cons</h4>
 
-* Some complain that there is too much "magic", eg unintuitive logic that powers some of its core libraries
 * Pretty opinionated, eg it works best if used as designed (akin to an iPhone)
+* Some complain that there is too much "magic", eg unintuitive logic that powers some of its core libraries
 
 <h2 id="routing">Routing</h2>
 
@@ -166,6 +170,45 @@ Controllers are the actions that are executed when a user hits a URI.  They typi
 <h4 id="laravel-controllers-cons">Cons</h4>
 
 * Only supports negotiating Eloquent models automatically
+
+<h2 id="http-library">HTTP Library</h2>
+
+PHP's abstractions around HTTP requests and responses are pretty bare bones.  Most frameworks find it necessary to build out classes and helper to better construct and read from requests and responses.
+
+<h3 id="aphiria-http-library">Aphiria</h3>
+
+<h4 id="aphiria-http-library-pros">Pros</h4>
+
+* Clean abstractions of HTTP messages
+* Helper classes to simplify common tasks with messages, eg setting cookies, determining if a request is JSON, constructing multi-part requests, etc
+* Contains support for content negotiation and media type formatters
+
+<h4 id="aphiria-http-library-cons">Cons</h4>
+
+* Does not support PSR-7
+* Does not contains an HTTP client
+
+<h3 id="symfony-http-library">Symfony</h3>
+
+<h4 id="symfony-http-library-pros">Pros</h4>
+
+* Contains an HTTP client to send and receive messages
+* Supports converting Symfony requests/responses to PSR-7 (but does not natively implement PSR-7)
+
+<h4 id="symfony-http-library-cons">Cons</h4>
+
+* Requires additional libraries for handling things like reading and writing cookies easily
+
+<h3 id="laravel-http-library">Laravel</h3>
+
+<h4 id="laravel-http-library-pros">Pros</h4>
+
+* Lots of convenience methods for common tasks
+* Supports converting requests/responses to PSR-7 because it extends Symfony's HTTP library
+
+<h4 id="laravel-http-library-cons">Cons</h4>
+
+* Not necessarily a con, but trades off proper abstractions for convenience
 
 <h2 id="di-container">Dependency Injection Container</h2>
 
