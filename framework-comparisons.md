@@ -38,7 +38,7 @@
 
 <h2 id="preface">Preface</h2>
 
-Before we get into comparing Aphiria against other frameworks, remember that each framework is just a tool.  Some tools are better suited to some problems than others.  This sort of comparison is inherently subjective, although we will do our best to keep things objective.  If you feel we've misconstrued or missed anything, please feel free to submit an issue or pull request to the documentation to fix it.
+Before we get into comparing Aphiria against other frameworks, remember that each framework is just a tool.  Some tools are better suited to some problems than others.  This sort of comparison is inherently subjective, although we will do our best to keep things objective.  If you feel we've misconstrued or missed anything, please feel free to submit an issue or pull request to the documentation to improve it.
 
 <h2 id="general">General</h2>
 
@@ -51,6 +51,7 @@ Before we get into library comparisons, let's compare the frameworks at a high l
 * Very decoupled design makes it simple to pick-and-choose the libraries you want to use
 * Unopinionated, ie it doesn't prescribe _how_ to do something - it places that completely in the developers' hands (akin to an Android phone)
 * Favors code-based configuration over magic string-based configuration
+* Thorough, searchable documentation
 
 <h4 id="aphiria-general-cons">Cons</h4>
 
@@ -72,13 +73,14 @@ Before we get into library comparisons, let's compare the frameworks at a high l
 * Perceived by some to be difficult to get up and running with
 * The documentation is difficult to navigate through
 
-<h3 id="symfony-general">Laravel</h3>
+<h3 id="laravel-general">Laravel</h3>
 
 <h4 id="laravel-general-pros">Pros</h4>
 
 * Lots of community support and tutorials
 * Arguably one of the easiest frameworks to get up and running with
 * Lots of functionality baked into the framework
+* Thorough, searchable documentation
 
 <h4 id="laravel-general-cons">Cons</h4>
 
@@ -97,7 +99,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 * Supports defining routes via annotations
 * Supports custom constraints, which make it possible to do things like versioned endpoints
 * Trie-based solution makes it one of the fastest routing libraries out there
-* Not tied to any HTTP nor middleware library
+* Not tied to any HTTP or middleware library
 * Supports host and path matching
 
 <h4 id="aphiria-routing-cons">Cons</h4>
@@ -118,7 +120,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 * Config-based route definitions are not easy to write without IDE plugins
 * Middleware support is tightly coupled to Symfony HTTP and middleware libraries
 
-<h3 id="symfony-routing">Laravel</h3>
+<h3 id="laravel-routing">Laravel</h3>
 
 <h4 id="laravel-routing-pros">Pros</h4>
 
@@ -159,7 +161,7 @@ Controllers are the actions that are executed when a user hits a URI.  They typi
 
 * No automatic content negotiation
 
-<h3 id="symfony-controllers">Laravel</h3>
+<h3 id="laravel-controllers">Laravel</h3>
 
 <h4 id="laravel-controllers-pros">Pros</h4>
 
@@ -240,7 +242,7 @@ A dependency injection (DI) container lets a developer tell the application "Whe
 * Although it supports code-based binding of services, it mostly relies on string-based configuration
 * Must manually mark services as lazy
 
-<h3 id="symfony-di-container">Laravel</h3>
+<h3 id="laravel-di-container">Laravel</h3>
 
 <h4 id="laravel-di-container-pros">Pros</h4>
 
@@ -282,7 +284,7 @@ A console library permits a user to enter a command via a console application an
 
 * No built-in support for command annotations
 
-<h3 id="symfony-console">Laravel</h3>
+<h3 id="laravel-console">Laravel</h3>
 
 <h4 id="laravel-console-pros">Pros</h4>
 
