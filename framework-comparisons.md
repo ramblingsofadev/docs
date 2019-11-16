@@ -104,7 +104,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 
 <h4 id="aphiria-routing-cons">Cons</h4>
 
-* Currently no support for URL generation from a route name
+* None
 
 <h3 id="symfony-routing">Symfony</h3>
 

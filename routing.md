@@ -27,10 +27,11 @@
 6. [Route Variable Rules](#route-variable-rules)
    1. [Built-In Rules](#built-in-rules)
    2. [Making Your Own Custom Rules](#making-your-own-custom-rules)
-7. [Caching](#caching)
+7. [Creating Route URIs](#creating-route-uris)
+8. [Caching](#caching)
    1. [Route Caching](#route-caching)
    2. [Trie Caching](#trie-caching)
-8. [Matching Algorithm](#matching-algorithm)
+9. [Matching Algorithm](#matching-algorithm)
 
 </div>
 
@@ -52,6 +53,7 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
   * With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
+* It supports [creating URIs from routes](#creating-route-uris)
 * It is built to support the latest PHP 7.4 features
 
 Out of the box, this library provides a fluent syntax to help you build your routes.  Let's look at a working example.
@@ -61,7 +63,8 @@ First, let's import the namespaces and define our routes:
 ```php
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\LazyRouteFactory;
-use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
+use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Register the routes
 $routeFactory = new LazyRouteFactory(function () {
@@ -294,8 +297,9 @@ If you're not using the configuration library, you can manually configure the ro
 use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\LazyRouteFactory;
-use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
+use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 $routeFactory = new LazyRouteFactory(function (RouteCollection Routes) {
     $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
@@ -578,7 +582,8 @@ Finally, register this rule factory with the trie compiler:
 ```php
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\LazyRouteFactory;
-use Aphiria\Routing\Matchers\Trees\{TrieFactory, TrieRouteMatcher};
+use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 $routeFactory = new LazyRouteFactory(function () {
     $routes = new RouteBuilderRegistry();
@@ -594,6 +599,39 @@ $routeMatcher = new TrieRouteMatcher($trieFactory->createTrie());
 ```
 
 Our route will now enforce a serial number with minimum length 6.
+
+<h2 id="creating-route-uris">Creating Route URIs</h2>
+
+You might find yourself wanting to create a link to a particular route within your app.  Let's say you have a route named `GetUserById` with a URI template of `/users/:id`.  We can generate a link to get a particular user:
+
+```php
+use Aphiria\Routing\UriTemplates\AstRouteUriFactory;
+
+// Assume you've already created your routes
+$routeUriFactory = new AstRouteUriFactory($routes);
+
+// Will create "/users/123"
+$uriForUser123 = $routeUriFactory->createRouteUri('GetUserById', ['id' => 123]);
+```
+
+Generated URIs will be a relative path unless the URI template specified a host.  Let's look at an example for one that does include a host: `:environment.example.com/users/:id`.
+
+```php
+// Will create "https://dev.example.com/users/123"
+$uriForDevUser123 = $routeUriFactory->createRouteUri('GetUserById', ['environment' => 'dev', 'id' => 123]);
+```
+
+> **Note:**  Absolute URIs are assumed to be HTTPS unless the URI template is specifically set to not be HTTPS-only.
+
+Optional route variables can be specified, too.  Let's assume the URI template is `/archives/:year[/:month]`:
+
+```php
+// Will create "/archives/2019"
+$booksFor2019 = $routeUriFactory->createRouteUri('GetBooksFromArchive', ['year' => 2019]);
+
+// Will create "/archives/2019/12"
+$booksForDec2019 = $routeUriFactory->createRouteUri('GetBooksFromArchive', ['year' => 2019, 'month' => 12]);
+```
 
 <h2 id="caching">Caching</h2>
 
@@ -633,8 +671,9 @@ $routeFactory = new LazyRouteFactory(
 To enable caching, pass in an `ITrieCache` (`FileTrieCache` comes with Aphiria) to your trie factory (passing in `null` will disable caching).  If you want to enable caching for a particular environment, you could do so:
 
 ```php
-use Aphiria\Routing\Matchers\Trees\Caching\FileTrieCache;
-use Aphiria\Routing\Matchers\Trees\TrieFactory;
+use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\Caching\FileTrieCache;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Let's say that your environment name is stored in an environment var named 'ENV_NAME'
 $trieCache = getenv('ENV_NAME') === 'production' ? new FileTrieCache('/tmp/trie.cache') : null;
