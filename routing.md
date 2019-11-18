@@ -61,23 +61,21 @@ Out of the box, this library provides a fluent syntax to help you build your rou
 First, let's import the namespaces and define our routes:
 
 ```php
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
-use Aphiria\Routing\LazyRouteFactory;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\RouteCollection
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Register the routes
-$routeFactory = new LazyRouteFactory(function () {
-    $routes = new RouteBuilderRegistry();
-    $routes->get('/books/:bookId')
-        ->toMethod(BookController::class, 'getBooksById')
-        ->withMiddleware(AuthMiddleware::class);
-        
-    return $routes->buildAll();
-});
+$routes = new RouteCollection($routes);
+$routeBuilders = new RouteBuilderRegistry();
+$routes->get('/books/:bookId')
+    ->toMethod(BookController::class, 'getBooksById')
+    ->withMiddleware(AuthMiddleware::class);
+$routes->addMany($routeBuilders->buildAll());
 
 // Set up the route matcher
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routeFactory))->createTrie());
+$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
 
 // Finally, let's find a matching route
 $result = $routeMatcher->matchRoute(
@@ -279,12 +277,11 @@ Before you can use annotations, you'll need to configure Aphiria to scan for the
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
-use Aphiria\RouteAnnotations\IRouteAnnotationRegistrant;
-use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
+use Aphiria\RouteAnnotations\AnnotationRouteRegistrant;
 
 // Assume we already have $container set up
-$routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(IRouteAnnotationRegistrant::class, $routeAnnotationRegistrant);
+$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
+$container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegistrant);
 
 (new AphiriaComponentBuilder($container))
     ->withRoutingComponent($appBuilder)
@@ -294,20 +291,15 @@ $container->bindInstance(IRouteAnnotationRegistrant::class, $routeAnnotationRegi
 If you're not using the configuration library, you can manually configure the router to scan for annotations:
 
 ```php
-use Aphiria\RouteAnnotations\ReflectionRouteAnnotationRegistrant;
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
-use Aphiria\Routing\LazyRouteFactory;
+use Aphiria\RouteAnnotations\AnnotationRouteRegistrant;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
-$routeFactory = new LazyRouteFactory(function (RouteCollection Routes) {
-    $routeAnnotationRegistrant = new ReflectionRouteAnnotationRegistrant(['PATH_TO_SCAN']);
-    $routeBuilders = new RouteBuilderRegistry();
-    $routeAnnotationRegistrant->registerRoutes($routes);
-    $routes->addMany($routeBuilders->buildAll());
-});
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routeFactory))->createTrie());
+$routes = new RouteCollection();
+$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
+$routeAnnotationRegistrant->registerRoutes($routes);
+$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
 
 // Find a matching route
 $result = $routeMatcher->matchRoute(
@@ -581,20 +573,18 @@ Finally, register this rule factory with the trie compiler:
 
 ```php
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
-use Aphiria\Routing\LazyRouteFactory;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
-$routeFactory = new LazyRouteFactory(function () {
-    $routes = new RouteBuilderRegistry();
-    $routes->get('parts/:serialNumber(minLength(6))')
-        ->toMethod(PartController::class, 'getPartBySerialNumber');
-        
-    return $routes->buildAll();
-});
+$routes = new RouteCollection();
+$routeBuilders = new RouteBuilderRegistry();
+$routeBuilders->get('parts/:serialNumber(minLength(6))')
+    ->toMethod(PartController::class, 'getPartBySerialNumber');
+$routes->addMany($routeBuilders->buildAll());
 
 $trieCompiler = new TrieCompiler($ruleFactory);
-$trieFactory = new TrieFactory($routeFactory, null, $trieCompiler);
+$trieFactory = new TrieFactory($routes, null, $trieCompiler);
 $routeMatcher = new TrieRouteMatcher($trieFactory->createTrie());
 ```
 
@@ -639,31 +629,24 @@ The process of building your routes and compiling the trie is a relatively slow 
 
 <h3 id="route-caching">Route Caching</h3>
 
-To enable caching, pass in an `IRouteCache` (`FileRouteCache` is provided) to the second parameter of `LazyRouteFactory`:
+To enable caching, use `CachedRouteRegistrant` and pass in an `IRouteCache` (`FileRouteCache` is provided) to the first parameter of `CachedRouteRegistrant`:
 
 ```php
+use Aphiria\Routing\CachedRouteRegistrant;
 use Aphiria\Routing\Caching\FileRouteCache;
-use Aphiria\Routing\LazyRouteFactory;
+use Aphiria\Routing\RouteCollection;
 
-$routeFactory = new LazyRouteFactory(
-    function () {
+$routes = new RouteCollection();
+$routeRegistrant = new CachedRouteRegistrant(
+    new FileRouteCache('/tmp/routes.cache'),
+    function (RouteCollection $routes) {
         // Register your routes...
-    },
-    new FileRouteCache('/tmp/routes.cache')
+    }
 );
 
-// Finish setting up your route matcher...
-```
+// Once you're done configuring your route registrant...
 
-To enable caching in a particular environment, you could do this:
-
-```php
-$routeFactory = new LazyRouteFactory(
-    function () {
-        // Register your routes...
-    },
-    getenv('ENV_NAME') === 'production' ? new FileRouteCache('/tmp/trie.cache') : null;
-);
+$routeRegistrant->registerRoutes($routes);
 ```
 
 <h3 id="trie-caching">Trie Caching</h3>
@@ -677,7 +660,7 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Let's say that your environment name is stored in an environment var named 'ENV_NAME'
 $trieCache = getenv('ENV_NAME') === 'production' ? new FileTrieCache('/tmp/trie.cache') : null;
-$trieFactory = new TrieFactory($routeFactory, $trieCache);
+$trieFactory = new TrieFactory($routes, $trieCache);
 
 // Finish setting up your route matcher...
 ```
