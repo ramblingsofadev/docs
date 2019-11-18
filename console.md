@@ -276,12 +276,14 @@ Before you can use annotations, you'll need to configure Aphiria to scan for the
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
-use Aphiria\ConsoleCommandAnnotations\ICommandAnnotationRegistrant;
-use Aphiria\ConsoleCommandAnnotations\ReflectionCommandAnnotationRegistrant;
+use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\ConsoleCommandAnnotations\AnnotationCommandRegistrant;
 
 // Assume we already have $container set up
-$commandAnnotationRegistrant = new ReflectionCommandAnnotationRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(ICommandAnnotationRegistrant::class, $commandAnnotationRegistrant);
+$commands = new CommandRegistry();
+$container->bindInstance(CommandRegistry::class, $commands);
+$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN']);
+$container->bindInstance(AnnotationCommandRegistrant::class, $annotationCommandRegistrant);
 
 (new AphiriaComponentBuilder($container))
     ->withConsoleCommandAnnotations($appBuilder);
@@ -290,15 +292,13 @@ $container->bindInstance(ICommandAnnotationRegistrant::class, $commandAnnotation
 If you're not using the configuration library, you can manually configure your app to scan for annotations:
 
 ```php
-use Aphiria\ConsoleCommandAnnotations\ReflectionCommandAnnotationRegistrant;
+use Aphiria\Console\Commands\AggregateCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\Console\Commands\LazyCommandRegistryFactory;
+use Aphiria\ConsoleCommandAnnotations\AnnotationCommandRegistrant;
 
-$commandFactory = new LazyCommandRegistryFactory(function (CommandRegstry $commands) {
-    $commandAnnotationRegistrant = new ReflectionCommandAnnotationRegistrant(['PATH_TO_SCAN']);
-    $commandAnnotationRegistrant->registerCommands($commands);
-});
-$commands = $commandFactory->createCommands();
+$commands = new CommandRegistry();
+$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN']);
+$annotationCommandRegistrant->registerCommands($commands);
 ````
 
 <h2 id="prompts">Prompts</h2>
