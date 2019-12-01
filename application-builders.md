@@ -203,7 +203,7 @@ $container = new Container;
     ->withExceptionResponseFactories($appBuilder)
     ->withRoutingComponent($appBuilder)
     ->withRouteAnnotations($appBuilder)
-    ->withConsoleCommandAnnotations($appBuilder)
+    ->withConsoleAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...

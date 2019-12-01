@@ -100,8 +100,8 @@ $response = new Response();
 Cookies are headers that are automatically appended to each request from the client to the server.  To set one, use `ResponseFormatter`:
 
 ```php
-use Aphiria\Net\Http\Cookie;
 use Aphiria\Net\Http\Formatting\ResponseFormatter;
+use Aphiria\Net\Http\Headers\Cookie;
 
 (new ResponseFormatter)->setCookie(
     $response,
@@ -120,11 +120,11 @@ public function __construct(
     ?string $domain = null,
     bool $isSecure = false,
     bool $isHttpOnly = true,
-    ?string $sameSite = null
+    ?string $sameSite = Cookie::SAME_SITE_LAX
 )
 ```
 
-Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
+Cookies accept `Cookie::SAME_SITE_LAX` (default), `Cookie::SAME_SITE_STRICT`, or `null` if no same-site setting should be specified.  Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
 
 <h3 id="deleting-response-cookies">Deleting Cookies</h3>
 
