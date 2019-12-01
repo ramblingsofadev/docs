@@ -54,7 +54,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/collections
 * aphiria/configuration
 * aphiria/console
-* aphiria/console-command-annotations
+* aphiria/console-annotations
 * aphiria/dependency-injection
 * aphiria/exceptions
 * aphiria/io
