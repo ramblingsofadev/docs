@@ -197,10 +197,7 @@ _Runtime: O(n log n)_
 You can sort values similar to the way you can sort PHP arrays via `usort()`:
 
 ```php
-$comparer = function ($a, $b) {
-    return $a > $b ? 1 : -1;
-};
-$arrayList->sort($comparer);
+$arrayList->sort(fn ($a, $b) => $a <=> $b);
 ```
 
 <h3 id="array-lists-to-array">ArrayList::toArray()</h3>
@@ -467,10 +464,7 @@ _Runtime: O(n log n)_
 You can sort values similar to the way you can sort PHP arrays via `usort()`:
 
 ```php
-$comparer = function ($a, $b) {
-    return $a > $b ? 1 : -1;
-};
-$set->sort($comparer);
+$set->sort(fn ($a, $b) => $a <=> $b);
 ```
 
 <h3 id="hash-sets-to-array">HashSet::toArray()</h3>

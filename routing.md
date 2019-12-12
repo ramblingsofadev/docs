@@ -529,12 +529,12 @@ The following rules are built-into Aphiria:
 
 <h3 id="making-your-own-custom-rules">Making Your Own Custom Rules</h3>
 
-You can register your own rule by implementing `IRule`.  Let's make a rule that enforces a certain minimum string length:
+You can register your own rule by implementing `IRouteVariableRule`.  Let's make a rule that enforces a certain minimum string length:
 
 ```php
-use Aphiria\Routing\UriTemplates\Rules\IRule;
+use Aphiria\Routing\UriTemplates\Rules\IRouteVariableRule;
 
-final class MinLengthRule implements IRule
+final class MinLengthRule implements IRouteVariableRule
 {
     private int $minLength;
 
@@ -564,9 +564,7 @@ use Aphiria\Routing\UriTemplates\Rules\{RuleFactory, RuleFactoryRegistrant};
 $ruleFactory = (new RuleFactoryRegistrant)->registerRuleFactories(new RuleFactory);
 
 // Register our custom rule
-$ruleFactory->registerRuleFactory(MinLengthRule::getSlug(), function (int $minLength) {
-    return new MinLengthRule($minLength);
-});
+$ruleFactory->registerRuleFactory(MinLengthRule::getSlug(), fn (int $minLength) => new MinLengthRule($minLength));
 ```
 
 Finally, register this rule factory with the trie compiler:

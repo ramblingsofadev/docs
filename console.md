@@ -125,10 +125,8 @@ use Aphiria\Console\Commands\CommandRegistry;
 
 $commands = new CommandRegistry();
 $commands->registerCommand(
-    $greetingCommand, 
-    function () use ($greetingCommandHandler) {
-        return $greetingCommandHandler;
-    }
+    $greetingCommand,
+    fn () => $greetingCommandHandler
 );
 
 // Actually run the application
