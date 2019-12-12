@@ -21,7 +21,7 @@
 3. [Binding Middleware](#binding-middleware)
    1. [Middleware Attributes](#middleware-attributes)
 4. [Grouping Routes](#grouping-routes)
-5. [Custom Constraints](#custom-constraints)
+5. [Route Constraints](#route-constraints)
    1. [Example - Versioned API](#versioned-api-example)
    2. [Getting Headers in PHP](#getting-php-headers)
 6. [Route Variable Constraints](#route-variable-constraints)
@@ -435,13 +435,13 @@ This creates two routes with a host suffix of _example.com_ and a route prefix o
 * `IRouteConstraint[] $constraints` (optional)
 * `array $attributes` (optional)
   * The mapping of route attribute names => values
-  * These attribute can be used with [custom constraint](#custom-constraints) matching
+  * These attribute can be used with [route constraint](#route-constraints) matching
 * `MiddlewareBinding[] $middleware` (optional)
   * The list of middleware bindings for routes in this group
 
 It is possible to nest route groups.
 
-<h2 id="custom-constraints">Custom Constraints</h2>
+<h2 id="route-constraints">Route Constraints</h2>
 
 Sometimes, you might find it useful to add some custom logic for matching routes.  This could involve enforcing anything from only allowing certain HTTP methods for a route (eg `HttpMethodRouteConstraint`) or only allowing HTTPS requests to a particular endpoint.  Let's go into some concrete examples...
 
