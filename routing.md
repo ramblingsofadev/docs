@@ -24,9 +24,9 @@
 5. [Custom Constraints](#custom-constraints)
    1. [Example - Versioned API](#versioned-api-example)
    2. [Getting Headers in PHP](#getting-php-headers)
-6. [Route Variable Rules](#route-variable-rules)
-   1. [Built-In Rules](#built-in-rules)
-   2. [Making Your Own Custom Rules](#making-your-own-custom-rules)
+6. [Route Variable Constraints](#route-variable-constraints)
+   1. [Built-In Constraints](#built-in-constraints)
+   2. [Making Your Own Custom Constraints](#making-your-own-custom-constraints)
 7. [Creating Route URIs](#creating-route-uris)
 8. [Caching](#caching)
    1. [Route Caching](#route-caching)
@@ -46,7 +46,7 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
 * It isn't coupled to _any_ library/framework
 * It supports things that other route matching libraries do not support, like:
   * [Binding framework-agnostic middleware to routes](#binding-middleware)
-  * [The ability to add custom matching rules on route variables](#route-variable-rules)
+  * [The ability to add custom matching constraints on route variables](#route-variable-constraints)
   * [The ability to match on header values](#custom-constraints), which makes things like versioning your routes a cinch
   * [Binding controller methods and closures to the route action](#route-actions)
 * It is fast
@@ -126,9 +126,9 @@ Aphiria provides a simple syntax for your URIs.  To capture variables in your ro
 users/:userId/profile
 ```
 
-If you'd like to use [rules](#route-variable-rules), then put them in parentheses after the variable:
+If you'd like to use [constraints](#route-variable-constraints), then put them in parentheses after the variable:
 ```php
-:varName(rule1,rule2(param1,param2))
+:varName(constraint1,constraint2(param1,param2))
 ```
 
 <h3 id="optional-route-parts">Optional Route Parts</h3>
@@ -502,19 +502,19 @@ use Aphiria\Routing\Requests\HeaderParser;
 $headers = (new HeaderParser)->parseHeaders($_SERVER);
 ```
 
-<h2 id="route-variable-rules">Route Variable Rules</h2>
+<h2 id="route-variable-constraints">Route Variable Constraints</h2>
 
-You can enforce certain rules to pass before matching on a route.  These rules come after variables, and must be enclosed in parentheses.  For example, if you want an integer to fall between two values, you can specify a route of
+You can enforce certain constraints to pass before matching on a route.  These constraints come after variables, and must be enclosed in parentheses.  For example, if you want an integer to fall between two values, you can specify a route of
 
 ```php
 :month(int,min(1),max(12))
 ```
 
-> **Note:** If a rule does not require any parameters, then the parentheses after the rule slug are optional.
+> **Note:** If a constraint does not require any parameters, then the parentheses after the constraint slug are optional.
 
-<h3 id="built-in-rules">Built-In Rules</h3>
+<h3 id="built-in-constraints">Built-In Constraints</h3>
 
-The following rules are built-into Aphiria:
+The following constraints are built-into Aphiria:
 
 * `alpha`
 * `alphanumeric`
@@ -527,14 +527,14 @@ The following rules are built-into Aphiria:
 * `regex(string $regex)`
 * `uuidv4`
 
-<h3 id="making-your-own-custom-rules">Making Your Own Custom Rules</h3>
+<h3 id="making-your-own-custom-constraints">Making Your Own Custom Constraints</h3>
 
-You can register your own rule by implementing `IRouteVariableRule`.  Let's make a rule that enforces a certain minimum string length:
+You can register your own constraint by implementing `IRouteVariableConstraint`.  Let's make a constraint that enforces a certain minimum string length:
 
 ```php
-use Aphiria\Routing\UriTemplates\Rules\IRouteVariableRule;
+use Aphiria\Routing\UriTemplates\Constraints\IRouteVariableConstraint;
 
-final class MinLengthRule implements IRouteVariableRule
+final class MinLengthConstraint implements IRouteVariableConstraint
 {
     private int $minLength;
 
@@ -555,19 +555,19 @@ final class MinLengthRule implements IRouteVariableRule
 }
 ```
 
-Let's register our rule with the rule factory:
+Let's register our constraint with the constraint factory:
 
 ```php
-use Aphiria\Routing\UriTemplates\Rules\{RuleFactory, RuleFactoryRegistrant};
+use Aphiria\Routing\UriTemplates\Constraints\{ConstraintFactory, ConstraintFactoryRegistrant};
 
-// Register some built-in rules to our factory
-$ruleFactory = (new RuleFactoryRegistrant)->registerRuleFactories(new RuleFactory);
+// Register some built-in constraints to our factory
+$constraintFactory = (new ConstraintFactoryRegistrant)->registerConstraintFactories(new ConstraintFactory);
 
-// Register our custom rule
-$ruleFactory->registerRuleFactory(MinLengthRule::getSlug(), fn (int $minLength) => new MinLengthRule($minLength));
+// Register our custom constraint
+$constraintFactory->registerConstraintFactory(MinLengthConstraint::getSlug(), fn (int $minLength) => new MinLengthConstraint($minLength));
 ```
 
-Finally, register this rule factory with the trie compiler:
+Finally, register this constraint factory with the trie compiler:
 
 ```php
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
@@ -581,7 +581,7 @@ $routeBuilders->get('parts/:serialNumber(minLength(6))')
     ->toMethod(PartController::class, 'getPartBySerialNumber');
 $routes->addMany($routeBuilders->buildAll());
 
-$trieCompiler = new TrieCompiler($ruleFactory);
+$trieCompiler = new TrieCompiler($constraintFactory);
 $trieFactory = new TrieFactory($routes, null, $trieCompiler);
 $routeMatcher = new TrieRouteMatcher($trieFactory->createTrie());
 ```
