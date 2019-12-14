@@ -188,7 +188,7 @@ PHP's abstractions around HTTP requests and responses are pretty bare bones.  Mo
 <h4 id="aphiria-http-library-cons">Cons</h4>
 
 * Does not support PSR-7
-* Does not contains an HTTP client
+* Does not contain an HTTP client
 
 <h3 id="symfony-http-library">Symfony</h3>
 
