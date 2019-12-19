@@ -274,8 +274,8 @@ Before you can use annotations, you'll need to configure Aphiria to scan for the
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\ConsoleAnnotations\AnnotationCommandRegistrant;
 
 // Assume we already have $container set up
 $commands = new CommandRegistry();
@@ -291,8 +291,8 @@ If you're not using the configuration library, you can manually configure your a
 
 ```php
 use Aphiria\Console\Commands\AggregateCommandRegistrant;
+use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\ConsoleAnnotations\AnnotationCommandRegistrant;
 
 $commands = new CommandRegistry();
 $annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN']);

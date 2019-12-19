@@ -54,14 +54,12 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/collections
 * aphiria/configuration
 * aphiria/console
-* aphiria/console-annotations
 * aphiria/dependency-injection
 * aphiria/exceptions
 * aphiria/io
 * aphiria/middleware
 * aphiria/net
 * aphiria/reflection
-* aphiria/route-annotations
 * aphiria/router
 * aphiria/serialization
 * aphiria/sessions

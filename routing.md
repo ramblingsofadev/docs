@@ -172,13 +172,7 @@ Each method returns an instance of `RouteBuilder`, and accepts the following par
 
 <h3 id="route-annotations">Route Annotations</h3>
 
-Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
-
-To use route annotations, install the route-annotations library by including the following in your _composer.json_:
-
-```bash
-"aphiria/route-annotations": "1.0.*"
-```
+Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the optional functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
 > **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
 
@@ -189,7 +183,7 @@ Let's actually define a route:
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\RouteAnnotations\Annotations\Put;
+use Aphiria\Routing\Annotations\Annotations\Put;
 use App\Users\Http\Middleware\Authorization;
 use App\Users\User;
 
@@ -236,7 +230,7 @@ Just like with our [route builders](#grouping-routes), we can also group routes 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\RouteAnnotations\Annotations\RouteGroup;
+use Aphiria\Routing\Annotations\Annotations\RouteGroup;
 use App\Users\Http\Middleware\Authorization;
 use App\Users\User;
 
@@ -277,7 +271,7 @@ Before you can use annotations, you'll need to configure Aphiria to scan for the
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
-use Aphiria\RouteAnnotations\AnnotationRouteRegistrant;
+use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
 
 // Assume we already have $container set up
 $routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
@@ -291,7 +285,7 @@ $container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegis
 If you're not using the configuration library, you can manually configure the router to scan for annotations:
 
 ```php
-use Aphiria\RouteAnnotations\AnnotationRouteRegistrant;
+use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
