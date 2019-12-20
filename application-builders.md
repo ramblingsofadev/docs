@@ -202,7 +202,7 @@ $container = new Container;
     ->withExceptionLogLevelFactories($appBuilder)
     ->withExceptionResponseFactories($appBuilder)
     ->withRoutingComponent($appBuilder)
-    ->withRouteAnnotations($appBuilder)
+    ->withRoutingAnnotations($appBuilder)
     ->withConsoleAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
 

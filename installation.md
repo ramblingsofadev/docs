@@ -42,7 +42,7 @@ Aphiria can be easily installed using Composer:
 composer create-project aphiria/app --prefer-dist
 ```
 
-Be sure to [configure your server](#server-config) to finish the installation.  Load up your website in a browser, and you should see a basic website explaining on how to start customizing it.  That's it!  If it does not show up, make sure you've made *PATH_TO_APHIRIA/tmp* writable.
+Be sure to [configure your server](#server-config) to finish the installation.
 
 > **Note:** You can <a href="https://getcomposer.org/download/" target="_blank">download Composer from here</a>.
 

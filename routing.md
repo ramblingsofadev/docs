@@ -183,7 +183,7 @@ Let's actually define a route:
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\Routing\Annotations\Annotations\Put;
+use Aphiria\Routing\Annotations\Put;
 use App\Users\Http\Middleware\Authorization;
 use App\Users\User;
 
@@ -230,7 +230,7 @@ Just like with our [route builders](#grouping-routes), we can also group routes 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\Routing\Annotations\Annotations\RouteGroup;
+use Aphiria\Routing\Annotations\RouteGroup;
 use App\Users\Http\Middleware\Authorization;
 use App\Users\User;
 
@@ -279,7 +279,7 @@ $container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegis
 
 (new AphiriaComponentBuilder($container))
     ->withRoutingComponent($appBuilder)
-    ->withRouteAnnotations($appBuilder);
+    ->withRoutingAnnotations($appBuilder);
 ```
 
 If you're not using the configuration library, you can manually configure the router to scan for annotations:
@@ -624,7 +624,7 @@ The process of building your routes and compiling the trie is a relatively slow 
 To enable caching, use `CachedRouteRegistrant` and pass in an `IRouteCache` (`FileRouteCache` is provided) to the first parameter of `CachedRouteRegistrant`:
 
 ```php
-use Aphiria\Routing\CachedRouteRegistrant;
+use Aphiria\Routing\Caching\CachedRouteRegistrant;
 use Aphiria\Routing\Caching\FileRouteCache;
 use Aphiria\Routing\RouteCollection;
 
