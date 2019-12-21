@@ -63,6 +63,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * aphiria/router
 * aphiria/serialization
 * aphiria/sessions
+* aphiria/validation
 
 <h2 id="server-config">Server Config</h2>
 

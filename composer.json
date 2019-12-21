@@ -1,0 +1,15 @@
+{
+    "name": "aphiria/docs",
+    "authors": [
+        {
+            "name": "David Young",
+            "email": "dave@aphiria.com",
+            "role": "Author"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "aphiria/aphiria": "1.0.*@dev"
+    },
+    "minimum-stability": "dev"
+}

@@ -18,9 +18,10 @@
 4. [Modules](#modules)
 5. [Using Aphiria Components](#using-aphiria-components)
    1. [Configuring Routes](#configuring-routes)
-   2. [Configuring Encoders](#configuring-encoders)
-   3. [Configuring Exception Log Levels](#configuring-exception-log-levels)
-   4. [Configuring Exception Responses](#configuring-exception-responses)
+   2. [Configuring Validators](#configuring-validators)
+   3. [Configuring Encoders](#configuring-encoders)
+   4. [Configuring Exception Log Levels](#configuring-exception-log-levels)
+   5. [Configuring Exception Responses](#configuring-exception-responses)
 
 </div>
 
@@ -28,7 +29,7 @@
 
 <h2 id="basics">Basics</h2>
 
-Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, and exception handlers.  It even lets you centralize the configuration of entire [modules](#modules) of code.
+Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, exception handlers, and validators.  It even lets you centralize the configuration of entire [modules](#modules) of code.
 
 <h3 id="application-builders-vs-bootstrappers">Application Builders vs Bootstrappers</h3>
 
@@ -189,7 +190,7 @@ Now, your entire user module is configured and ready to go.
 
 <h2 id="using-aphiria-components">Using Aphiria Components</h2>
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [console command annotations](console.md#command-annotations), [encoder](serialization.md), or [exception handling](http-exception-handling.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [console command annotations](console.md#command-annotations), [encoder](serialization.md), [exception handling](http-exception-handling.md), or [validation](validation.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
@@ -204,6 +205,8 @@ $container = new Container;
     ->withRoutingComponent($appBuilder)
     ->withRoutingAnnotations($appBuilder)
     ->withConsoleAnnotations($appBuilder)
+    ->withValidationComponent($appBuilder)
+    ->withValidationAnnotations($appBuilder)
     ->withEncoderComponent($appBuilder);
 
 // Finish configuring your app...
@@ -211,7 +214,7 @@ $container = new Container;
 $requestHandler = $appBuilder->buildApiApplication();
 ```
 
-These methods will set up components for your [exception handlers](http-exception-handling.md), [routes](#configuring-routes), and [encoders](#configuring-encoders).
+These methods will set up components for your [exception handlers](http-exception-handling.md), [routes](#configuring-routes), [encoders](#configuring-encoders), and [validators](#configuring-validators).
 
 > **Note:** If you use Aphiria's exception handler library, it's highly recommended that you include it before building any other Aphiria components so that the exception handler middleware is registered first.
 
@@ -233,6 +236,24 @@ $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routes) {
 Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
 
 > **Note:** If you're using route annotations, those routes will be combined with any manually-registered routes.
+
+<h3 id="configuring-validators">Configuring Validators</h3>
+
+Let's set up some custom validation rules for our models.
+
+```php
+(new AphiriaComponentBuilder($container))
+    ->withValidationComponent($appBuilder);
+
+// Then, inside your module:
+$appBuilder->withComponent('validators', function (ObjectConstraintRegistry $objectConstraints) {
+    $objectConstraints->registerObjectConstraints(new ObjectConstraints(
+        BlogPost::class,
+        ['title' => new RequiredConstraint],
+        []
+    ));
+});
+```
 
 <h3 id="configuring-encoders">Configuring Encoders</h3>
 
