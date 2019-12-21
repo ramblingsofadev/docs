@@ -290,7 +290,6 @@ $container->bindInstance(AnnotationCommandRegistrant::class, $annotationCommandR
 If you're not using the configuration library, you can manually configure your app to scan for annotations:
 
 ```php
-use Aphiria\Console\Commands\AggregateCommandRegistrant;
 use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
 
@@ -581,7 +580,7 @@ exit($app->handle($argv, $output));
 To override a built-in element, just re-register it:
 
 ```php
-$compiler->registerElement(
+$elements->registerElement(
     new Element('success', new Style(Colors::GREEN, Colors::BLACK))
 );
 ```
