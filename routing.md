@@ -512,7 +512,7 @@ The following constraints are built-into Aphiria:
 
 * `alpha`
 * `alphanumeric`
-* `between($min, $max, bool $isInclusive = true)`
+* `between($min, $max, bool $minIsInclusive = true, bool $maxIsInclusive = true)`
 * `date(string $commaSeparatedListOfAcceptableFormats)`
 * `in(string $commaSeparatedListOfAcceptableValues)`
 * `int`
