@@ -67,9 +67,9 @@ use Aphiria\Routing\RouteCollection
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Register the routes
-$routes = new RouteCollection($routes);
+$routes = new RouteCollection();
 $routeBuilders = new RouteBuilderRegistry();
-$routes->get('/books/:bookId')
+$routeBuilders->get('/books/:bookId')
     ->toMethod(BookController::class, 'getBooksById')
     ->withMiddleware(AuthMiddleware::class);
 $routes->addMany($routeBuilders->buildAll());
@@ -151,12 +151,12 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
   
  ```php
-$routes->delete('/foo');
-$routes->get('/foo');
-$routes->options('/foo');
-$routes->patch('/foo');
-$routes->post('/foo');
-$routes->put('/foo');
+$routeBuilders->delete('/foo');
+$routeBuilders->get('/foo');
+$routeBuilders->options('/foo');
+$routeBuilders->patch('/foo');
+$routeBuilders->post('/foo');
+$routeBuilders->put('/foo');
 ```
 
 Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
@@ -331,11 +331,11 @@ Aphiria supports mapping routes to both controller methods and to closures:
 
 ```php
 // Map to a controller method
-$routes->get('users/:userId')
+$routeBuilders->get('users/:userId')
     ->toMethod(UserController::class, 'getUserById');
 
 // Map to a closure
-$routes->get('users/:userId/name')
+$routeBuilders->get('users/:userId/name')
     ->toClosure(function () {
         // Handle the request...
     });
@@ -350,7 +350,7 @@ Middleware are a great way to modify both the request and the response on an end
 To bind a single middleware class to your route, call:
 
 ```php
-$routes->get('foo')
+$routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withMiddleware(FooMiddleware::class);
 ```
@@ -358,7 +358,7 @@ $routes->get('foo')
 To bind many middleware classes, call:
 
 ```php
-$routes->get('foo')
+$routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         FooMiddleware::class,
@@ -373,13 +373,13 @@ Under the hood, these class names get converted to instances of `MiddlewareBindi
 Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `AuthMiddleware`, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
 
 ```php
-$routes->get('foo')
+$routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withMiddleware(AuthMiddleware::class, ['role' => 'admin']);
 
 // Or
 
-$routes->get('foo')
+$routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         new MiddlewareBinding(AuthMiddleware::class, ['role' => 'admin']),
@@ -403,14 +403,14 @@ Often times, a lot of your routes will share similar properties, such as hosts a
 ```php
 use Aphiria\Routing\Builders\RouteGroupOptions;
 
-$routes->group(
+$routeBuilders->group(
     new RouteGroupOptions('courses/:courseId', 'example.com'),
-    function (RouteBuilderRegistry $routes) {
+    function (RouteBuilderRegistry $routeBuilders) {
         // This route's path will use the group's path
-        $routes->get('')
+        $routeBuilders->get('')
             ->toMethod(CourseController::class, 'getCourseById');
 
-        $routes->get('/professors')
+        $routeBuilders->get('/professors')
             ->toMethod(CourseController::class, 'getCourseProfessors');
     }
 );
@@ -445,13 +445,13 @@ Let's say your app sends an API version header, and you want to match an endpoin
 
 ```php
 // This route will require an API-VERSION value of 'v1.0'
-$routes->get('comments')
+$routeBuilders->get('comments')
     ->toMethod(CommentController::class, 'getAllComments1_0')
     ->withAttribute('API-VERSION', 'v1.0')
     ->withConstraint(new ApiVersionConstraint);
 
 // This route will require an API-VERSION value of 'v2.0'
-$routes->get('comments')
+$routeBuilders->get('comments')
     ->toMethod(CommentController::class, 'getAllComments2_0')
     ->withAttribute('API-VERSION', 'v2.0')
     ->withConstraint(new ApiVersionConstraint);
