@@ -38,6 +38,7 @@ Now, let's start handling some exceptions.
 We can use middleware to catch any exceptions that might be thrown while handling a request.  Let's look at an example that uses the [configuration library](application-builders.md):
 
 ```php
+use Aphiria\Configuration\Middleware\MiddlewareBinding;
 use Aphiria\Exceptions\ExceptionLogger;
 use Aphiria\Exceptions\IExceptionLogger;
 use Aphiria\Exceptions\Middleware\ExceptionHandler;
