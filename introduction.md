@@ -49,11 +49,11 @@ Now, we'll actually set up our app to include these endpoints.  Let's say we nee
 
 ```php
 $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
-$appBuilder->withRoutes(function (RouteBuilderRegistry $routes) {
-    $routes->post('users')
+$appBuilder->withRoutes(function (RouteBuilderRegistry $routeBuilders) {
+    $routeBuilders->post('users')
         ->toMethod(UserController::class, 'createUser');
 
-    $routes->get('users/:id')
+    $routeBuilders->get('users/:id')
         ->toMethod(UserController::class, 'getUser');
 });
 ```

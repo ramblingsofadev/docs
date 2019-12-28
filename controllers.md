@@ -220,7 +220,7 @@ final class LoginController extends Controller
 Sometimes, a controller class is overkill for a route that does very little.  In this case, you can use a `Closure` when defining your routes:
 
 ```php
- $routes->get('ping')
+ $routeBuilders->get('ping')
     ->toClosure(fn () => $this->ok());
 ```
 
