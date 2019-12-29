@@ -360,11 +360,11 @@ To actually use annotations, you'll need to configure Aphiria to scan for them. 
 
 ```php
 use Aphiria\Configuration\AphiriaComponentBuilder;
-use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintRegistrant;
+use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
 
 // Assume we already have $container set up
-$annotationConstraintRegistrant = new AnnotationObjectConstraintRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(AnnotationObjectConstraintRegistrant::class, $annotationConstraintRegistrant);
+$annotationConstraintRegistrant = new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']);
+$container->bindInstance(AnnotationObjectConstraintsRegistrant::class, $annotationConstraintRegistrant);
 
 (new AphiriaComponentBuilder($container))
     ->withValidationComponent($appBuilder)
@@ -374,19 +374,19 @@ $container->bindInstance(AnnotationObjectConstraintRegistrant::class, $annotatio
 If you're not using the configuration library, you can manually scan for annotations:
 
 ```php
-use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintRegistrant;
-use Aphiria\Validation\Constraints\Caching\CachedObjectConstraintRegistrant;
-use Aphiria\Validation\Constraints\Caching\FileObjectConstraintRegistryCache;
-use Aphiria\Validation\Constraints\ObjectConstraintRegistry;
+use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
+use Aphiria\Validation\Constraints\Caching\CachedObjectConstraintsRegistrant;
+use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
+use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
 use Aphiria\Validation\Validator;
 
-$objectConstraints = new ObjectConstraintRegistry();
-$annotationConstraintRegistrant = new AnnotationObjectConstraintRegistrant(['PATH_TO_SCAN']);
+$objectConstraints = new ObjectConstraintsRegistry();
+$annotationConstraintRegistrant = new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']);
 
 // It's best to cache the results of scanning for annotations in production
 if (\getenv('APP_ENV') === 'production') {  
-    $constraintCache = new FileObjectConstraintRegistryCache('/tmp/constraints.txt');
-    $constraintRegistrant = new CachedObjectConstraintRegistrant($constraintCache);
+    $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
+    $constraintRegistrant = new CachedObjectConstraintsRegistrant($constraintCache);
     $constraintRegistrant->addConstraintRegistrant($annotationConstraintRegistrant);
     $constraintRegistrant->registerConstraints($objectConstraints);
 } else {

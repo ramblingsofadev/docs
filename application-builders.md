@@ -246,12 +246,9 @@ Let's set up some custom validation rules for our models.
     ->withValidationComponent($appBuilder);
 
 // Then, inside your module:
-$appBuilder->withComponent('validators', function (ObjectConstraintRegistry $objectConstraints) {
-    $objectConstraints->registerObjectConstraints(new ObjectConstraints(
-        BlogPost::class,
-        ['title' => new RequiredConstraint],
-        []
-    ));
+$appBuilder->withComponent('validators', function (ObjectConstraintsRegistryBuilder $objectConstraintsBuilder) {
+    $objectConstraintsBuilder->class(BlogPost::class)
+        ->hasPropertyConstraints('title', new RequiredConstraint());
 });
 ```
 
