@@ -48,19 +48,18 @@ final class User
 Let's set up some constraints.
 
 ```php
-use Aphiria\Validation\Builders\ValidatorBuilder;
+use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\{EmailConstraint, Requiredconstraint};
 use Aphiria\Validation\ValidationContext;
+use Aphiria\Validation\Validator;
 use App\Users\User;
 
 // Set up our validator
-$validatorBuilder = new ValidatorBuilder();
-$validatorBuilder->class(User::class)
-    ->hasProperty('email')
-    ->withConstraint(new EmailConstraint())
-    ->hasProperty('name')
-    ->withConstraint(new RequiredConstraint());
-$validator = $validatorBuilder->build();
+$constraintsBuilder = new ObjectConstraintsRegistryBuilder();
+$constraintsBuilder->class(User::class)
+    ->hasPropertyConstraints('email', new EmailConstraint())
+    ->hasPropertyConstraints('name', new Requiredconstraint());
+$validator = new Validator($constraintsBuilder->build());
 
 // Let's validate
 $user = new User(123, 'dave@example.com', 'Dave');
@@ -81,23 +80,7 @@ Having a context allows us to keep track of things like circular dependencies, w
 
 <h3 id="validating-objects">Validating Objects</h3>
 
-To validate an object, simply map the properties and methods in that object to constraints.  Aphiria will then recursively validate the object and any properties/methods that contain objects.  Use `ValidatorBuilder` to help set up the constraints on your objects' properties/methods.
-
-```php
-$validatorBuilder = new ValidatorBuilder();
-$validatorBuilder->class(BlogPost::class)
-    ->hasProperty('title')
-    ->withConstraint(new RequiredConstraint())
-    ->hasMethod('getTitleSlug')
-    ->withConstraint(new AlphanumericConstraint());
-$validator = $validatorBuilder->build();
-```
-
-If a property or method has many constraints, you can use `withManyConstraints()` with an array of `IConstraint` instances.
-
-> **Note:** The only methods that can be validated are ones with no required parameters.
-
-To validate an object, we have two options:
+To validate an object, simply map the properties and methods in that object to constraints.  Aphiria will then recursively validate the object and any properties/methods that contain objects.  Use `ObjectConstraintsRegistryBuilder` to help set up the constraints on your objects' properties/methods [like in the above example](#introduction).  To validate an object, we have two options:
 
 ```php
 $blogPost = new BlogPost('How to Reticulate Splines');
@@ -246,9 +229,8 @@ final class MaxLengthConstraint implements IConstraint
 You can now use this constraint just like any other built-in constraint:
 
 ```php
-$validatorBuilder->class(BlogPost::class)
-    ->hasProperty('title')
-    ->withConstraint(new MaxLengthConstraint(32));
+$constraintsBuilder->class(BlogPost::class)
+    ->hasPropertyConstraints('title', new MaxLengthConstraint(32));
 ```
 
 <h2 id="error-messages">Error Messages</h2>
