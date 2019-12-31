@@ -23,16 +23,17 @@ Content negotiation is a process between the client and server to determine how 
   * Controlled by the `Content-Type` and `Accept` headers
   * Dictates the [media type formatter](#media-type-formatters) to use
 * Character encoding
-  * Controlled by the `Content-Type` and `Accept-Charset` headers
+  * Controlled by the `Content-Type` and `Accept-Charset` headers by default
 * Language
-  * Controlled by the `Content-Language` and `Accept-Language` headers
-
-> **Note:** `ContentNegotiator` uses language tags from <a href="https://tools.ietf.org/html/rfc5646" target="_blank">RFC 5646</a>, and follows the lookup rules in <a href="https://tools.ietf.org/html/rfc4647#section-3.4" target="_blank">RFC 4647 Section 3.4</a>.
+  * Controlled by the `Content-Language` and `Accept-Language` headers by default
 
 Setting up your content negotiator is straightforward:
 
 ```php
+use Aphiria\Net\Http\ContentNegotiation\AcceptCharsetEncodingMatcher;
+use Aphiria\Net\Http\ContentNegotiation\AcceptLanguageMatcher;
 use Aphiria\Net\Http\ContentNegotiation\ContentNegotiator;
+use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatterMatcher;
 use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\FormUrlEncodedMediaTypeFormatter;
 use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\JsonMediaTypeFormatter;
 
@@ -41,11 +42,17 @@ $mediaTypeFormatters = [
     new JsonMediaTypeFormatter(),
     new FormUrlEncodedMediaTypeFormatter()
 ];
-$supportedLanguages = ['en-US'];
-$contentNegotiator = new ContentNegotiator($mediaTypeFormatters, $supportedLanguages);
+$contentNegotiator = new ContentNegotiator(
+    $mediaTypeFormatters, 
+    new MediaTypeFormatterMatcher($mediaTypeFormatters),
+    new AcceptCharsetEncodingMatcher(),
+    new AcceptLanguageMatcher(['en-US'])
+);
 ```
 
 Now you're ready to start [negotiating](#negotiating-requests).
+
+> **Note:** `AcceptLanguageMatcher` uses language tags from <a href="https://tools.ietf.org/html/rfc5646" target="_blank">RFC 5646</a>, and follows the lookup rules in <a href="https://tools.ietf.org/html/rfc4647#section-3.4" target="_blank">RFC 4647 Section 3.4</a>.
 
 <h2 id="negotiating-requests">Negotiating Requests</h2>
 
