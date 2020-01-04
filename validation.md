@@ -16,7 +16,7 @@
    1. [Built-In Constraints](#built-in-constraints)
    2. [Custom Constraints](#custom-constraints)
 4. [Error Messages](#error-messages)
-   1. [Built-In Error Message Compilers](#built-in-error-message-compilers)
+   1. [Built-In Error Message Formatters](#built-in-error-message-formatters)
 5. [Validation Annotations](#validation-annotations)
    1. [Built-In Annotations](#built-in-annotations)
    2. [Using Annotations](#using-annotations)
@@ -242,28 +242,28 @@ Error messages provide human-readable explanations of what failed during validat
 
 Constraints also provide error message placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
 
-To actually compile error messages, you can use an instance of `IErrorMessageCompiler`.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
+To actually format error messages, you can use an instance of `IErrorMessageFormatter`.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
 
 ```php
-use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageCompiler;
+use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageFormatter;
 use Aphiria\Validation\ValidationException;
 
-$errorMessageCompiler = new StringReplaceErrorMessageCompiler();
+$errorMessageFormatter = new StringReplaceErrorMessageFormatter();
 
 try {
     $validator->validateObject($blogPost);
 } catch (ValidationException $ex) {
-    $compiledErrorMessages = [];
+    $formattedErrorMessages = [];
 
     foreach ($ex->getValidationContext()->getConstraintViolations() as $violation) {
         $failedConstraint = $violation->getConstraint();
-        $compiledErrorMessages[] = $errorMessageCompiler->compile(
+        $formattedErrorMessages[] = $errorMessageFormatter->format(
             $failedConstraint->getErrorMessageId(), 
             $failedConstraint->getErrorMessagePlaceholders()
         );
     }
 
-    // Do something with the compiled error messages
+    // Do something with the formatted error messages
 }
 ```
 
@@ -275,19 +275,19 @@ use Aphiria\Validation\ValidationContext;
 $validationContext = new ValidationContext($blogPost);
 
 if (!$validator->tryValidateObject($blogPost, $validationContext)) {
-    $compiledErrorMessages = [];
+    $formattedErrorMessages = [];
     
     foreach ($validationContext->getConstraintViolations() as $violation) {
         // Same as in the above example...
     }
 
-    // Do something with the compiled error messages
+    // Do something with the formatted error messages
 }
 ```
 
-<h3 id="built-in-error-message-compilers">Built-In Error Message Compilers</h3>
+<h3 id="built-in-error-message-formatters">Built-In Error Message Formatters</h3>
 
-Aphiria comes with a couple error message compilers.  `StringReplaceErrorMessageCompiler` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default compiler, and is most suitable for applications that do not require i18n.
+Aphiria comes with a couple error message formatters.  `StringReplaceErrorMessageFormatter` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default formatter, and is most suitable for applications that do not require i18n.
 
 <h2 id="validation-annotations">Validation Annotations</h2>
 
