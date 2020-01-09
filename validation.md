@@ -16,10 +16,11 @@
    1. [Built-In Constraints](#built-in-constraints)
    2. [Custom Constraints](#custom-constraints)
 4. [Error Messages](#error-messages)
-   1. [Built-In Error Message Formatters](#built-in-error-message-formatters)
+   1. [Built-In Error Message Interpolaters](#built-in-error-message-interpolaters)
 5. [Validation Annotations](#validation-annotations)
    1. [Built-In Annotations](#built-in-annotations)
    2. [Using Annotations](#using-annotations)
+6. [Validating Request Bodies](#validating-request-bodies)
 
 </div>
 
@@ -242,28 +243,22 @@ Error messages provide human-readable explanations of what failed during validat
 
 Constraints also provide error message placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
 
-To actually format error messages, you can use an instance of `IErrorMessageFormatter`.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
+To actually interpolate error messages, you can inject an instance of `IErrorMessageInterpolater` into your validator.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
 
 ```php
-use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageFormatter;
-use Aphiria\Validation\ValidationException;
+use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageInterpolater;
+use Aphiria\Validation\{ValidationException, Validator};
 
-$errorMessageFormatter = new StringReplaceErrorMessageFormatter();
+// Assume we already have our object constraints configured
+$errorMessageInterpolater = new StringReplaceErrorMessageInterpolater();
+$validator = new Validator($objectConstraints, $errorMessageInterpolater);
 
 try {
     $validator->validateObject($blogPost);
 } catch (ValidationException $ex) {
-    $formattedErrorMessages = [];
+    $errors = $ex->getValidationContext()->getErrorMessages();
 
-    foreach ($ex->getValidationContext()->getConstraintViolations() as $violation) {
-        $failedConstraint = $violation->getConstraint();
-        $formattedErrorMessages[] = $errorMessageFormatter->format(
-            $failedConstraint->getErrorMessageId(), 
-            $failedConstraint->getErrorMessagePlaceholders()
-        );
-    }
-
-    // Do something with the formatted error messages
+    // Do something with the errors...
 }
 ```
 
@@ -275,19 +270,15 @@ use Aphiria\Validation\ValidationContext;
 $validationContext = new ValidationContext($blogPost);
 
 if (!$validator->tryValidateObject($blogPost, $validationContext)) {
-    $formattedErrorMessages = [];
-    
-    foreach ($validationContext->getConstraintViolations() as $violation) {
-        // Same as in the above example...
-    }
+    $errors = $validationContext->getErrorMessages();
 
-    // Do something with the formatted error messages
+    // Do something with the Interpolated error messages
 }
 ```
 
-<h3 id="built-in-error-message-formatters">Built-In Error Message Formatters</h3>
+<h3 id="built-in-error-message-interpolaters">Built-In Error Message Interpolaters</h3>
 
-Aphiria comes with a couple error message formatters.  `StringReplaceErrorMessageFormatter` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default formatter, and is most suitable for applications that do not require i18n.
+Aphiria comes with a couple error message interpolaters.  `StringReplaceErrorMessageInterpolater` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default interpolater, and is most suitable for applications that do not require i18n.
 
 <h2 id="validation-annotations">Validation Annotations</h2>
 
@@ -359,17 +350,18 @@ If you're not using the configuration library, you can manually scan for annotat
 use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
 use Aphiria\Validation\Constraints\Caching\CachedObjectConstraintsRegistrant;
 use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
+use Aphiria\Validation\Constraints\ObjectConstraintsRegistrantCollection;
 use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
 use Aphiria\Validation\Validator;
 
 $objectConstraints = new ObjectConstraintsRegistry();
+$objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection();
 $annotationConstraintRegistrant = new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']);
 
 // It's best to cache the results of scanning for annotations in production
 if (\getenv('APP_ENV') === 'production') {  
     $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
-    $constraintRegistrant = new CachedObjectConstraintsRegistrant($constraintCache);
-    $constraintRegistrant->addConstraintRegistrant($annotationConstraintRegistrant);
+    $constraintRegistrant = new CachedObjectConstraintsRegistrant($constraintCache, $objectConstraintsRegistrants);
     $constraintRegistrant->registerConstraints($objectConstraints);
 } else {
     $annotationConstraintRegistrant->registerConstraints($objectConstraints);
@@ -377,3 +369,7 @@ if (\getenv('APP_ENV') === 'production') {
 
 $validator = new Validator($objectConstraints);
 ```
+
+<h2 id="validating-request-bodies">Validating Request Bodies</h2>
+
+It's possible to use the validation library along with the [serialization library](serialization.md) to validate deserialized request bodies.  Read the [controller documentation](controllers.md#validating-request-bodies) for more details.

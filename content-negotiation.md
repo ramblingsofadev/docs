@@ -9,6 +9,7 @@
 1. [Basics](#basics)
 2. [Negotiating Requests](#negotiating-requests)
 3. [Negotiating Responses](#negotiating-responses)
+   1. [Negotiating Language](#negotiating-language)
 4. [Media Type Formatters](#media-type-formatters)
 
 </div>
@@ -46,7 +47,7 @@ $contentNegotiator = new ContentNegotiator(
     $mediaTypeFormatters, 
     new MediaTypeFormatterMatcher($mediaTypeFormatters),
     new AcceptCharsetEncodingMatcher(),
-    new AcceptLanguageMatcher(['en-US'])
+    new AcceptLanguageMatcher(['en'])
 );
 ```
 
@@ -118,6 +119,38 @@ Content-Language: en-US
 Content-Length: 36
 
 {"id":123,"email":"foo@example.com"}
+```
+
+<h3 id="negotiating-language">Negotiating Language</h3>
+
+By default, `ContentNegotiator` uses `AcceptLanguageMatcher` to find the best language to respond in from the `Accept-Language` header.  However, if your locale is, for example, set as a query string parameter, you can use a custom language matcher and inject it into your `ContentNegotiator`.
+
+```php
+use Aphiria\Net\Http\ContentNegotiation\ILanguageMatcher;
+use Aphiria\Net\Http\Formatting\RequestParser;
+use Aphiria\Net\Http\IHttpRequestMessage;
+
+final class QueryStringLanguageMatcher implements ILanguageMatcher
+{
+    private RequestParser $requestParser;
+   
+    public function __construct()
+    {
+        $this->requestParser = new RequestParser();
+    }
+
+    public function getBestLanguageMatch(IHttpRequestMessage $request): ?string
+    {
+        $queryStringVars = $this->requestParser->parseQueryString($request);
+        $bestLanguage = null;
+        
+        if ($queryStringVars->tryGet('locale', $bestLanguage)) {
+            return $bestLanguage;
+        }
+
+        return null;
+    }
+}
 ```
 
 <h2 id="media-type-formatters">Media Type Formatters</h2>

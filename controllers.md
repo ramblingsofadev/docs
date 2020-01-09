@@ -11,6 +11,7 @@
    1. [Request Bodies](#request-body-parameters)
    2. [URI Parameters](#uri-parameters)
    3. [Arrays in Request Bodies](#arrays-in-request-bodies)
+   4. [Validating Request Bodies](#validating-request-bodies)
 3. [Parsing Request Data](#parsing-request-data)
 4. [Formatting Response Data](#formatting-response-data)
 5. [Closure Controllers](#closure-controllers)
@@ -157,6 +158,29 @@ final class UserController extends Controller
         $this->users->createManyUsers($users);
         
         return $this->created();
+    }
+}
+```
+
+<h3 id="validating-request-bodies">Validating Request Bodies</h3>
+
+It's possible to combine the power of the [serialization](serialization.md) and [validation](validation.md) libraries to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [changing the exception response factory](http-exception-handling.md#customizing-exception-responses) for an `InvalidRequestBodyException`.
+
+If a request body cannot be automatically deserialized, as in the case of [arrays of objects in request bodies](#arrays-in-request-bodies), you must manually perform validation.
+
+```php
+use Aphiria\Api\Validation\IRequestBodyValidator;
+
+final class UserController extends Controller
+{
+    private IRequestBodyValidator $validator;
+
+    public function createManyUsers(): IHttpResponseMessage
+    {
+        $users = $this->readRequestBodyAs(User::class . '[]');
+        $this->validator->validate($this->request, $users);
+
+        // Continue processing the users...
     }
 }
 ```
