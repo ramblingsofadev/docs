@@ -621,20 +621,15 @@ The process of building your routes and compiling the trie is a relatively slow 
 
 <h3 id="route-caching">Route Caching</h3>
 
-To enable caching, use `CachedRouteRegistrant` and pass in an `IRouteCache` (`FileRouteCache` is provided) to the first parameter of `CachedRouteRegistrant`:
+To enable caching, pass in an `IRouteCache` (`FileRouteCache` is provided) to the first parameter of `RouteRegistrantCollection`:
 
 ```php
-use Aphiria\Routing\Caching\CachedRouteRegistrant;
 use Aphiria\Routing\Caching\FileRouteCache;
 use Aphiria\Routing\RouteCollection;
+use Aphiria\Routing\RouteRegistrantCollection;
 
 $routes = new RouteCollection();
-$routeRegistrant = new CachedRouteRegistrant(
-    new FileRouteCache('/tmp/routes.cache'),
-    function (RouteCollection $routes) {
-        // Register your routes...
-    }
-);
+$routeRegistrant = new RouteRegistrantCollection(new FileRouteCache('/tmp/routes.cache'));
 
 // Once you're done configuring your route registrant...
 
@@ -646,7 +641,6 @@ $routeRegistrant->registerRoutes($routes);
 To enable caching, pass in an `ITrieCache` (`FileTrieCache` comes with Aphiria) to your trie factory (passing in `null` will disable caching).  If you want to enable caching for a particular environment, you could do so:
 
 ```php
-use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\Caching\FileTrieCache;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 

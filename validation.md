@@ -348,24 +348,23 @@ If you're not using the configuration library, you can manually scan for annotat
 
 ```php
 use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
-use Aphiria\Validation\Constraints\Caching\CachedObjectConstraintsRegistrant;
 use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
 use Aphiria\Validation\Constraints\ObjectConstraintsRegistrantCollection;
 use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
 use Aphiria\Validation\Validator;
 
-$objectConstraints = new ObjectConstraintsRegistry();
-$objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection();
-$annotationConstraintRegistrant = new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']);
 
 // It's best to cache the results of scanning for annotations in production
 if (\getenv('APP_ENV') === 'production') {  
     $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
-    $constraintRegistrant = new CachedObjectConstraintsRegistrant($constraintCache, $objectConstraintsRegistrants);
-    $constraintRegistrant->registerConstraints($objectConstraints);
 } else {
-    $annotationConstraintRegistrant->registerConstraints($objectConstraints);
+    $constraintCache = null;
 }
+
+$objectConstraints = new ObjectConstraintsRegistry();
+$objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection($constraintCache);
+$objectConstraintsRegistrants->add(new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']));
+$objectConstraintsRegistrants->registerConstraints($objectConstraints);
 
 $validator = new Validator($objectConstraints);
 ```
