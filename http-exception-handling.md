@@ -12,7 +12,8 @@
 3. [Global Exception Handling](#global-exception-handling)
    1. [Throwing Errors As Exceptions](#throwing-errors-as-exceptions)
 4. [Customizing Exception Responses](#customizing-exception-responses)
-   1. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
+   1. [Default Exception Responses](#default-exception-responses)
+   2. [Using Classes to Create Exception Responses](#using-classes-to-create-exception-responses)
 5. [Logging](#logging)
 
 </div>
@@ -122,6 +123,31 @@ $exceptionResponseFactories->registerManyFactories([
     // ...
 ]);
 ```
+
+<h3 id="default-exception-responses">Default Exception Responses</h3>
+
+Mapping every single one of your application's exceptions to a response factory could be tedious.  To get around this, you can add a default response factory for exceptions that do not need custom responses.  Let's take a look at an example that returns <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> by default:
+
+```php
+use Aphiria\Api\Errors\ProblemDetails;
+
+$exceptionResponseFactories->registerDefaultFactory(
+    function (Exception $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) {
+        $problemDetails = new ProblemDetails(
+            'https://tools.ietf.org/html/rfc7231#section-6.6.1',
+            'An error occurred',
+            null,
+            500
+        );
+
+        return $responseFactory->createResponse($request, 500, null, $problemDetails);
+    }
+);
+```
+
+Now, whenever an exception is thrown that does not have a custom response, a 500 response with problem details will be returned.
+
+> **Note:** Problem details are the default factory in the skeleton app.
 
 <h3 id="using-classes-to-create-exception-responses">Using Classes to Create Exception Responses</h3>
 
