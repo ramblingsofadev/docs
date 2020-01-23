@@ -141,6 +141,7 @@ Controllers are the actions that are executed when a user hits a URI.  They typi
 <h4 id="aphiria-controllers-pros">Pros</h4>
 
 * Automatic content negotiation for request and response bodies
+* Automatic validation of request bodies
 * Automatic deserialization of route and query string parameters
 * Expressive syntax that makes your controllers more intuitive to read and write
 * Convenience methods for constructing various responses
