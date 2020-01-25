@@ -48,7 +48,7 @@ Although this is simple, it's probably a little heavy-handed to register all you
 
 <h2 id="inspection-bindings">Inspection Bindings</h2>
 
-Rather than having to dispatch _every_ bootstrapper on every request, you can use binding inspections to lazily register them, eg only when they're actually needed.  At a high level, we can look inside your bootstrappers and determine what each of them bind.  It can then set up a factory for each of those bindings that runs `Bootstrapper::registerBindings()` only when at least one of the bootstrapper's bindings is necessary.  This prevents you from having to list out the bindings a bootstrapper registers to get this sort of functionality (like other frameworks force you to do).
+Rather than having to dispatch _every_ bootstrapper on every request, you can use binding inspections to lazily register them, eg only when they're actually needed.  At a high level, we can look inside your bootstrappers and determine what each of them bind.  It can then set up a factory for each of those bindings that runs `Bootstrapper::registerBindings()` only when at least one of the bootstrapper's bindings is used.  This prevents you from having to list out the bindings a bootstrapper registers to get this sort of functionality (like other frameworks force you to do).
 
 Let's build on the `UserBootstrapper` from the [previous example](#basics) and set up our app to inspect its bindings:
 
