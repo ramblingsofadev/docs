@@ -51,8 +51,7 @@ Let's set up some constraints.
 ```php
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\{EmailConstraint, Requiredconstraint};
-use Aphiria\Validation\ValidationContext;
-use Aphiria\Validation\Validator;
+use Aphiria\Validation\{ValidationContext, Validator};
 use App\Users\User;
 
 // Set up our validator
