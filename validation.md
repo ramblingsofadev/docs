@@ -16,7 +16,7 @@
    1. [Built-In Constraints](#built-in-constraints)
    2. [Custom Constraints](#custom-constraints)
 4. [Error Messages](#error-messages)
-   1. [Built-In Error Message Interpolaters](#built-in-error-message-interpolaters)
+   1. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
 5. [Validation Annotations](#validation-annotations)
    1. [Built-In Annotations](#built-in-annotations)
    2. [Using Annotations](#using-annotations)
@@ -242,15 +242,15 @@ Error messages provide human-readable explanations of what failed during validat
 
 Constraints also provide error message placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
 
-To actually interpolate error messages, you can inject an instance of `IErrorMessageInterpolater` into your validator.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
+To actually interpolate error messages, you can inject an instance of `IErrorMessageInterpolator` into your validator.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
 
 ```php
-use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageInterpolater;
+use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageInterpolator;
 use Aphiria\Validation\{ValidationException, Validator};
 
 // Assume we already have our object constraints configured
-$errorMessageInterpolater = new StringReplaceErrorMessageInterpolater();
-$validator = new Validator($objectConstraints, $errorMessageInterpolater);
+$errorMessageInterpolator = new StringReplaceErrorMessageInterpolator();
+$validator = new Validator($objectConstraints, $errorMessageInterpolator);
 
 try {
     $validator->validateObject($blogPost);
@@ -275,9 +275,9 @@ if (!$validator->tryValidateObject($blogPost, $validationContext)) {
 }
 ```
 
-<h3 id="built-in-error-message-interpolaters">Built-In Error Message Interpolaters</h3>
+<h3 id="built-in-error-message-interpolators">Built-In Error Message Interpolators</h3>
 
-Aphiria comes with a couple error message interpolaters.  `StringReplaceErrorMessageInterpolater` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default interpolater, and is most suitable for applications that do not require i18n.
+Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMessageInterpolator` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default interpolator, and is most suitable for applications that do not require i18n.
 
 <h2 id="validation-annotations">Validation Annotations</h2>
 
