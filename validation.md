@@ -51,7 +51,7 @@ Let's set up some constraints.
 ```php
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\{EmailConstraint, Requiredconstraint};
-use Aphiria\Validation\{ValidationContext, Validator};
+use Aphiria\Validation\Validator;
 use App\Users\User;
 
 // Set up our validator
@@ -63,20 +63,19 @@ $validator = new Validator($constraintsBuilder->build());
 
 // Let's validate
 $user = new User(123, 'dave@example.com', 'Dave');
-$validator->validateObject($user, new ValidationContext($user));
+$validator->validateObject($user);
 ```
 
 If the object was not valid, a `ValidationException` will be thrown.  That's it - validation, made simple.
 
 <h2 id="validating-data">Validating Data</h2>
 
-To validate data, you need three things:
+Several types of data can be validated:
 
-1. The data itself
-2. A list of [constraints](#constraints) to apply
-3. A context in which to perform the validation
-
-Having a context allows us to keep track of things like circular dependencies, which property/method we're validating, and any violations found during validation.
+* [Objects](#validating-objects)
+* [Properties](#validating-properties)
+* [Methods](#validating-methods)
+* [Raw values](#validating-values)
 
 <h3 id="validating-objects">Validating Objects</h3>
 
@@ -86,12 +85,14 @@ To validate an object, simply map the properties and methods in that object to c
 $blogPost = new BlogPost('How to Reticulate Splines');
 
 // Will throw a ValidationException if $blogPost is invalid
-$valdiator->validateObject($blogPost, new ValidationContext($blogPost));
+$valdiator->validateObject($blogPost);
 
 // Or
 
+$violations = [];
+
 // Will return true if $blogPost is valid, otherwise false
-if ($validator->tryValidateObject($blogPost, new ValidationContext($blogPost))) {
+if ($validator->tryValidateObject($blogPost, $violations)) {
     // ...
 }
 ```
@@ -104,12 +105,14 @@ You can validate an individual property from an object:
 $blogPost = new BlogPost('How to Reticulate Splines');
 
 // Will throw a ValidationException if $blogPost->title is invalid
-$valdiator->validateProperty($blogPost, 'title', new ValidationContext($blogPost, 'title'));
+$valdiator->validateProperty($blogPost, 'title');
 
 // Or
 
+$violations = [];
+
 // Will return true if $blogPost->title is valid, otherwise false
-if ($validator->tryValidateProperty($blogPost, 'title', new ValidationContext($blogPost, 'title'))) {
+if ($validator->tryValidateProperty($blogPost, 'title', $violations)) {
     // ...
 }
 ```
@@ -124,12 +127,14 @@ You can validate an individual method very similarly to how you validate propert
 $blogPost = new BlogPost('How to Reticulate Splines');
 
 // Will throw a ValidationException if $blogPost->getTitleSlug() is invalid
-$valdiator->validateMethod($blogPost, 'getTitleSlug', new ValidationContext($blogPost, null, 'getTitleSlug'));
+$valdiator->validateMethod($blogPost, 'getTitleSlug');
 
 // Or
 
+$violations = [];
+
 // Will return true if $blogPost->getTitleSlug() is valid, otherwise false
-if ($validator->tryValidateMethod($blogPost, 'getTitleSlug', new ValidationContext($blogPost, null, 'getTitleSlug'))) {
+if ($validator->tryValidateMethod($blogPost, 'getTitleSlug', $violations)) {
     // ...
 }
 ```
@@ -142,12 +147,14 @@ If you want to validate an individual value, you can:
 
 ```php
 // Will throw a ValidationException if $email is invalid
-$valdiator->validateValue($email, [new EmailConstraint()], new ValidationContext($email));
+$valdiator->validateValue($email, [new EmailConstraint()]);
 
 // Or
 
+$violations = [];
+
 // Will return true if $email is valid, otherwise false
-if ($validator->tryValidateValue($email, [new EmailConstraint()], new ValidationContext($email))) {
+if ($validator->tryValidateValue($email, [new EmailConstraint()], $violations)) {
     // ...
 }
 ```
@@ -194,7 +201,6 @@ Creating a custom constraint is simple - just implement `IConstraint`.
 
 ```php
 use Aphiria\Validation\Constraints\IConstraint;
-use Aphiria\Validation\ValidationContext;
 
 final class MaxLengthConstraint implements IConstraint
 {
@@ -210,12 +216,12 @@ final class MaxLengthConstraint implements IConstraint
         return 'Length cannot exceed {maxLength}';
     }
 
-    public function getErrorMessagePlaceholders(): array
+    public function getErrorMessagePlaceholders($value): array
     {
         return ['maxLength' => $this->maxLength];
     }
 
-    public function passes($value, ValidationContext $context): bool
+    public function passes($value): bool
     {
         if (!is_string($value)) {
             throw new \InvalidArgumentException('Value must be string');
@@ -255,23 +261,29 @@ $validator = new Validator($objectConstraints, $errorMessageInterpolator);
 try {
     $validator->validateObject($blogPost);
 } catch (ValidationException $ex) {
-    $errors = $ex->getValidationContext()->getErrorMessages();
+    $errors = [];
+
+    foreach ($ex->getViolations() as $violation) {
+        $errors[] = $violation->getErrorMessage();
+    }
 
     // Do something with the errors...
 }
 ```
 
-If you're using one of the `IValidator::tryValidate*()` methods, you can grab the violations from the `ValidationContext`:
+If you're using one of the `IValidator::tryValidate*()` methods, you can grab the violations from the violations array parameter:
 
 ```php
-use Aphiria\Validation\ValidationContext;
+$violations = [];
 
-$validationContext = new ValidationContext($blogPost);
+if (!$validator->tryValidateObject($blogPost, $violations)) {
+    $errors = [];
 
-if (!$validator->tryValidateObject($blogPost, $validationContext)) {
-    $errors = $validationContext->getErrorMessages();
+    foreach ($violations as $violation) {
+        $errors[] = $violation->getErrorMessage();
+    }
 
-    // Do something with the Interpolated error messages
+    // Do something with the errors...
 }
 ```
 
