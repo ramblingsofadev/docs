@@ -7,7 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Introduction](#introduction)
-2. [Validating Data](#validating-objects)
+2. [Validating Data](#validating-data)
    1. [Validating Objects](#validating-objects)
    2. [Validating Properties](#validating-properties)
    3. [Validating Methods](#validating-methods)
