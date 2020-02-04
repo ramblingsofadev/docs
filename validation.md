@@ -16,7 +16,8 @@
    1. [Built-In Constraints](#built-in-constraints)
    2. [Custom Constraints](#custom-constraints)
 4. [Error Messages](#error-messages)
-   1. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
+   1. [Error Message Templates](#error-message-templates)
+   2. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
 5. [Validation Annotations](#validation-annotations)
    1. [Built-In Annotations](#built-in-annotations)
    2. [Using Annotations](#using-annotations)
@@ -287,9 +288,61 @@ if (!$validator->tryValidateObject($blogPost, $violations)) {
 }
 ```
 
+<h3 id="error-message-templates">Error Message Templates</h3>
+
+Error message templates are what get [interpolated](#built-in-error-message-interpolators) into error messages.  As previously stated, you can make your error message IDs the same as the templates.  If that's the route you take, it's best to pass in an instance of `DefaultErrorMessageTemplateRegistry` to your interpolator:
+
+```php
+use Aphiria\Validation\ErrorMessages\{DefaultErrorMessageTemplateRegistry, StringReplaceErrorMessageInterpolator};
+
+$errorTemplates = new DefaultErrorMessageTemplateRegistry();
+$errorMessageInterpolator = new StringReplaceErrorMessageInterpolator($errorTemplates);
+```
+
+If your error message IDs are pointers to error messages, you can implement your own error template registry.  Let's say that our templates are stored in a PHP file and are separated by locale, eg
+
+```php
+// These messages messages are in the ICU format
+return [
+    'en' => [
+        'tooLong' => 'Value must not exceed {maxLength, plural, one {# character}, other {# characters}} characters'
+    ],
+    'es' => [
+        'tooLong' => 'El valor no debe superar los {maxLength, plural, one {# caracter}, other {# caracter}} caracteres'
+    ]
+];
+```
+
+Let's set up a registry to read from this file:
+
+```php
+use Aphiria\Validation\ErrorMessages\IErrorMessageTemplateRegistry;
+
+class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTemplateRegistry
+{
+    private array $errorMessages;
+    private string $defaultLocale;
+
+    public function __construct($path, string $defaultLocale)
+    {
+        $this->errorMessages = require $path;
+        $this->defaultLocale = $defaultLocale;
+    }
+
+    public function getErrorMessageTemplate(string $errorMessageId, string $locale = null): string
+    {
+        return $this->errorMessages[$locale][$errorMessageId] ?? $this->errorMessages[$this->defaultLocale][$errorMessageId];
+    }
+}
+```
+
+To use this resource file, just pass in an instance of `ResourceFileErrorMessageTemplateRegistry` into [`IcuErrorMessageInterpolator`](#built-in-error-message-interpolators).
+
 <h3 id="built-in-error-message-interpolators">Built-In Error Message Interpolators</h3>
 
 Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMessageInterpolator` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default interpolator, and is most suitable for applications that do not require i18n.
+
+If you do require i18n and are using the <a href="http://userguide.icu-project.org/formatparse/messages" target="_blank">ICU format</a>, then `IcuErrorMessageInterpolator` is probably the better choice.
 
 <h2 id="validation-annotations">Validation Annotations</h2>
 
