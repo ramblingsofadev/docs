@@ -242,14 +242,9 @@ $constraintsBuilder->class(BlogPost::class)
 
 <h2 id="error-messages">Error Messages</h2>
 
-Error messages provide human-readable explanations of what failed during validation.  `IConstraint` provides an error message ID, which can be used in two ways:
+Error messages provide human-readable explanations of what failed during validation.  `IConstraints` contain error message IDs and placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
 
-1. As the error message itself, which works best if you're not doing i18n
-2. As a sort of pointer (eg a slug) to the message to use, which works best if you're using a third-party i18n library
-
-Constraints also provide error message placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
-
-To actually interpolate error messages, you can inject an instance of `IErrorMessageInterpolator` into your validator.  Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
+Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
 
 ```php
 use Aphiria\Validation\ErrorMessages\StringReplaceErrorMessageInterpolator;
@@ -290,30 +285,28 @@ if (!$validator->tryValidateObject($blogPost, $violations)) {
 
 <h3 id="error-message-templates">Error Message Templates</h3>
 
-Error message templates are what get [interpolated](#built-in-error-message-interpolators) into error messages.  As previously stated, you can make your error message IDs the same as the templates.  If that's the route you take, it's best to pass in an instance of `DefaultErrorMessageTemplateRegistry` to your interpolator:
+Aphiria allows you to configure how your error message IDs map to error message templates via error template registries.  The IDs are typically used in one of two ways:
 
-```php
-use Aphiria\Validation\ErrorMessages\{DefaultErrorMessageTemplateRegistry, StringReplaceErrorMessageInterpolator};
+1. As the error message template itself, which works best if you're not doing i18n
+   - `DefaultErrorMessageTemplateRegistry` is recommended
+2. As a sort of pointer (eg a slug) to the message template to use, which works best if you need to support i18n
+   - Implementing your own template registry is recommended
 
-$errorTemplates = new DefaultErrorMessageTemplateRegistry();
-$errorMessageInterpolator = new StringReplaceErrorMessageInterpolator($errorTemplates);
-```
-
-If your error message IDs are pointers to error messages, you can implement your own error template registry.  Let's say that our templates are stored in a PHP file and are separated by locale, eg
+Let's look at an example of option 2.  Let's say that your templates are stored in a PHP file and are separated by locale, eg:
 
 ```php
 // These messages messages are in the ICU format
 return [
     'en' => [
-        'tooLong' => 'Value must not exceed {maxLength, plural, one {# character}, other {# characters}} characters'
+        'tooLong' => 'Value can not exceed {maxLength, plural, one {# character}, other {# characters}}'
     ],
     'es' => [
-        'tooLong' => 'El valor no debe superar los {maxLength, plural, one {# caracter}, other {# caracter}} caracteres'
+        'tooLong' => 'El valor no puede superar {maxLength, plural, one {un # caracter}, other {los # caracteres}}'
     ]
 ];
 ```
 
-Let's set up a registry to read from this file:
+Let's create a registry to read from this file:
 
 ```php
 use Aphiria\Validation\ErrorMessages\IErrorMessageTemplateRegistry;
@@ -336,13 +329,35 @@ class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTemplateR
 }
 ```
 
-To use this resource file, just pass in an instance of `ResourceFileErrorMessageTemplateRegistry` into [`IcuErrorMessageInterpolator`](#built-in-error-message-interpolators).
+To use this registry, just pass it into your interpolator, and pass the interpolator into your validator.
+
+```php
+use Aphiria\Validation\ErrorMessages\IcuFormatErrorMessageInterpolator;
+use Aphiria\Validation\Validator;
+
+$errorMessageTemplates = new ResourceFileErrorMessageTemplateRegistry('/resources/errorMessageTemplates.php');
+$errorMessageInterpolator = new IcuFormatErrorMessageInterpolator($errorMessageTemplates);
+
+// Assume we've configured the object constraints
+$validator = new Validator($objectConstraints, $errorMessageInterpolator);
+```
+
+You can override the default error message ID of a constraint by passing one in via the constructor:
+
+```php
+use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
+use Aphiria\Validation\Constraints\EmailConstraint;
+
+$constraintsBuilder = new ObjectConstraintsRegistryBuilder();
+$constraintsBuilder->class(User::class)
+    ->hasPropertyConstraints('email', new EmailConstraint('email-invalid'));
+```
 
 <h3 id="built-in-error-message-interpolators">Built-In Error Message Interpolators</h3>
 
-Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMessageInterpolator` simply replaces `{placeholder}` in the constraints' error message IDs with the constraints' placeholders.  It is the default interpolator, and is most suitable for applications that do not require i18n.
+Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMessageInterpolator` simply replaces `{placeholder}` in the constraints' error message templates with the constraints' placeholders.  It is the default interpolator, and is most suitable for applications that do not require i18n.
 
-If you do require i18n and are using the <a href="http://userguide.icu-project.org/formatparse/messages" target="_blank">ICU format</a>, then `IcuErrorMessageInterpolator` is probably the better choice.
+If you do require i18n and are using the <a href="http://userguide.icu-project.org/formatparse/messages" target="_blank">ICU format</a>, `IcuErrorMessageInterpolator` is probably the better choice.
 
 <h2 id="validation-annotations">Validation Annotations</h2>
 
