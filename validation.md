@@ -311,12 +311,12 @@ Let's create a registry to read from this file:
 ```php
 use Aphiria\Validation\ErrorMessages\IErrorMessageTemplateRegistry;
 
-class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTemplateRegistry
+final class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTemplateRegistry
 {
     private array $errorMessages;
     private string $defaultLocale;
 
-    public function __construct($path, string $defaultLocale)
+    public function __construct(string $path, string $defaultLocale)
     {
         $this->errorMessages = require $path;
         $this->defaultLocale = $defaultLocale;

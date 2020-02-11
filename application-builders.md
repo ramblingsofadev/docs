@@ -40,7 +40,7 @@ Before we dive too deep, you might be asking yourself "What's the difference bet
 `ApplicationBuilder` provides all the functionality you'll need to configure your application logic:
 
 ```php
-use Aphiria\Configuration\ApplicationBuilder;
+use Aphiria\Configuration\Builders\ApplicationBuilder;
 use Aphiria\DependencyInjection\Bootstrappers\Inspections\BindingInspectorBootstrapperDispatcher;
 use Aphiria\DependencyInjection\Container;
 
@@ -152,7 +152,7 @@ This is semantically identical to our previous example that called `withComponen
 A module is a chunk of your domain.  For example, if you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate bootstrappers, routes, and console commands.  So, why not bundle all the configuration logic by module?
 
 ```php
-use Aphiria\Configuration\IModuleBuilder;
+use Aphiria\Configuration\Builders\IModuleBuilder;
 use Aphiria\Routing\Builders\RouteGroupOptions;
 
 final class UserModuleBuilder implements IModuleBuilder
@@ -193,7 +193,7 @@ Now, your entire user module is configured and ready to go.
 The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [console command annotations](console.md#command-annotations), [encoder](serialization.md), [exception handling](http-exception-handling.md), or [validation](validation.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
 
 ```php
-use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
 use Aphiria\DependencyInjection\Container;
 
 // Assume we already have an app builder
