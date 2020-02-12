@@ -235,7 +235,7 @@ $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routeBuilde
 
 Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
 
-> **Note:** If you're using route annotations, those routes will be combined with any manually-registered routes.
+> **Note:** If you're using [route annotations](routing.md#route-annotations), those routes will be combined with any manually-registered routes.
 
 <h3 id="configuring-validators">Configuring Validators</h3>
 
