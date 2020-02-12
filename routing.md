@@ -39,9 +39,7 @@
 
 <h2 id="basics">Basics</h2>
 
-This library is a routing library.  In other words, it lets you map URIs to actions, and attempts to match an input request to ones of those routes.
-
-There are so many routing libraries out there.  Why use this one?  Well, there are a few reasons:
+Routing is the process of mapping HTTP requests to actions.  There are so many routing libraries out there.  Why use this one?  Well, there are a few reasons:
 
 * It isn't coupled to _any_ library/framework
 * It supports things that other route matching libraries do not support, like:
@@ -50,28 +48,27 @@ There are so many routing libraries out there.  Why use this one?  Well, there a
   * [The ability to match on header values](#custom-constraints), which makes things like versioning your routes a cinch
   * [Binding controller methods and closures to the route action](#route-actions)
 * It is fast
-  * With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)
+  * <a href="https://github.com/aphiria/aphiria/blob/master/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
 * It supports [creating URIs from routes](#creating-route-uris)
 * It is built to support the latest PHP 7.4 features
 
-Out of the box, this library provides a fluent syntax to help you build your routes.  Let's look at a working example.
-
-First, let's import the namespaces and define our routes:
+Let's look at a fully-functional example:
 
 ```php
-use Aphiria\Routing\Builders\RouteBuilderRegistry;;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
-use Aphiria\Routing\RouteCollection
+use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
+use App\Books\Api\{BookController, Authorization};
 
 // Register the routes
 $routes = new RouteCollection();
 $routeBuilders = new RouteBuilderRegistry();
 $routeBuilders->get('/books/:bookId')
     ->toMethod(BookController::class, 'getBooksById')
-    ->withMiddleware(AuthMiddleware::class);
+    ->withMiddleware(Authorization::class);
 $routes->addMany($routeBuilders->buildAll());
 
 // Set up the route matcher
@@ -183,8 +180,8 @@ Let's actually define a route:
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\Routing\Annotations\Put;
-use App\Users\Http\Middleware\Authorization;
+use Aphiria\Routing\Annotations\{Middleware, Put};
+use App\Users\Api\Authorization;
 use App\Users\User;
 
 class UserController extends Controller
@@ -231,7 +228,8 @@ Just like with our [route builders](#grouping-routes), we can also group routes 
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IHttpResponseMessage;
 use Aphiria\Routing\Annotations\RouteGroup;
-use App\Users\Http\Middleware\Authorization;
+use Aphiria\Routing\Annotations\{Middleware, Put};
+use App\Users\Api\Authorization;
 use App\Users\User;
 
 /**
@@ -270,7 +268,7 @@ Middleware can be defined via the `@Middleware` attribute.  The first value must
 Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
 
 ```php
-use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
 use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
 
 // Assume we already have $container set up
@@ -336,9 +334,7 @@ $routeBuilders->get('users/:userId')
 
 // Map to a closure
 $routeBuilders->get('users/:userId/name')
-    ->toClosure(function () {
-        // Handle the request...
-    });
+    ->toClosure(fn () => /* Handle the request */);
 ```
 
 To determine the type of action (controller method or closure) the matched route uses, check `RouteAction::usesMethod()`.
@@ -370,19 +366,19 @@ Under the hood, these class names get converted to instances of `MiddlewareBindi
 
 <h3 id="middleware-attributes">Middleware Attributes</h3>
 
-Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `AuthMiddleware`, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
+Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
 
 ```php
 $routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
-    ->withMiddleware(AuthMiddleware::class, ['role' => 'admin']);
+    ->withMiddleware(Authorization::class, ['role' => 'admin']);
 
 // Or
 
 $routeBuilders->get('foo')
     ->toMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
-        new MiddlewareBinding(AuthMiddleware::class, ['role' => 'admin']),
+        new MiddlewareBinding(Authorization::class, ['role' => 'admin']),
         // Other middleware...
     ]);
 ```
@@ -391,7 +387,7 @@ Here's how you can grab the middleware on a matched route:
 
 ```php
 foreach ($result->middlewareBindings as $middlewareBinding) {
-    $middlewareBinding->className; // "AuthMiddleware"
+    $middlewareBinding->className; // "Authorization"
     $middlewareBinding->attributes; // ["role" => "admin"]
 }
 ```
@@ -401,7 +397,7 @@ foreach ($result->middlewareBindings as $middlewareBinding) {
 Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  You can group these routes together using `RouteBuilderRegistry::group()` and specifying the options to apply to all routes within the group:
 
 ```php
-use Aphiria\Routing\Builders\RouteGroupOptions;
+use Aphiria\Routing\Builders\{RouteBuilderRegistry, RouteGroupOptions};
 
 $routeBuilders->group(
     new RouteGroupOptions('courses/:courseId', 'example.com'),
@@ -469,6 +465,7 @@ final class ApiVersionConstraint implements IRouteConstraint
 {
     public function passes(
         MatchedRouteCandidate $matchedRouteCandidate,
+        string $method,
         string $host,
         string $path,
         array $headers
@@ -479,7 +476,7 @@ final class ApiVersionConstraint implements IRouteConstraint
             return false;
         }
 
-        return array_search($attributes['API-VERSION'], $headers['API-VERSION']) !== false;
+        return in_array($attributes['API-VERSION'], $headers['API-VERSION'], true);
     }
 }
 ```
@@ -491,9 +488,9 @@ If we hit _/comments_ with an "API-VERSION" header value of "v2.0", we'd match t
 PHP is irritatingly difficult to extract headers from `$_SERVER`.  If you're using a library/framework to grab headers, then use that.  Otherwise, you can use the `HeaderParser`:
 
 ```php
-use Aphiria\Routing\Requests\HeaderParser;
+use Aphiria\Routing\Requests\RequestHeaderParser;
 
-$headers = (new HeaderParser)->parseHeaders($_SERVER);
+$headers = (new RequestHeaderParser)->parseHeaders($_SERVER);
 ```
 
 <h2 id="route-variable-constraints">Route Variable Constraints</h2>
@@ -552,10 +549,10 @@ final class MinLengthConstraint implements IRouteVariableConstraint
 Let's register our constraint with the constraint factory:
 
 ```php
-use Aphiria\Routing\UriTemplates\Constraints\{ConstraintFactory, ConstraintFactoryRegistrant};
+use Aphiria\Routing\UriTemplates\Constraints\{RouteVariableConstraintFactory, RouteVariableConstraintFactoryRegistrant};
 
 // Register some built-in constraints to our factory
-$constraintFactory = (new ConstraintFactoryRegistrant)->registerConstraintFactories(new ConstraintFactory);
+$constraintFactory = (new RouteVariableConstraintFactoryRegistrant)->registerConstraintFactories(new RouteVariableConstraintFactory);
 
 // Register our custom constraint
 $constraintFactory->registerConstraintFactory(MinLengthConstraint::getSlug(), fn (int $minLength) => new MinLengthConstraint($minLength));
@@ -567,7 +564,7 @@ Finally, register this constraint factory with the trie compiler:
 use Aphiria\Routing\Builders\RouteBuilderRegistry;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
-use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\{TrieCompiler, TrieFactory};
 
 $routes = new RouteCollection();
 $routeBuilders = new RouteBuilderRegistry();
