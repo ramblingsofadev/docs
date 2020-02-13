@@ -273,14 +273,14 @@ final class GreetingCommandHandler implements ICommandHandler
 Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
 
 ```php
-use Aphiria\Configuration\AphiriaComponentBuilder;
+use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
 use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
 
 // Assume we already have $container set up
 $commands = new CommandRegistry();
 $container->bindInstance(CommandRegistry::class, $commands);
-$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN']);
+$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN'], $container);
 $container->bindInstance(AnnotationCommandRegistrant::class, $annotationCommandRegistrant);
 
 (new AphiriaComponentBuilder($container))
@@ -293,8 +293,9 @@ If you're not using the configuration library, you can manually configure your a
 use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
 
+// Assume we already have $container set up
 $commands = new CommandRegistry();
-$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN']);
+$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN'], $container);
 $annotationCommandRegistrant->registerCommands($commands);
 ````
 
