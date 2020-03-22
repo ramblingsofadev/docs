@@ -9,7 +9,9 @@
     ],
     "license": "MIT",
     "require": {
-        "aphiria/aphiria": "1.0.*@dev"
+        "aphiria/aphiria": "1.0.*@dev",
+        "symfony/routing": "5.0.*",
+        "symfony/yaml": "5.0.*"
     },
     "minimum-stability": "dev"
 }

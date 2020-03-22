@@ -10,7 +10,7 @@
 2. [Bindings](#bindings)
 3. [Targeted Bindings](#targeted-bindings)
 4. [Auto-Wiring](#auto-wiring)
-5. [Bootstrappers](#bootstrappers)
+5. [Binders](#binders)
 
 </div>
 
@@ -127,17 +127,17 @@ $userService = $container->resolve(UserService::class);
 
 The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and either check to see if it has a binding or attempt to auto-wire an instance of it if possible.
 
-<h2 id="bootstrappers">Bootstrappers</h2>
+<h2 id="binders">Binders</h2>
 
-A bootstrapper is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a bootstrapper called `UserBootstrapper` to centralize all the bindings related to your user domain.
+A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain.
 
 ```php
-use Aphiria\DependencyInjection\Bootstrappers\Bootstrapper;
+use Aphiria\DependencyInjection\Binders\Binder;
 use Aphiria\DependencyInjection\IContainer;
 
-final class UserBootstrapper extends Bootstrapper
+final class UserBinder extends Binder
 {
-    public function registerBindings(IContainer $container): void
+    public function bind(IContainer $container): void
     {
         $container->bindInstance(IUserRepository::class, new UserRepository());
         $container->bindSingleton(IUserService::class, UserService::class);
@@ -145,4 +145,4 @@ final class UserBootstrapper extends Bootstrapper
 }
 ```
 
-For more info on bootstrappers, [read their documentation](bootstrappers.md).
+For more info on binders, [read their documentation](binders.md).

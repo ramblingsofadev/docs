@@ -7,21 +7,15 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
-   1. [Application Builders vs Bootstrappers](#application-builders-vs-bootstrappers)
-2. [Application Builders](#application-builders)
-   1. [Building API Apps](#building-api-apps)
-   2. [Building Console Apps](#building-console-apps)
-   3. [Configuring Bootstrappers](#configuring-bootstrappers)
-   4. [Configuring Middleware](#configuring-middleware)
-   5. [Configuring Console Commands](#configuring-console-commands)
-3. [Components](#components)
-4. [Modules](#modules)
-5. [Using Aphiria Components](#using-aphiria-components)
-   1. [Configuring Routes](#configuring-routes)
-   2. [Configuring Validators](#configuring-validators)
-   3. [Configuring Encoders](#configuring-encoders)
-   4. [Configuring Exception Log Levels](#configuring-exception-log-levels)
-   5. [Configuring Exception Responses](#configuring-exception-responses)
+2. [Components](#components)
+   1. [Binders](#component-binders)
+   2. [Routes](#component-routes)
+   3. [Middleware](#component-middleware)
+   4. [Console Commands](#component-console-commands)
+   5. [Validator](#component-validator)
+   6. [Serializer](#component-serializer)
+   7. [Exception Handler](#component-exception-handler)
+3. [Adding Custom Components](#adding-custom-components)
 
 </div>
 
@@ -29,290 +23,343 @@
 
 <h2 id="basics">Basics</h2>
 
-Aphiria comes with an easy way to centrally configure your application logic, eg bootstrappers, routes, console commands, exception handlers, and validators.  It even lets you centralize the configuration of entire [modules](#modules) of code.
+Application builders provide an easy way to configure your application's components, eg adding binders, routes, global middleware, console commands, validators, and more.  [Components](#components) are pieces of your application that are shared across modules (chunks of your domain).  If you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate binders, routes, console commands, etc.  So, why not bundle all the configuration logic by module?
 
-<h3 id="application-builders-vs-bootstrappers">Application Builders vs Bootstrappers</h3>
-
-Before we dive too deep, you might be asking yourself "What's the difference between [application builders](#application-builders) and [bootstrappers](bootstrappers.md)?".  Bootstrappers are where you bind your dependencies to the DI container so that the container can resolve them - that's it.  Application builders, on the other hand, are where you can configure a [module](#modules) of your domain with shared resources, such as a [router](#configuring-routes) or even [bootstrappers](#configuring-bootstrappers) themselves.  This is really the heart of Aphiria - your app should be nothing but a collection of modules that are capable of configuring themselves.
-
-<h2 id="application-builders">Application Builders</h2>
-
-`ApplicationBuilder` provides all the functionality you'll need to configure your application logic:
+Let's look at an example of a module:
 
 ```php
-use Aphiria\Configuration\Builders\ApplicationBuilder;
-use Aphiria\DependencyInjection\Bootstrappers\Inspections\BindingInspectorBootstrapperDispatcher;
-use Aphiria\DependencyInjection\Container;
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;
 
-$container = new Container();
-$bootstrapperDispatcher = new BindingInspectorBootstrapperDispatcher($container);
-$appBuilder = new ApplicationBuilder($container, $bootstrapperDispatcher);
-```
-
-Once you're done configuring your [bootstrappers](#configuring-bootstrappers), [routes](#configuring-routes), and [console commands](#configuring-console-commands), you can go ahead and build your application.
-
-<h3 id="building-api-apps">Building API Apps</h3>
-
-Let's create an API app:
-
-```php
-$requestHandler = $appBuilder->buildApiApplication();
-```
-
-`$requestHandler` will be an instance of `IRequestHandler`.  Building your API will also dispatch bootstrappers and build your components.
-
-<h3 id="building-console-apps">Building Console Apps</h3>
-
-Let's create a console app:
-
-```php
-$app = $appBuilder->buildConsoleApplication();
-```
-
-`$app` will be an instance of `ICommandBus`.  Like [building an API app](#building-api-apps), your bootstrappers will also be dispatched and your components built.
-
-> **Note:** If you're using the [command annotations](console.md#command-annotations), those commands will be registered along with any manually registered ones.
-
-<h3 id="configuring-bootstrappers">Configuring Bootstrappers</h3>
-
-Let's take a look at how to configure bootstrappers:
-
-```php
-$appBuilder->withBootstrappers(fn () => [new FooBootstrapper]);
-```
-
-<h3 id="configuring-middleware">Configuring Middleware</h3>
-
-You can configure your app to have global middleware, which doesn't have to be coupled to any particular middleware library implementation.  Simply set up a `MiddlewareBinding` with the class name and any attributes (optional):
-
-```php
-use Aphiria\Configuration\Middleware\MiddlewareBinding;
-
-$appBuilder->withGlobalMiddleware(fn () => [
-    new MiddlewareBinding(AuthMiddleware::class)
-]);
-```
-
-Now, the `AuthMiddleware` will be run on every single request in your application.
-
-<h3 id="configuring-console-commands">Configuring Console Commands</h3>
-
-Now, we'll add some console commands:
-
-```php
-$appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
-    // You can also use $commands->registerManyCommands()
-    $commands->registerCommand(
-        new FooCommand(),
-        fn () => new FooCommandHandler()
-    );
-});
-```
-
-<h2 id="components">Components</h2>
-
-A component is a singular piece of your app, eg a [router](#configuring-routes), and is smaller in scope than a [module](#modules).  Components are configured after bootstrappers are run, and are a convenient place to finish setting up your application before it runs.
-
-To build a component in your app builder, you must first register a factory for it:
-
-```php
-$appBuilder->registerComponentBuilder('routes', function (array $callbacks) {
-    // Assume we're using some generic routing library
-    $router = new Router();
-
-    // $callbacks will contain all callbacks registered to this component via withComponent()
-    foreach ($callbacks as $callback) {
-        $callback($router);
-    }
-});
-```
-
-Now, we can begin configuring this component.  For example, let's say we wanted to add some routes.  Just use the same component name as when we registered the component factory:
-
-```php
-$appBuilder->withComponent('routes', function (Router $router) {
-    $router->get('/users', UserController::class, 'getUsers');
-});
-```
-
-In this example, each callback will be invoked by the factory registered in `registerComponentBuilder`, and will be injected with an instance of `Router`.
-
-For an added bit of syntactic sugar, you can just call `with{ComponentName}`:
-
-```php
-$appBuilder->withRoutes(function (Router $router) {
-    $router->get('/users', UserController::class, 'getUsers');
-});
-```
-
-This is semantically identical to our previous example that called `withComponent('routes', ...)`.
-
-<h2 id="modules">Modules</h2>
-
-A module is a chunk of your domain.  For example, if you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate bootstrappers, routes, and console commands.  So, why not bundle all the configuration logic by module?
-
-```php
-use Aphiria\Configuration\Builders\IModuleBuilder;
-use Aphiria\Routing\Builders\RouteGroupOptions;
-
-final class UserModuleBuilder implements IModuleBuilder
+class UserModule implements IModule
 {
+    // Gives us a fluent way to configure Aphiria components
+    use AphiriaComponents;
+
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $appBuilder->withBootstrappers(fn () => [new UserServiceBootstrapper]);
+        $this->withBinders($appBuilder, [new UserBinder()]);
 
-        $appBuilder->withComponent('routes', function (RouteBuilderRegistry $routeBuilders) {
-            // Let's prefix all our routes with 'users'
-            $routeBuilders->group(new RouteGroupOptions('users'), function (RouteBuilderRegistry $routeBuilders) {
-                $routeBuilders->get('/:id')
-                    ->toMethod(UserController::class, 'getUserById');
-            });
+        $this->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
+            $routeBuilders->get('users/:id')
+                ->toMethod(UserController::class, 'getUserById');
         });
-        
-        $appBuilder->withConsoleCommands(function (CommandRegistry $commands) {
+
+        $this->withCommands($appBuilder, function (CommandRegistry $commands) {
             $commands->registerCommand(
-                new RunUserReportCommand(),
-                fn () => new RunUserReportCommandHandler()
+                new GenerateUserReportCommand(),
+                fn () => new GenerateUserReportCommandHandler()
             );
         });
     }
 }
 ```
 
-To use your module in your application builder, just call:
+Application builders are agnostic to the types of applications they build as well as the components they configure, but Aphiria does provide `ApiApplicationBuilder` and `ConsoleApplicationBuilder`, along with various [components](#components), to simplify building API and console applications.
+
+<h2 id="components">Components</h2>
+
+A component is a piece of your application that is shared across domains.  Below, we'll go over the components that are bundled with Aphiria, and some decoration methods to help configure them.
+
+<h3 id="component-binders">Binders</h3>
+
+You can configure your module to require [binders](binders.md).
 
 ```php
-$appBuilder->withModule(new UserModuleBuilder());
-$requestHandler = $appBuilder->buildApiApplication();
-```
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
 
-Now, your entire user module is configured and ready to go.
+class UserModule implements IModule
+{
+    use AphiriaComponents;
 
-<h2 id="using-aphiria-components">Using Aphiria Components</h2>
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add a binder
+        $this->withBinders($appBuilder, new UserBinder());
 
-The configuration library isn't strictly tied to Aphiria's [routing](routing.md), [route annotation](routing.md#route-annotations), [console](console.md), [console command annotations](console.md#command-annotations), [encoder](serialization.md), [exception handling](http-exception-handling.md), or [validation](validation.md) libraries.  However, if you do decide to use them, we've simplified how you can configure them:
+        // Or use an array of binders
 
-```php
-use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
-use Aphiria\DependencyInjection\Container;
-
-// Assume we already have an app builder
-$container = new Container;
-(new AphiriaComponentBuilder($container))
-    ->withExceptionHandlers($appBuilder)
-    ->withExceptionLogLevelFactories($appBuilder)
-    ->withExceptionResponseFactories($appBuilder)
-    ->withRoutingComponent($appBuilder)
-    ->withRoutingAnnotations($appBuilder)
-    ->withConsoleAnnotations($appBuilder)
-    ->withValidationComponent($appBuilder)
-    ->withValidationAnnotations($appBuilder)
-    ->withEncoderComponent($appBuilder);
-
-// Finish configuring your app...
-
-$requestHandler = $appBuilder->buildApiApplication();
-```
-
-These methods will set up components for your [exception handlers](http-exception-handling.md), [routes](#configuring-routes), [encoders](#configuring-encoders), and [validators](#configuring-validators).
-
-> **Note:** If you use Aphiria's exception handler library, it's highly recommended that you include it before building any other Aphiria components so that the exception handler middleware is registered first.
-
-<h3 id="configuring-routes">Configuring Routes</h3>
-
-You can manually register routes to your application:
-
-```php
-(new AphiriaComponentBuilder($container))
-    ->withRoutingComponent($appBuilder);
-
-// Then, inside your module:
-$appBuilder->withComponent('routes', function (RouteBuilderRegistry $routeBuilders) {
-    $routeBuilders->get('users/:id')
-        ->toMethod(UserController::class, 'getUserById');
-});
-```
-
-Due to how lazy route creation works, your routes will only be built if they need to be, eg they're not cached yet.
-
-> **Note:** If you're using [route annotations](routing.md#route-annotations), those routes will be combined with any manually-registered routes.
-
-<h3 id="configuring-validators">Configuring Validators</h3>
-
-Let's set up some custom validation rules for our models.
-
-```php
-(new AphiriaComponentBuilder($container))
-    ->withValidationComponent($appBuilder);
-
-// Then, inside your module:
-$appBuilder->withComponent('validators', function (ObjectConstraintsRegistryBuilder $objectConstraintsBuilder) {
-    $objectConstraintsBuilder->class(BlogPost::class)
-        ->hasPropertyConstraints('title', new RequiredConstraint());
-});
-```
-
-<h3 id="configuring-encoders">Configuring Encoders</h3>
-
-Sometimes our models require some custom encoding logic when serializing and deserializing them.  Let's configure an encoder for a user model:
-
-```php
-(new AphiriaComponentBuilder($container))
-    ->withEncoderComponent($appBuilder);
-
-// Then, inside your module:
-$appBuilder->withComponent('encoders', function (EncoderRegistry $encoders) {
-    $encoders->registerEncoder(User::class, new class() implements IEncoder {
-        public function decode($userHash, string $type, EncodingContext $context)
-        {
-            return new User($userHash['id'], $userHash['email']);
-        }
-
-        public function encode($user, EncodingContext $context)
-        {
-            return ['id' => $user->getId(), 'email' => $user->getEmail()];
-        }
-    });
-});
-```
-
-<h3 id="configuring-exception-log-levels">Configuring Exception Log Levels</h3>
-
-Typically, uncaught exceptions get logged as `LogLevel::ERROR`.  However, there might be exceptions that warrant a higher or lower level.  For example, if you receive an exception that a database table is gone, you might want to log a `LogLevel::EMERGECNCY`.
-
-```php
-(new AphiriaComponentBuilder($container))
-    ->withExceptionLogLevelFactories($appBuilder);
-
-// Then, inside your module:
-$appBuilder->withComponent(
-    'exceptionLogLevelFactories', 
-    function (ExceptionLogLevelFactoryRegistry $factories) {
-        $factories->registerFactory(
-            DbTableNotFoundException::class,
-            fn (DbTableNotFoundException $ex) => LogLevel::EMERGENCY
-        );
+        $this->withBinders($appBuilder, [new UserBinder()]);
     }
-);
+}
 ```
 
-<h3 id="configuring-exception-responses">Configuring Exception Responses</h3>
+<h3 id="component-routes">Routes</h3>
 
-Aphiria has an easy way to map your module's exceptions to HTTP responses:
+You can register [routes](routing.md) for your module, and you can enable route annotations.
 
 ```php
-(new AphiriaComponentBuilder($container))
-    ->withExceptionResponseFactories($appBuilder);
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;
 
-// Then, inside your module:
-$appBuilder->withComponent(
-    'exceptionResponseFactories',
-    function (ExceptionResponseFactoryRegistry $factories) {
-        $factories->registerFactory(
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add some routes
+        $this->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
+            $routeBuilders->get('users/:id')
+                ->toMethod(UserController::class, 'getUserById');
+        });
+
+        // Enable route annotations
+        $this->withRouteAnnotations($appBuilder);
+    }
+}
+```
+
+<h3 id="component-middleware">Middleware</h3>
+
+Some modules might need to add global middleware to your application.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Middleware\MiddlewareBinding;
+
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add global middleware (executed before each route)
+        $this->withGlobalMiddleware($appBuilder, new MiddlewareBinding(Cors::class));
+
+        // Or use an array of bindings
+        $this->withGlobalMiddleware($appBuilder, [new MiddlewareBinding(Cors::class)]);
+
+        // Or with a priority (lower number = higher priority)
+        $this->withGlobalMiddleware($appBuilder, new MiddlewareBinding(Cors::class), 1);
+    }
+}
+```
+
+<h3 id="component-console-commands">Console Commands</h3>
+
+You can register console commands, and enable command annotations from your modules.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\Framework\Application\AphiriaComponents;
+
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add console commands
+        $this->withCommands($appBuilder, function (CommandRegistry $commands) {
+            $commands->registerCommand(
+                new GenerateUserReportCommand(),
+                fn () => new GenerateUserReportCommandHandler()
+            );
+        });
+
+        // Enable command annotations
+        $this->withCommandAnnotations($appBuilder);
+    }
+}
+```
+
+<h3 id="component-validator">Validator</h3>
+
+You can also configure constraints for your models and enable validator annotations.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
+use Aphiria\Validation\Constraints\EmailConstraint;
+
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add constraints to a class
+        $this->withObjectConstraints($appBuilder, function (ObjectConstraintsRegistryBuilder $objectConstraintsBuilder) {
+            $objectConstraintsBuilder->class(User::class)
+                ->hasPropertyConstraints('email', new EmailConstraint());
+        });
+
+        // Enable validator annotations
+        $this->withValidatorAnnotations($appBuilder);
+    }
+}
+```
+
+<h3 id="component-serializer">Serializer</h3>
+
+Your modules can configure custom encoders for your models.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Serialization\Encoding\EncodingContext;
+use Aphiria\Serialization\Encoding\IEncoder;
+
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add an encoder to simplify serializing an object
+        $this->withEncoder($appBuilder, User::class, new class() implements IEncoder {
+            public function decode($userHash, string $type, EncodingContext $context): User
+            {
+                return new User($userHash['id'], $userHash['email']);
+            }
+
+            public function encode($user, EncodingContext $context)
+            {
+                return ['id' => $user->id, 'email' => $user->email];
+            }
+        });
+    }
+}
+```
+
+<h3 id="component-exception-handler">Exception Handler</h3>
+
+Exceptions may be mapped to custom HTTP responses and PSR-3 log levels.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Net\Http\HttpStatusCodes;
+use Aphiria\Net\Http\IHttpRequestMessage;
+use Aphiria\Net\Http\IResponseFactory;
+use Psr\Log\LogLevel;
+
+class UserModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        // Add a custom HTTP response for an exception
+        $this->withExceptionResponseFactory(
+            $appBuilder,
             UserNotFoundException::class,
-            fn (UserNotFoundException $ex, ?IHttpRequestMessage $request, INegotiatedResponseFactory $responseFactory) 
-                => $responseFactory->createResponse($request, 404)
+            function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
+                return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
+            }
+        );
+
+        // Add a custom PSR-3 log level for an exception
+        $this->withLogLevelFactory(
+            $appBuilder,
+            UserCorruptedException::class,
+            fn (UserCorruptedException $ex) => LogLevel::CRITICAL
         );
     }
-);
+}
+```
+
+<h2 id="adding-custom-components">Adding Custom Components</h2>
+
+You can add your own custom components to application builders.  They typically have `with*()` methods to let you configure the component, and a `build()` method that actually finishes building the component.
+
+> **Note:** Binders aren't dispatched until just before `build()` is called on the components.  This means you can't inject dependencies from binders into your components - they won't have been bound yet.  So, if you need any dependencies inside the `build()` method, use the DI container to resolve them.
+
+Let's say you prefer to use Symfony's router, and want to be able to add routes from your modules.  The first thing you should do is add a binder for the router so that the DI container can resolve it:
+
+```php
+use Aphiria\DependencyInjection\Binders\Binder;
+use Aphiria\DependencyInjection\IContainer;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
+
+class SymfonyRouterBinder extends Binder
+{
+    public function bind(IContainer $container): void
+    {
+        $routes = new RouteCollection();
+        $requestContext = new RequestContext(/* ... */);
+        $matcher = new UrlMatcher($routes, $requestContext);
+
+        $container->bindInstance(RouteCollection::class, $routes);
+        $container->bindInstance(UrlMatcherInterface ::class, $matcher);
+    }
+}
+```
+
+Now, let's define a component that allows us to add routes.
+
+```php
+use Aphiria\Api\App;
+use Aphiria\Application\IComponent;
+use Aphiria\DependencyInjection\IContainer;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+class SymfonyRouterComponent implements IComponent
+{
+    private IContainer $container;
+    private array $routes = [];
+
+    public function __construct(IContainer $container)
+    {
+        $this->container = $container;
+    }
+
+    public function build(): void
+    {
+        $routes = $this->container->resolve(RouteCollection::class);
+
+        foreach ($this->routes as $name => $route) {
+            $routes->add($name, $route);
+        }
+
+        // Assume we've created a request handler that uses the Symfony route matcher
+        $this->container->for(
+            App::class,
+            fn (IContainer $container) => $container->resolve(SymfonyRouterRequestHandler::class)
+        );
+    }
+
+    // Our own method for adding routes
+    public function withRoutes(string $name, Route $route): self
+    {
+        $this->routes[$name] = $route;
+
+        return $this;
+    }
+}
+```
+
+All that's left is to register the component, and start using it.
+
+```php
+use Aphiria\Framework\Api\Builders\ApiApplicationBuilder;
+use Symfony\Component\Routing\Route;
+
+$appBuilder = new ApiApplicationBuilder($container);
+$appBuilder->withComponent(new SymfonyRouterComponent($container));
+
+// Now use it
+
+$appBuilder->getComponent(SymfonyRouterComponent::class)
+    ->withRoutes('GetUserById', new Route('users/{id}'));
 ```

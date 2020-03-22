@@ -222,8 +222,8 @@ A dependency injection (DI) container lets a developer tell the application "Whe
 <h4 id="aphiria-di-container-pros">Pros</h4>
 
 * Support for auto-wiring
-* Supports bootstrappers for registering dependencies for modules
-* Supports automatic lazy execution of bootstrappers so that bootstrappers that aren't used are not executed
+* Supports binders for registering dependencies for modules
+* Supports automatic lazy execution of binders so that binders that aren't used are not executed
 * Straightforward methods to bind and resolve dependencies from the DI Container
 * Supports targeted bindings
 
