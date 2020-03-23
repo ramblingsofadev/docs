@@ -90,10 +90,10 @@ $config = (new JsonConfigurationFileReader)->readConfiguration('config.json');
 You can create your own custom file reader.  Let's look at an example that reads from YAML files:
 
 ```php
-use Aphiria\Configuration\ConfigurationException;
 use Aphiria\Configuration\HashTableConfiguration;
 use Aphiria\Configuration\IConfiguration;
 use Aphiria\Configuration\IConfigurationFileReader;
+use Aphiria\Configuration\InvalidConfigurationFileException;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlConfigurationFileReader implements IConfigurationFileReader
@@ -101,13 +101,13 @@ class YamlConfigurationFileReader implements IConfigurationFileReader
     public function readConfiguration(string $path, string $pathDelimiter = '.'): IConfiguration
     {
         if (!file_exists($path)) {
-            throw new ConfigurationException("$path does not exist");
+            throw new InvalidConfigurationFileException("$path does not exist");
         }
 
         $hashTable = Yaml::parseFile($path);
 
         if (!\is_array($hashTable)) {
-            throw new ConfigurationException("Configuration in $path must be an array");
+            throw new InvalidConfigurationFileException("Configuration in $path must be an array");
         }
 
         return new HashTableConfiguration($hashTable, $pathDelimiter);
@@ -147,7 +147,7 @@ GlobalConfiguration::tryGetString('foo', $value);
 GlobalConfiguration::tryGetValue('foo', $value);
 ```
 
-These methods mimic the `IConfiguration` interface, but are static.  Like `IConfiguration`, you can use `.` as a delimiter between sections.  If you have 2 configuration sources registered, `GlobalConfiguration` will attempt to find the path in the first registered source, and, if it's not found, the second source.  If no value is found, the `get*()` methods will throw a `ConfigurationException`, and the `tryGet*()` methods will return `false`.
+These methods mimic the `IConfiguration` interface, but are static.  Like `IConfiguration`, you can use `.` as a delimiter between sections.  If you have 2 configuration sources registered, `GlobalConfiguration` will attempt to find the path in the first registered source, and, if it's not found, the second source.  If no value is found, the `get*()` methods will throw a `MissingConfigurationValueException`, and the `tryGet*()` methods will return `false`.
 
 <h3 id="building-the-global-configuration">Building The Global Configuration</h3>
 

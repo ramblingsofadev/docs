@@ -8,7 +8,7 @@
 
 1. [Basics](#basics)
 2. [Inspection Bindings](#inspection-bindings)
-3. [Using App Builders](#using-app-builders)
+3. [Using Application Builders](#using-application-builders)
 
 </div>
 
@@ -72,6 +72,6 @@ That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it
 
 > **Note:** It's recommended that you only use caching for binder bindings in production environments.  Otherwise, changes you make to your binders might not be reflected.
 
-<h2 id="using-app-builders">Using App Builders</h2>
+<h2 id="using-application-builders">Using Application Builders</h2>
 
 The [configuration](application-builders.md) library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](application-builders.md#configuring-binders) to learn more about it.

@@ -244,6 +244,8 @@ Exceptions may be mapped to custom HTTP responses and PSR-3 log levels.
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
+use Aphiria\Console\Output\IOutput;
+use Aphiria\Console\StatusCodes;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Net\Http\HttpStatusCodes;
 use Aphiria\Net\Http\IHttpRequestMessage;
@@ -257,11 +259,22 @@ class UserModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         // Add a custom HTTP response for an exception
-        $this->withExceptionResponseFactory(
+        $this->withHttpExceptionResponseFactory(
             $appBuilder,
             UserNotFoundException::class,
             function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
                 return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
+            }
+        );
+
+        // Add a custom console output writer for an exception
+        $this->withConsoleExceptionOutputWriter(
+            $appBuilder,
+            UserNotFoundException::class,
+            function (UserNotFoundException $ex, IOutput $output) {
+                $output->writeln('Missing user');
+
+                return StatusCodes::FATAL;
             }
         );
 
@@ -308,7 +321,7 @@ class SymfonyRouterBinder extends Binder
 Now, let's define a component that allows us to add routes.
 
 ```php
-use Aphiria\Api\App;
+use Aphiria\Api\Application;
 use Aphiria\Application\IComponent;
 use Aphiria\DependencyInjection\IContainer;
 use Symfony\Component\Routing\Route;
@@ -334,7 +347,7 @@ class SymfonyRouterComponent implements IComponent
 
         // Assume we've created a request handler that uses the Symfony route matcher
         $this->container->for(
-            App::class,
+            Application::class,
             fn (IContainer $container) => $container->resolve(SymfonyRouterRequestHandler::class)
         );
     }

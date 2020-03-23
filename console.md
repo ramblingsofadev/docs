@@ -44,7 +44,7 @@ If you're already using the <a href="https://github.com/aphiria/app" target="_bl
 #!/usr/bin/env php
 <?php
 
-use Aphiria\Console\App;
+use Aphiria\Console\Application;
 use Aphiria\Console\Commands\CommandRegistry;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -54,7 +54,7 @@ $commands = new CommandRegistry();
 // Register your commands here...
 
 global $argv;
-exit((new App($commands))->handle($argv));
+exit((new Application($commands))->handle($argv));
 ```
 
 Now, you're set to start [running commands](#running-commands).
@@ -115,12 +115,12 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 <h3 id="registering-commands">Registering Commands</h3>
 
-Before you can use the example command, you must register it so that the `App` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
+Before you can use the example command, you must register it so that the `Application` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
 > **Note:** If you're using the configuration library, refer to [its documentation](application-builders.md#configuring-console-commands) to learn how to register your commands to your app.
 
 ```php
-use Aphiria\Console\App;
+use Aphiria\Console\Application;
 use Aphiria\Console\Commands\CommandRegistry;
 
 $commands = new CommandRegistry();
@@ -131,7 +131,7 @@ $commands->registerCommand(
 
 // Actually run the application
 global $argv;
-exit((new App($commands))->handle($argv));
+exit((new Application($commands))->handle($argv));
 ```
 
 To call this command, run this from the command line:
@@ -197,7 +197,7 @@ $option = new Option('foo', 'f', $types, 'The foo option');
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
-It's possible to call a command from another command by using `App`:
+It's possible to call a command from another command by using `Application`:
 
 ```php
 use Aphiria\Console\Input\Input;

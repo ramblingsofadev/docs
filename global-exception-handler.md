@@ -26,7 +26,7 @@ Let's look at an example:
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
 
 $exceptionRenderer = new HttpExceptionRenderer();
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
@@ -47,7 +47,7 @@ That's it.  Now, whenever an unhandled error or exception is thrown, the global 
 To turn problem detail responses off, you pass in `false` in the constructor:
 
 ```php
-use Aphiria\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
 
 $exceptionRenderer = new HttpExceptionRenderer(false);
 ```
@@ -58,7 +58,7 @@ You might not want all exceptions to result in a 500.  For example, if you have 
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
 use Aphiria\Net\Http\HttpStatusCodes;
 use Aphiria\Net\Http\IHttpRequestMessage;
 use Aphiria\Net\Http\IResponseFactory;
@@ -96,20 +96,28 @@ $globalExceptionHandler->registerWithPhp();
 Exception results are a wrapper around a console status code and a list of messages to write to the console.  You can map exceptions to exception results.
 
 ```php
+use Aphiria\Console\Output\IOutput;
+use Aphiria\Console\StatusCodes;
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Exceptions\Console\ConsoleExceptionRenderer;
-use Aphiria\Exceptions\Console\ExceptionResult;
+use Aphiria\Framework\Exceptions\Console\ConsoleExceptionRenderer;
 
 $exceptionRenderer = new ConsoleExceptionRenderer();
-$exceptionRenderer->registerExceptionResultFactory(
+$exceptionRenderer->registerOutputWriter(
     DatabaseNotFound::class,
-    fn (DatabaseNotFound $ex) => new ExceptionResult(1, '<fatal>Contact a sysadmin</fatal>')
+    function (DatabaseNotFound $ex, IOutput $output) {
+        $output->writeln('<fatal>Contact a sysadmin</fatal>');
+
+        return StatusCodes::FATAL;
+    }
 );
 
-// You can also register many exceptions-to-results factories
-$exceptionRenderer->registerManyExceptionResultFactories([
-    DatabaseNotFound::class => 
-        fn (DatabaseNotFound $ex) => new ExceptionResult(1, '<fatal>Contact a sysadmin</fatal>'),
+// You can also register many exceptions-to-output writers
+$exceptionRenderer->registerManyOutputWriters([
+    DatabaseNotFound::class => function (DatabaseNotFound $ex, IOutput $output) {
+        $output->writeln('<fatal>Contact a sysadmin</fatal>');
+
+        return StatusCodes::FATAL;
+    },
     // ...
 ]);
 
@@ -123,7 +131,7 @@ By default, the global exception handler is compatible with any PSR-3 logger suc
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
@@ -140,8 +148,8 @@ $globalExceptionHandler->registerWithPhp();
 It's possible to map certain exceptions to a PSR-3 log level.  For example, if you have an exception that means your infrastructure might be down, you can cause it to log as an emergency.
 
 ```php
-use Aphiria\Exceptions\Http\HttpExceptionRenderer;
 use Aphiria\Exceptions\GlobalExceptionHandler;
+use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
 use Psr\Log\LogLevel;
 
 $globalExceptionHandler = new GlobalExceptionHandler(new HttpExceptionRenderer());
