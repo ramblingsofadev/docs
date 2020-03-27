@@ -1,4 +1,4 @@
-<h1 id="doc-title">Global Exception Handler</h1>
+<h1 id="doc-title">Exception Handling</h1>
 
 <nav class="toc-nav" markdown="1">
 
