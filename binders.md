@@ -7,7 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
-2. [Inspection Bindings](#inspection-bindings)
+2. [Lazy Dispatching](#lazy-dispatching)
 3. [Using Application Builders](#using-application-builders)
 
 </div>
@@ -44,33 +44,30 @@ foreach ($binders as $binder) {
 // Your app is all set
 ```
 
-Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#inspection-bindings) will go into more details on how to handle this more optimally.
+Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#lazy-dispatching) will go into more details on how to handle this more optimally.
 
-<h2 id="inspection-bindings">Inspection Bindings</h2>
+<h2 id="Lazy Dispatching">Lazy Dispatching</h2>
 
-Rather than having to dispatch _every_ binder on every request, you can use binding inspections to lazily register them, eg only when they're actually needed.  At a high level, we can look inside your binders and determine what each of them bind.  It can then set up a factory for each of those bindings that runs `Binder::bind()` only when at least one of the binder's bindings is used.  This prevents you from having to list out the bindings a binder registers to get this sort of functionality (like other frameworks force you to do).
+Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then sets up a factory for each of those bindings that runs `Binder::bind()` only when at least one of the binder's bindings is used.  This prevents you from having to list out the bindings a binder registers to get this sort of functionality (like other frameworks force you to do).
 
-Let's build on the `UserBinder` from the [previous example](#basics) and set up our app to inspect its bindings:
+Let's build on the `UserBinder` from the [previous example](#basics) and set up our app to lazily dispatch it:
 
 ```php
-use Aphiria\DependencyInjection\Binders\Inspection\BindingInspectorBinderDispatcher;
-use Aphiria\DependencyInjection\Binders\Inspection\Caching\FileBinderBindingCache;
+use Aphiria\DependencyInjection\Binders\LazyBinderDispatcher;
+use Aphiria\DependencyInjection\Binders\Metadata\Caching\FileBinderMetadataCollectionCache;
 use Aphiria\DependencyInjection\Container;
 
-$binders = [new UserBinder()];
 $container = new Container();
-$binderDispatcher = new BindingInspectorBinderDispatcher(
-    $container,
-    getenv('ENV_NAME') === 'production'
-        ? new FileBinderBindingCache('/tmp/binderInspections.txt')
-        : null
-);
-$binderDispatcher->dispatch($binders);
+$metadataCache = getenv('ENV_NAME') === 'production'
+    ? new FileBinderMetadataCollectionCache('/tmp/binderMetadataCollectionCache.txt')
+    : null;
+$binderDispatcher = new LazyBinderDispatcher($metadataCache);
+$binderDispatcher->dispatch([new UserBinder], $container);
 ```
 
-That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it will automatically run `UserBinder::bind()` once and use the binding defined inside to resolve it every time after.
+That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it will automatically run `UserBinder::bind()` once and use the binding defined inside to resolve it every time after.  Additionally, any binder that resolves interfaces bound by `UserBinder` will also be dispatched.
 
-> **Note:** It's recommended that you only use caching for binder bindings in production environments.  Otherwise, changes you make to your binders might not be reflected.
+> **Note:** It's recommended that you only use caching for production environments.  Otherwise, changes you make to your binders might not be reflected.
 
 <h2 id="using-application-builders">Using Application Builders</h2>
 
