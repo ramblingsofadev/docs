@@ -64,11 +64,11 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 use App\Books\Api\{BookController, Authorization};
 
 // Register the routes
-$routes = new RouteCollection();
 $routeBuilders = new RouteBuilderRegistry();
 $routeBuilders->get('/books/:bookId')
     ->toMethod(BookController::class, 'getBooksById')
     ->withMiddleware(Authorization::class);
+$routes = new RouteCollection();
 $routes->addMany($routeBuilders->buildAll());
 
 // Set up the route matcher
@@ -566,10 +566,10 @@ use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\{TrieCompiler, TrieFactory};
 
-$routes = new RouteCollection();
 $routeBuilders = new RouteBuilderRegistry();
 $routeBuilders->get('parts/:serialNumber(minLength(6))')
     ->toMethod(PartController::class, 'getPartBySerialNumber');
+$routes = new RouteCollection();
 $routes->addMany($routeBuilders->buildAll());
 
 $trieCompiler = new TrieCompiler($constraintFactory);
