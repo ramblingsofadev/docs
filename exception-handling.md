@@ -40,7 +40,7 @@ That's it.  Now, whenever an unhandled error or exception is thrown, the global 
 
 `HttpExceptionRenderer` is provided out of the box to simplify rendering HTTP responses for Aphiria applications.  This renderer tries to create a response using the following steps:
   
-1. If an [exception response](#exception-response) exists for the thrown exception, it's used
+1. If an [exception response](#exception-responses) exists for the thrown exception, it's used
 2. Otherwise, if the renderer is configured to use <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a>, it will create a 500 response with a problem details body
 3. Otherwise, if the renderer does not use problem details, an empty 500 response is used
 
