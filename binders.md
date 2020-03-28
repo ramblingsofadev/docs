@@ -71,4 +71,4 @@ That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it
 
 <h2 id="using-application-builders">Using Application Builders</h2>
 
-The [configuration](application-builders.md) library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](application-builders.md#configuring-binders) to learn more about it.
+The [configuration](application-builders.md) library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](application-builders.md#component-binders) to learn more about it.

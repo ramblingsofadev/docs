@@ -164,7 +164,7 @@ $sessionMiddleware = new SessionMiddleware(
 );
 ```
 
-Refer to the [configuration library](application-builders.md#configuring-middleware) for more information on how to register the middleware.
+Refer to the [configuration library](application-builders.md#component-middleware) for more information on how to register the middleware.
 
 <h2 id="id-generators">ID Generators</h2>
 

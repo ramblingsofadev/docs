@@ -57,7 +57,7 @@ $appBuilder->withRoutes(function (RouteBuilderRegistry $routeBuilders) {
 });
 ```
 
-The [application builder](application-builders.md) simplifies registering all [binders](application-builders.md#configuring-binders), [routes](application-builders.md#configuring-routes), and other parts of your application in a [modular way](application-builders.md#modules).
+The [application builder](application-builders.md) simplifies registering all [binders](application-builders.md#component-binders), [routes](application-builders.md#component-routes), and other parts of your application in a [modular way](application-builders.md#basics).
 
 Hopefully, these examples demonstrate how easy it is to build an application with Aphiria.
 
