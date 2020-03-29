@@ -324,6 +324,7 @@ Now, let's define a component that allows us to add routes.
 use Aphiria\Api\Application;
 use Aphiria\Application\IComponent;
 use Aphiria\DependencyInjection\IContainer;
+use Aphiria\Net\Http\Handlers\IRequestHandler;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -346,10 +347,9 @@ class SymfonyRouterComponent implements IComponent
         }
 
         // Assume we've created a request handler that uses the Symfony route matcher
-        $this->container->for(
-            Application::class,
-            fn (IContainer $container) => $container->resolve(SymfonyRouterRequestHandler::class)
-        );
+        $this->container->for(Application::class, function (IContainer $container) {
+            $container->bindInstance(IRequestHandler::class, new SymfonyRouterRequestHandler());
+        });
     }
 
     // Our own method for adding routes
