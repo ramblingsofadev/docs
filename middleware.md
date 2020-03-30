@@ -128,7 +128,7 @@ To actually specify `role`, pass it into your route configuration:
 
 ```php
 $routeBuilders->get('foo')
-    ->toMethod(MyController::class, 'myMethod')
+    ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(RoleMiddleware::class, ['role' => 'admin']);
 ```
 

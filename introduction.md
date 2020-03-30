@@ -50,10 +50,10 @@ Now, we'll actually set up our app to include these endpoints.  Let's say we nee
 $appBuilder->withBinders(fn () => [new UserServiceBinder]);
 $appBuilder->withRoutes(function (RouteBuilderRegistry $routeBuilders) {
     $routeBuilders->post('users')
-        ->toMethod(UserController::class, 'createUser');
+        ->mapsToMethod(UserController::class, 'createUser');
 
     $routeBuilders->get('users/:id')
-        ->toMethod(UserController::class, 'getUser');
+        ->mapsToMethod(UserController::class, 'getUser');
 });
 ```
 

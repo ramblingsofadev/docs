@@ -66,7 +66,7 @@ use App\Books\Api\{BookController, Authorization};
 // Register the routes
 $routeBuilders = new RouteBuilderRegistry();
 $routeBuilders->get('/books/:bookId')
-    ->toMethod(BookController::class, 'getBooksById')
+    ->mapsToMethod(BookController::class, 'getBooksById')
     ->withMiddleware(Authorization::class);
 $routes = new RouteCollection();
 $routes->addMany($routeBuilders->buildAll());
@@ -165,7 +165,7 @@ Each method returns an instance of `RouteBuilder`, and accepts the following par
 * `bool $isHttpsOnly` (optional)
   * Whether or not this route is HTTPS-only
   
- You can also call `RouteBuilderRegistry::map()` and pass in the HTTP method(s) you'd like to map to.
+ You can also call `RouteBuilderRegistry::route()` and pass in the HTTP method(s) you'd like to map to.
 
 <h3 id="route-annotations">Route Annotations</h3>
 
@@ -330,11 +330,11 @@ Aphiria supports mapping routes to both controller methods and to closures:
 ```php
 // Map to a controller method
 $routeBuilders->get('users/:userId')
-    ->toMethod(UserController::class, 'getUserById');
+    ->mapsToMethod(UserController::class, 'getUserById');
 
 // Map to a closure
 $routeBuilders->get('users/:userId/name')
-    ->toClosure(fn () => /* Handle the request */);
+    ->mapsToClosure(fn () => /* Handle the request */);
 ```
 
 To determine the type of action (controller method or closure) the matched route uses, check `RouteAction::usesMethod()`.
@@ -347,7 +347,7 @@ To bind a single middleware class to your route, call:
 
 ```php
 $routeBuilders->get('foo')
-    ->toMethod(MyController::class, 'myMethod')
+    ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(FooMiddleware::class);
 ```
 
@@ -355,7 +355,7 @@ To bind many middleware classes, call:
 
 ```php
 $routeBuilders->get('foo')
-    ->toMethod(MyController::class, 'myMethod')
+    ->mapsToMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         FooMiddleware::class,
         BarMiddleware::class
@@ -370,13 +370,13 @@ Some frameworks, such as Aphiria and Laravel, let you bind attributes to middlew
 
 ```php
 $routeBuilders->get('foo')
-    ->toMethod(MyController::class, 'myMethod')
+    ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(Authorization::class, ['role' => 'admin']);
 
 // Or
 
 $routeBuilders->get('foo')
-    ->toMethod(MyController::class, 'myMethod')
+    ->mapsToMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         new MiddlewareBinding(Authorization::class, ['role' => 'admin']),
         // Other middleware...
@@ -404,10 +404,10 @@ $routeBuilders->group(
     function (RouteBuilderRegistry $routeBuilders) {
         // This route's path will use the group's path
         $routeBuilders->get('')
-            ->toMethod(CourseController::class, 'getCourseById');
+            ->mapsToMethod(CourseController::class, 'getCourseById');
 
         $routeBuilders->get('/professors')
-            ->toMethod(CourseController::class, 'getCourseProfessors');
+            ->mapsToMethod(CourseController::class, 'getCourseProfessors');
     }
 );
 ```
@@ -442,13 +442,13 @@ Let's say your app sends an API version header, and you want to match an endpoin
 ```php
 // This route will require an API-VERSION value of 'v1.0'
 $routeBuilders->get('comments')
-    ->toMethod(CommentController::class, 'getAllComments1_0')
+    ->mapsToMethod(CommentController::class, 'getAllComments1_0')
     ->withAttribute('API-VERSION', 'v1.0')
     ->withConstraint(new ApiVersionConstraint);
 
 // This route will require an API-VERSION value of 'v2.0'
 $routeBuilders->get('comments')
-    ->toMethod(CommentController::class, 'getAllComments2_0')
+    ->mapsToMethod(CommentController::class, 'getAllComments2_0')
     ->withAttribute('API-VERSION', 'v2.0')
     ->withConstraint(new ApiVersionConstraint);
 ```
@@ -568,7 +568,7 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\{TrieCompiler, TrieFactory};
 
 $routeBuilders = new RouteBuilderRegistry();
 $routeBuilders->get('parts/:serialNumber(minLength(6))')
-    ->toMethod(PartController::class, 'getPartBySerialNumber');
+    ->mapsToMethod(PartController::class, 'getPartBySerialNumber');
 $routes = new RouteCollection();
 $routes->addMany($routeBuilders->buildAll());
 

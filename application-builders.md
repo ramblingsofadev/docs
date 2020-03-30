@@ -7,6 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
+   1. [Modules](#modules)
 2. [Components](#components)
    1. [Binders](#component-binders)
    2. [Routes](#component-routes)
@@ -41,24 +42,45 @@ class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withBinders($appBuilder, [new UserBinder()]);
-
-        $this->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
-            $routeBuilders->get('users/:id')
-                ->toMethod(UserController::class, 'getUserById');
-        });
-
-        $this->withCommands($appBuilder, function (CommandRegistry $commands) {
-            $commands->registerCommand(
-                new GenerateUserReportCommand(),
-                fn () => new GenerateUserReportCommandHandler()
-            );
-        });
+        $this->withBinders($appBuilder, [new UserBinder()])
+            ->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
+                $routeBuilders->get('users/:id')
+                    ->mapsToMethod(UserController::class, 'getUserById');
+            })
+            ->withCommands($appBuilder, function (CommandRegistry $commands) {
+                $commands->registerCommand(
+                    new GenerateUserReportCommand(),
+                    fn () => new GenerateUserReportCommandHandler()
+                );
+            });
     }
 }
 ```
 
 Application builders are agnostic to the types of applications they build as well as the components they configure, but Aphiria does provide `ApiApplicationBuilder` and `ConsoleApplicationBuilder`, along with various [components](#components), to simplify building API and console applications.
+
+<h3 id="modules">Modules</h3>
+
+To register a module, can import the `AphiriaComponents` trait:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Framework\Application\AphiriaComponents;
+
+class App
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withModules($appBuilder, new MyModule());
+
+        // Or register many modules
+
+        $this->withModules($appBuilder, [new MyModule1(), new MyModule2()]);
+    }
+}
+```
 
 <h2 id="components">Components</h2>
 
@@ -108,7 +130,7 @@ class UserModule implements IModule
         // Add some routes
         $this->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
             $routeBuilders->get('users/:id')
-                ->toMethod(UserController::class, 'getUserById');
+                ->mapsToMethod(UserController::class, 'getUserById');
         });
 
         // Enable route annotations
@@ -119,7 +141,7 @@ class UserModule implements IModule
 
 <h3 id="component-middleware">Middleware</h3>
 
-Some modules might need to add global middleware to your application.
+Some modules might need to add global [middleware](middleware.md) to your application.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -147,7 +169,7 @@ class UserModule implements IModule
 
 <h3 id="component-console-commands">Console Commands</h3>
 
-You can register console commands, and enable command annotations from your modules.
+You can register [console commands](console.md#creating-commands), and enable command annotations from your modules.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -177,7 +199,7 @@ class UserModule implements IModule
 
 <h3 id="component-validator">Validator</h3>
 
-You can also configure constraints for your models and enable validator annotations.
+You can also configure [constraints](validation.md#constraints) for your models and enable [validator annotations](validation.md#validation-annotations).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -206,7 +228,7 @@ class UserModule implements IModule
 
 <h3 id="component-serializer">Serializer</h3>
 
-Your modules can configure custom encoders for your models.
+Your modules can configure [custom encoders](serialization.md#encoders) for your models.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -239,7 +261,7 @@ class UserModule implements IModule
 
 <h3 id="component-exception-handler">Exception Handler</h3>
 
-Exceptions may be mapped to custom HTTP responses and PSR-3 log levels.
+Exceptions may be mapped to [custom HTTP responses](exception-handling.md#exception-responses) and [PSR-3 log levels](exception-handling.md#exception-log-levels).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
