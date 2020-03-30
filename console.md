@@ -117,7 +117,7 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 Before you can use the example command, you must register it so that the `Application` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
-> **Note:** If you're using the configuration library, refer to [its documentation](application-builders.md#component-console-commands) to learn how to register your commands to your app.
+> **Note:** If you're using the application builder library, refer to [its documentation](application-builders.md#component-console-commands) to learn how to register your commands to your app.
 
 ```php
 use Aphiria\Console\Application;
@@ -287,7 +287,7 @@ $container->bindInstance(AnnotationCommandRegistrant::class, $annotationCommandR
     ->withConsoleAnnotations($appBuilder);
 ```
 
-If you're not using the configuration library, you can manually configure your app to scan for annotations:
+If you're not using the application builder library, you can manually configure your app to scan for annotations:
 
 ```php
 use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;

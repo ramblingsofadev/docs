@@ -7,7 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Global Exception Handler](#global-exception-handler)
-2. [HTTP Exception Renderer](#http-exception-renderer)
+2. [API Exception Renderer](#api-exception-renderer)
    1. [Exception Responses](#exception-responses)
 3. [Console Exception Renderer](#console-exception-renderer)
    1. [Exception Results](#exception-results)
@@ -26,9 +26,9 @@ Let's look at an example:
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 
-$exceptionRenderer = new HttpExceptionRenderer();
+$exceptionRenderer = new ApiExceptionRenderer();
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 // This is important - it's what registers the handler as the default handler in PHP
 $globalExceptionHandler->registerWithPhp();
@@ -36,9 +36,9 @@ $globalExceptionHandler->registerWithPhp();
 
 That's it.  Now, whenever an unhandled error or exception is thrown, the global exception handler will catch it, [log it](#logging), and [render it](#http-exception-renderer).  We'll go into more details on how to customize it below.
 
-<h2 id="http-exception-renderer">HTTP Exception Renderer</h2>
+<h2 id="api-exception-renderer">API Exception Renderer</h2>
 
-`HttpExceptionRenderer` is provided out of the box to simplify rendering HTTP responses for Aphiria applications.  This renderer tries to create a response using the following steps:
+`ApiExceptionRenderer` is provided out of the box to simplify rendering API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
   
 1. If an [exception response](#exception-responses) exists for the thrown exception, it's used
 2. Otherwise, if the renderer is configured to use <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a>, it will create a 500 response with a problem details body
@@ -47,9 +47,9 @@ That's it.  Now, whenever an unhandled error or exception is thrown, the global 
 To turn problem detail responses off, you pass in `false` in the constructor:
 
 ```php
-use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 
-$exceptionRenderer = new HttpExceptionRenderer(false);
+$exceptionRenderer = new ApiExceptionRenderer(false);
 ```
 
 <h3 id="exception-responses">Exception Responses</h3>
@@ -58,12 +58,12 @@ You might not want all exceptions to result in a 500.  For example, if you have 
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 use Aphiria\Net\Http\HttpStatusCodes;
 use Aphiria\Net\Http\IHttpRequestMessage;
 use Aphiria\Net\Http\IResponseFactory;
 
-$exceptionRenderer = new HttpExceptionRenderer();
+$exceptionRenderer = new ApiExceptionRenderer();
 $exceptionRenderer->registerResponseFactory(
     UserNotFoundException::class,
     function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
@@ -131,12 +131,12 @@ By default, the global exception handler is compatible with any PSR-3 logger suc
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 
-$exceptionRenderer = new HttpExceptionRenderer();
+$exceptionRenderer = new ApiExceptionRenderer();
 $logger = new Logger('app');
 $logger->pushHandler(new StreamHandler('/etc/logs/errors.txt', LogLevel::DEBUG));
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer, $logger);
@@ -149,10 +149,10 @@ It's possible to map certain exceptions to a PSR-3 log level.  For example, if y
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Exceptions\Http\HttpExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 use Psr\Log\LogLevel;
 
-$globalExceptionHandler = new GlobalExceptionHandler(new HttpExceptionRenderer());
+$globalExceptionHandler = new GlobalExceptionHandler(new ApiExceptionRenderer());
 $globalExceptionHandler->registerLogLevelFactory(
     DatabaseNotFoundException::class,
     fn (DatabaseNotFoundException $ex) => LogLevel::EMERGENCY

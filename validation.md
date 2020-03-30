@@ -423,7 +423,7 @@ $container->bindInstance(AnnotationObjectConstraintsRegistrant::class, $annotati
     ->withValidationAnnotations($appBuilder);
 ```
 
-If you're not using the configuration library, you can manually scan for annotations:
+If you're not using the application builder library, you can manually scan for annotations:
 
 ```php
 use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;

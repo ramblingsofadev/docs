@@ -16,7 +16,7 @@
       3. [Middleware](#route-annotation-middleware)
       4. [Scanning For Annotations](#scanning-for-annotations)
    5. [Using Aphiria's Net Library](#using-aphirias-net-library)
-   6. [Using Aphiria's Configuration Library](#using-aphirias-configuration-library)
+   6. [Using Aphiria's Application Builder Library](#using-aphirias-application-builder-library)
 2. [Route Actions](#route-actions)
 3. [Binding Middleware](#binding-middleware)
    1. [Middleware Attributes](#middleware-attributes)
@@ -280,7 +280,7 @@ $container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegis
     ->withRoutingAnnotations($appBuilder);
 ```
 
-If you're not using the configuration library, you can manually configure the router to scan for annotations:
+If you're not using the application builder library, you can manually configure the router to scan for annotations:
 
 ```php
 use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
@@ -319,9 +319,9 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h3 id="using-aphirias-configuration-library">Using Aphiria's Configuration Library</h3>
+<h3 id="using-aphirias-application builder-library">Using Aphiria's Application Builder Library</h3>
 
-[Aphiria's configuration library](application-builders.md) simplifies how you register routes.  Refer to [its documentation](application-builders.md#component-routes) for more info.
+[Aphiria's application builder library](application-builders.md) simplifies how you register routes.  Refer to [its documentation](application-builders.md#component-routes) for more info.
 
 <h2 id="route-actions">Route Actions</h2>
 
