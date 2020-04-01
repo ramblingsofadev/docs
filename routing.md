@@ -319,9 +319,9 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h3 id="using-aphirias-application builder-library">Using Aphiria's Application Builder Library</h3>
+<h3 id="using-aphirias-application-builder-library">Using Aphiria's Application Builder Library</h3>
 
-[Aphiria's application builder library](application-builders.md) simplifies how you register routes.  Refer to [its documentation](application-builders.md#component-routes) for more info.
+Learn more about how [Aphiria's application builder library](application-builders.md#component-routes) can simplify registering your routes.
 
 <h2 id="route-actions">Route Actions</h2>
 
