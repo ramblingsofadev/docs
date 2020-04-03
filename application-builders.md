@@ -111,6 +111,34 @@ class UserModule implements IModule
 }
 ```
 
+You can also configure your app to use a particular [binder dispatcher](binders.md#lazy-dispatching):
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Configuration\GlobalConfiguration;
+use Aphiria\DependencyInjection\Binders\LazyBinderDispatcher;
+use Aphiria\DependencyInjection\Binders\Metadata\Caching\FileBinderMetadataCollectionCache;
+use Aphiria\Framework\Application\AphiriaComponents;
+
+class App implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        if (\getenv('APP_ENV') === 'production') {
+            $cachePath = GlobalConfiguration::getString('aphiria.binders.metadataCachePath');
+            $cache = new FileBinderMetadataCollectionCache($cachePath);
+        } else {
+            $cache = null;
+        }
+
+        $this->withBinderDispatcher($appBuilder, new LazyBinderDispatcher($cache));
+    }
+}
+```
+
 <h3 id="component-routes">Routes</h3>
 
 You can register [routes](routing.md) for your module, and you can enable route annotations.
