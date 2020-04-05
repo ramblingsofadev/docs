@@ -47,17 +47,15 @@ $container->bindFactory(IUserService::class, fn () => new UserService());
 
 // Whenever you need IUserService, run the factory and use that instance every time after
 $container->bindFactory(IUserService::class, fn () => new UserService(), true);
-```
 
-> **Note:** The factory **must** be parameterless.
-
-```php
 // Whenever you need IUserService, use auto-wiring to return a new instance of UserService
 $container->bindClass(IUserService::class, UserService::class);
 
 // Whenever you need IUserService, use auto-wiring to return the same instance of UserService
 $container->bindClass(IUserService::class, UserService::class, [], true);
 ```
+
+> **Note:** The factory in `bindFactory()` **must** be parameterless.
 
 > **Note:** If you attempt to resolve an interface, but the container does not have a binding or it cannot [auto-wire](#auto-wiring) it, a `ResolutionException` will be thrown.
 
