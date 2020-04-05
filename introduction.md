@@ -69,14 +69,12 @@ To get up and running, follow our [installation guide](installation.md) to creat
 
 Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks (even <a href="https://www.opulencephp.com" target="_blank" title="Opulence">Opulence</a>), and usually found at least one major problem with them all:
  
-* Lack of support for [content negotiation](content-negotiation.md)
-* Too much magic going on behind the scenes
-* All-in adoption of some of the less popular PSRs
+* A lot of coupling between framework libraries, making it difficult to substitute in third party libraries
+* Lack of support for [automatic content negotiation](content-negotiation.md)
+* Lack of simple, [code-based application configuration](application-builders.md)
+* No [code-based model validators](validation.md)
+* No baked-in, optional support for [route](routing.md#route-annotations), [command](console.md#command-annotations), or [validator](validation.md#validation-annotations) annotations
+* Generally too much magic going on behind the scenes
+* All-in adoption of some less popular PSRs
 
-I spent months sketching out the ideal syntax.  As I waded into the depths of development, though, I started to realize that my ideas were a fundamental shift from Opulence.  For example:
-  
-* To make content negotiation work, I'd need to completely rewrite my abstractions for HTTP requests and responses
-* I'd need a whole library dedicated to the serializing and deserializing of POPOs with no/minimal configuration
-* The Opulence router would need to be rewritten to keep up with the speed of the latest routing libraries
-
-After more than a year of development, a whole new framework was emerging - Aphiria.  I honestly believe it is the most intuitive, expressive PHP framework to date.  It enables developers to build powerful APIs without getting in the way.  I invite you to browse [some of the documentation](controllers.md) and see for yourself.
+There is a general trend towards having separate API and front end codebases.  Full stack frameworks have their place, but I felt like this was becoming a less and less common way to write websites - most are JavaScript-powered UIs calling APIs.  So, I focused on what I know best - building REST APIs.  I spent months sketching out the ideal syntax, laboring over how to provide the best developer experience possible.  Once I had the syntax down, I worked backwards and started implementing it over the course of a few years.  It wasn't easy, but I can honestly say I am very proud of it.  I hope you enjoy it, too.
