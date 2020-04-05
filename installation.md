@@ -46,7 +46,7 @@ Be sure to [configure your server](#server-config) to finish the installation.
 
 > **Note:** You can <a href="https://getcomposer.org/download/" target="_blank">download Composer from here</a>.
 
-<h5 id="libraries">Libraries</h5>
+<h3 id="libraries">Libraries</h3>
 
 Aphiria is broken into various libraries, each of which can be installed individually:
 
@@ -74,7 +74,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 
 > **Note:** You must set `YOUR_SITE_DOMAIN` and `YOUR_SITE_DIRECTORY` with the appropriate values in the configs below.
 
-<h5 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h5>
+<h3 id="php-built-in-web-server-config">PHP Built-in Web Server Config</h3>
 
 To run Aphiria locally, run the following in a terminal:
 
@@ -84,7 +84,7 @@ php -S localhost:80 -t public localhost_router.php
     
 This will run PHP's built-in web server. The site will be accessible at http://localhost.
 
-<h5 id="apache-config">Apache Config</h5>
+<h3 id="apache-config">Apache Config</h3>
 
 Create a virtual host in your Apache config with the following settings:
 
@@ -108,7 +108,7 @@ Create a virtual host in your Apache config with the following settings:
 </VirtualHost>
 ```
 
-<h5 id="nginx-config">Nginx Config</h5>
+<h3 id="nginx-config">Nginx Config</h3>
 
 Add the following to your Nginx config:
 
@@ -137,7 +137,7 @@ server {
 }
 ```
 
-<h5 id="caddy-config">Caddy Config</h5>
+<h3 id="caddy-config">Caddy Config</h3>
 
 Add the following to your Caddyfile config:
 
