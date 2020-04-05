@@ -10,28 +10,28 @@
    1. [Route Variables](#route-variables)
    2. [Optional Route Parts](#optional-route-parts)
    3. [Route Builders](#route-builders)
-   4. [Route Annotations](#route-annotations)
-      1. [Example](#route-annotation-example)
-      2. [Route Groups](#route-annotation-groups)
-      3. [Middleware](#route-annotation-middleware)
-      4. [Scanning For Annotations](#scanning-for-annotations)
-   5. [Using Aphiria's Net Library](#using-aphirias-net-library)
-   6. [Using Aphiria's Application Builder Library](#using-aphirias-application-builder-library)
+   4. [Using Aphiria's Net Library](#using-aphirias-net-library)
+   5. [Using Aphiria's Application Builder Library](#using-aphirias-application-builder-library)
 2. [Route Actions](#route-actions)
 3. [Binding Middleware](#binding-middleware)
    1. [Middleware Attributes](#middleware-attributes)
 4. [Grouping Routes](#grouping-routes)
-5. [Route Constraints](#route-constraints)
+5. [Route Annotations](#route-annotations)
+  1. [Example](#route-annotation-example)
+  2. [Route Groups](#route-annotation-groups)
+  3. [Middleware](#route-annotation-middleware)
+  4. [Scanning For Annotations](#scanning-for-annotations)
+6. [Route Constraints](#route-constraints)
    1. [Example - Versioned API](#versioned-api-example)
    2. [Getting Headers in PHP](#getting-php-headers)
-6. [Route Variable Constraints](#route-variable-constraints)
+7. [Route Variable Constraints](#route-variable-constraints)
    1. [Built-In Constraints](#built-in-constraints)
    2. [Making Your Own Custom Constraints](#making-your-own-custom-constraints)
-7. [Creating Route URIs](#creating-route-uris)
-8. [Caching](#caching)
+8. [Creating Route URIs](#creating-route-uris)
+9. [Caching](#caching)
    1. [Route Caching](#route-caching)
    2. [Trie Caching](#trie-caching)
-9. [Matching Algorithm](#matching-algorithm)
+10. [Matching Algorithm](#matching-algorithm)
 
 </div>
 
@@ -167,140 +167,6 @@ Each method returns an instance of `RouteBuilder`, and accepts the following par
   
  You can also call `RouteBuilderRegistry::route()` and pass in the HTTP method(s) you'd like to map to.
 
-<h3 id="route-annotations">Route Annotations</h3>
-
-Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the optional functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
-
-> **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
-
-<h4 id="route-annotation-example">Example</h4>
-
-Let's actually define a route:
-
-```php
-use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\Routing\Annotations\{Middleware, Put};
-use App\Users\Api\Authorization;
-use App\Users\User;
-
-class UserController extends Controller
-{
-    /**
-     * @Put("users/:id")
-     * @Middleware(Authorization::class, attributes={"role"="admin"})
-     */
-    public function updateUser(User $user): IHttpResponseMessage
-    {
-        // ...
-    }
-}
-```
-
-> **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `@Controller` annotation.
-
-The following HTTP methods have route annotations:
-
-* `@Any` - Permits any HTTP method
-* `@Delete`
-* `@Get`
-* `@Head`
-* `@Options`
-* `@Patch`
-* `@Post`
-* `@Put`
-* `@Trace`
-
-Each of the above annotations take in the route path as the first parameter, and optionally let you define any of the following properties:
-
-* `host` - The host name for the route
-* `name` - The name of the route
-* `isHttpsOnly` - Whether or not the route is HTTPS only
-* `attributes` - The key-value pairs of route metadata
-* `constraints` - The list of `@RouteConstraint` options to apply
-  * `@RouteConstraint` takes in the name of the constraint class and `constructorParams`, which is the list of parameters to pass into the constraint constructor
-
-<h4 id="route-annotation-groups">Route Groups</h4>
-
-Just like with our [route builders](#grouping-routes), we can also group routes with annotations:
-
-```php
-use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IHttpResponseMessage;
-use Aphiria\Routing\Annotations\RouteGroup;
-use Aphiria\Routing\Annotations\{Middleware, Put};
-use App\Users\Api\Authorization;
-use App\Users\User;
-
-/**
- * @RouteGroup("users")
- */
-class UserController extends Controller
-{
-    /**
-     * @Put(":id")
-     * @Middleware(Authorization::class)
-     */
-    public function createUser(User $user): IHttpResponseMessage
-    {
-        // ...
-    }
-}
-```
-
-When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.
-
-The following properties can be set in `@RouteGroup`:
-
-* `host` - The host name to suffix to the host of any routes contained in the controller
-* `isHttpsOnly` - Whether or not all the routes are HTTPS only
-* `attributes` - The key-value pairs of metadata that applies to all routes
-* `constraints` - The list of `@RouteConstraint` options to apply to all routes
-  
-<h4 id="route-annotation-middleware">Middleware</h4>
-
-Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
-
-* `attributes` - The key-value pairs of metadata for the middleware
-
-<h4 id="scanning-for-annotations">Scanning For Annotations</h4>
-
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
-
-```php
-use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
-use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
-
-// Assume we already have $container set up
-$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegistrant);
-
-(new AphiriaComponentBuilder($container))
-    ->withRoutingComponent($appBuilder)
-    ->withRoutingAnnotations($appBuilder);
-```
-
-If you're not using the application builder library, you can manually configure the router to scan for annotations:
-
-```php
-use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
-use Aphiria\Routing\Matchers\TrieRouteMatcher;
-use Aphiria\Routing\RouteCollection;
-use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
-
-$routes = new RouteCollection();
-$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
-$routeAnnotationRegistrant->registerRoutes($routes);
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
-
-// Find a matching route
-$result = $routeMatcher->matchRoute(
-    $_SERVER['REQUEST_METHOD'],
-    $_SERVER['HTTP_HOST'],
-    $_SERVER['REQUEST_URI']
-);
-```
-
 <h3 id="using-aphirias-net-library">Using Aphiria's Net Library</h3>
 
 You can use [Aphiria's net library](http-requests.md) to route the request instead of relying on PHP's superglobals:
@@ -430,6 +296,140 @@ This creates two routes with a host suffix of _example.com_ and a route prefix o
   * The list of middleware bindings for routes in this group
 
 It is possible to nest route groups.
+
+<h2 id="route-annotations">Route Annotations</h2>
+
+Up until this point, we've shown you how to manually map routes to controllers, but there is another way - annotations.  Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the optional functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
+
+> **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
+
+<h3 id="route-annotation-example">Example</h3>
+
+Let's actually define a route:
+
+```php
+use Aphiria\Api\Controllers\Controller;
+use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\Routing\Annotations\{Middleware, Put};
+use App\Users\Api\Authorization;
+use App\Users\User;
+
+class UserController extends Controller
+{
+    /**
+     * @Put("users/:id")
+     * @Middleware(Authorization::class, attributes={"role"="admin"})
+     */
+    public function updateUser(User $user): IHttpResponseMessage
+    {
+        // ...
+    }
+}
+```
+
+> **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `@Controller` annotation.
+
+The following HTTP methods have route annotations:
+
+* `@Any` - Permits any HTTP method
+* `@Delete`
+* `@Get`
+* `@Head`
+* `@Options`
+* `@Patch`
+* `@Post`
+* `@Put`
+* `@Trace`
+
+Each of the above annotations take in the route path as the first parameter, and optionally let you define any of the following properties:
+
+* `host` - The host name for the route
+* `name` - The name of the route
+* `isHttpsOnly` - Whether or not the route is HTTPS only
+* `attributes` - The key-value pairs of route metadata
+* `constraints` - The list of `@RouteConstraint` options to apply
+  * `@RouteConstraint` takes in the name of the constraint class and `constructorParams`, which is the list of parameters to pass into the constraint constructor
+
+<h3 id="route-annotation-groups">Route Groups</h3>
+
+Just like with our [route builders](#grouping-routes), we can also group routes with annotations:
+
+```php
+use Aphiria\Api\Controllers\Controller;
+use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\Routing\Annotations\RouteGroup;
+use Aphiria\Routing\Annotations\{Middleware, Put};
+use App\Users\Api\Authorization;
+use App\Users\User;
+
+/**
+ * @RouteGroup("users")
+ */
+class UserController extends Controller
+{
+    /**
+     * @Put(":id")
+     * @Middleware(Authorization::class)
+     */
+    public function createUser(User $user): IHttpResponseMessage
+    {
+        // ...
+    }
+}
+```
+
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.
+
+The following properties can be set in `@RouteGroup`:
+
+* `host` - The host name to suffix to the host of any routes contained in the controller
+* `isHttpsOnly` - Whether or not all the routes are HTTPS only
+* `attributes` - The key-value pairs of metadata that applies to all routes
+* `constraints` - The list of `@RouteConstraint` options to apply to all routes
+  
+<h3 id="route-annotation-middleware">Middleware</h3>
+
+Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
+
+* `attributes` - The key-value pairs of metadata for the middleware
+
+<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
+
+```php
+use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
+use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
+
+// Assume we already have $container set up
+$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
+$container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegistrant);
+
+(new AphiriaComponentBuilder($container))
+    ->withRoutingComponent($appBuilder)
+    ->withRoutingAnnotations($appBuilder);
+```
+
+If you're not using the application builder library, you can manually configure the router to scan for annotations:
+
+```php
+use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
+use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\RouteCollection;
+use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
+
+$routes = new RouteCollection();
+$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
+$routeAnnotationRegistrant->registerRoutes($routes);
+$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
+
+// Find a matching route
+$result = $routeMatcher->matchRoute(
+    $_SERVER['REQUEST_METHOD'],
+    $_SERVER['HTTP_HOST'],
+    $_SERVER['REQUEST_URI']
+);
+```
 
 <h2 id="route-constraints">Route Constraints</h2>
 
