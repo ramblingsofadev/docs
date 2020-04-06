@@ -61,7 +61,7 @@ Application builders are agnostic to the types of applications they build as wel
 
 <h3 id="modules">Modules</h3>
 
-To register a module, can import the `AphiriaComponents` trait:
+To register a module, you can use the `AphiriaComponents` trait:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
