@@ -7,15 +7,12 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
-2. [Creating Responses](#creating-responses)
-   1. [Response Headers](#response-headers)
-   2. [Response Bodies](#response-bodies)
-4. [JSON Responses](#json-responses)
-5. [Redirect Responses](#redirect-responses)
-6. [Setting Cookies](#setting-response-cookies)
+2. [JSON Responses](#json-responses)
+3. [Redirect Responses](#redirect-responses)
+4. [Setting Cookies](#setting-response-cookies)
    1. [Deleting Cookies](#deleting-response-cookies)
-7. [Writing Responses](#writing-responses)
-8. [Serializing Responses](#serializing-responses)
+5. [Writing Responses](#writing-responses)
+6. [Serializing Responses](#serializing-responses)
 
 </div>
 
@@ -23,50 +20,42 @@
 
 <h2 id="basics">Basics</h2>
 
-Responses are HTTP messages that are sent by servers back to the client.  They contain the following methods:
-
-* `getBody(): ?IHttpBody`
-* `getHeaders(): HttpHeaders`
-* `getProtocolVersion(): string`
-* `getReasonPhrase(): ?string`
-* `getStatusCode(): int`
-* `setBody(IHttpBody $body): void`
-* `setStatusCode(int $statusCode, ?string $reasonPhrase = null): void`
-
-<h2 id="creating-responses">Creating Responses</h2>
-
-Creating a response is easy:
+Responses are HTTP messages that are sent by servers back to the client.  They contain data like a status code, headers, and body.
 
 ```php
+use Aphiria\Net\Http\HttpHeaders
 use Aphiria\Net\Http\Response;
+use Aphiria\Net\Http\StringBody;
 
-$response = new Response();
-```
+$response = new Response(
+    200,
+    new HttpHeaders(),
+    new StringBody('foo')
+);
 
-This will create a 200 OK response.  If you'd like to set a different status code, you can either pass it in the constructor or via `Response::setStatusCode()`:
+// Get the status code
+$response->getStatusCode();
 
-```php
-$response = new Response(404);
-// Or...
-$response->setStatusCode(404);
-```
+// Set the status code
+$response->setStatusCode(500);
 
-<h3 id="response-headers">Response Headers</h3>
+// Get the reason phrase
+$response->getReasonPhrase(); // "OK"
 
-You can set response [headers](http-requests.md#headers) via `Response::getHeaders()`:
+// Get the protocol version
+$response->getProtocolVersion(); // 1.1
 
-```php
-$response->getHeaders()->add('Content-Type', 'application/json');
-```
+// Get the body (could be null)
+$response->getBody();
 
-<h3 id="response-bodies">Response Bodies</h3>
-
-You can pass the [body](http-requests.md#bodies) via the response constructor or via `Response::setBody()`:
-
-```php
-$response = new Response(200, null, new StringBody('foo'));
-// Or...
+// Set the body
 $response->setBody(new StringBody('foo'));
+
+// Get the headers (you can add new headers to the returned hash table)
+$response->getHeaders();
+
+// Set a header
+$response->getHeaders()->add('Foo', 'bar');
 ```
 
 <h2 id="json-responses">JSON Responses</h2>
@@ -109,22 +98,24 @@ use Aphiria\Net\Http\Headers\Cookie;
 );
 ```
 
-`Cookie` accepts the following parameters:
+Here's how to create a cookie:
 
 ```php
-public function __construct(
-    string $name,
-    $value,
-    $expiration = null, // Either Unix timestamp or DateTime to expire
-    ?string $path = null,
-    ?string $domain = null,
-    bool $isSecure = false,
-    bool $isHttpOnly = true,
-    ?string $sameSite = Cookie::SAME_SITE_LAX
-)
+use Aphiria\Net\Http\Headers\Cookie;
+
+$cookie = new Cookie(
+    'token', // The name
+    'abc123', // The value
+    time() + 3600, // The expiration (can also be a DateTime)
+    '/', // The path (can be null)
+    'example.com', // The domain (can be null)
+    true, // Whether or not the cookie is HTTPS-only
+    true, // Whether or not the cookie is not readable by client scripts
+    Cookie::SAME_SITE_LAX // The same-site setting (can be null)
+);
 ```
 
-Cookies accept `Cookie::SAME_SITE_LAX` (default), `Cookie::SAME_SITE_STRICT`, or `null` if no same-site setting should be specified.  Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
+Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
 
 <h3 id="deleting-response-cookies">Deleting Cookies</h3>
 

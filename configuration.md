@@ -22,28 +22,40 @@
 Configs allow you to store changeable values that power your application.  Unlike environment variables, they do not typically change between environments.  Configurations must implement `IConfiguration`, which provides the following methods:
 
 ```php
+// Get the value as an array
 $config->getArray('foo');
-         
+
+// Get the value as a boolean
 $config->getBool('foo');
 
+// Get the value as a float
 $config->getFloat('foo');
 
+// Get the value as an integer
 $config->getInt('foo');
 
+// Get the value as a string
 $config->getString('foo');
 
+// Get the raw value
 $config->getValue('foo');
 
+// Try to get the value as an array
 $config->tryGetArray('foo', $value);
 
+// Try to get the value as a boolean
 $config->tryGetBool('foo', $value);
 
+// Try to get the value as a float
 $config->tryGetFloat('foo', $value);
 
+// Try to get the value as an integer
 $config->tryGetInt('foo', $value);
 
+// Try to get the value as a string
 $config->tryGetString('foo', $value);
 
+// Try to get the raw value
 $config->tryGetValue('foo', $value);
 ```
 
@@ -122,28 +134,40 @@ class YamlConfigurationFileReader implements IConfigurationFileReader
 ```php
 use Aphiria\Configuration\GlobalConfiguration;
 
+// Get the value as an array
 GlobalConfiguration::getArray('foo');
 
+// Get the value as a boolean
 GlobalConfiguration::getBool('foo');
 
+// Get the value as a float
 GlobalConfiguration::getFloat('foo');
 
+// Get the value as an integer
 GlobalConfiguration::getInt('foo');
 
+// Get the value as a string
 GlobalConfiguration::getString('foo');
 
+// Get the raw value
 GlobalConfiguration::getValue('foo');
 
+// Try to get the value as an array
 GlobalConfiguration::tryGetArray('foo', $value);
 
+// Try to get the value as a boolean
 GlobalConfiguration::tryGetBool('foo', $value);
 
+// Try to get the value as a float
 GlobalConfiguration::tryGetFloat('foo', $value);
 
+// Try to get the value as an integer
 GlobalConfiguration::tryGetInt('foo', $value);
 
+// Try to get the value as a string
 GlobalConfiguration::tryGetString('foo', $value);
 
+// Try to get the raw value
 GlobalConfiguration::tryGetValue('foo', $value);
 ```
 

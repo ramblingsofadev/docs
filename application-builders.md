@@ -57,7 +57,7 @@ class UserModule implements IModule
 }
 ```
 
-Application builders are agnostic to the types of applications they build as well as the components they configure, but Aphiria does provide `ApiApplicationBuilder` and `ConsoleApplicationBuilder`, along with various [components](#components), to simplify building API and console applications.
+Here's the best part of how Aphiria is built - all components, even Aphiria-provided components for things like binders, routes, console commands, etc, are not first-class citizens.  They're just normal components, which means it's trivial to [configure another library in place of any Aphiria libraries](#adding-custom-components) if you so choose.
 
 <h3 id="modules">Modules</h3>
 

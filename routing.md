@@ -278,22 +278,27 @@ $routeBuilders->group(
 );
 ```
 
-This creates two routes with a host suffix of _example.com_ and a route prefix of _users/_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  `RouteGroupOptions::__construct()` accepts the following parameters:
+This creates two routes with a host suffix of _example.com_ and a route prefix of _users/_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  You can set several settings in group options:
 
-* `string $pathTemplate`
-  * The path for routes in this group ([read about syntax](#route-variables))
-  * This value is prefixed to the paths of all routes within the group
-* `string|null $hostTemplate` (optional)
-  * The optional host template for routes in this group  ([read about syntax](#route-variables))
-  * This value is suffixed to the hosts of all routes within the group
-* `bool $isHttpsOnly` (optional)
-  * Whether or not the routes in this group are HTTPS-only
-* `IRouteConstraint[] $constraints` (optional)
-* `array $attributes` (optional)
-  * The mapping of route attribute names => values
-  * These attribute can be used with [route constraint](#route-constraints) matching
-* `MiddlewareBinding[] $middleware` (optional)
-  * The list of middleware bindings for routes in this group
+```php
+use Aphiria\Middleware\MiddlewareBinding;
+use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteGroupOptions;
+
+$routeBuilders->group(
+    new RouteGroupOptions(
+        'courses/:courseId', // The path template
+        'api.example.com', // The nullable host template
+        true, // Whether or not all routes are HTTPS-only
+        [new MyConstraint()], // List of constraints
+        ['role' => 'admin'], // The constraint attributes
+        [new MiddlewareBinding(Authentication::class)] // The middleware
+    ),
+    function (RouteBuilderRegistry $routeBuilders) {
+        // ...
+    }
+)
+```
 
 It is possible to nest route groups.
 
@@ -329,26 +334,21 @@ class UserController extends Controller
 
 > **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `@Controller` annotation.
 
-The following HTTP methods have route annotations:
+The following HTTP methods have route annotations: `@Any` (any HTTP method), `@Delete`, `@Get`, `@Head`, `@Options`, `@Patch`, `@Post`, `@Put`, and `@Trace`.  Each annotation takes in the same parameters:
 
-* `@Any` - Permits any HTTP method
-* `@Delete`
-* `@Get`
-* `@Head`
-* `@Options`
-* `@Patch`
-* `@Post`
-* `@Put`
-* `@Trace`
+```php
+use Aphiria\Routing\Annotations\Get;
+use Aphiria\Routing\Annotations\RouteConstraint;
 
-Each of the above annotations take in the route path as the first parameter, and optionally let you define any of the following properties:
-
-* `host` - The host name for the route
-* `name` - The name of the route
-* `isHttpsOnly` - Whether or not the route is HTTPS only
-* `attributes` - The key-value pairs of route metadata
-* `constraints` - The list of `@RouteConstraint` options to apply
-  * `@RouteConstraint` takes in the name of the constraint class and `constructorParams`, which is the list of parameters to pass into the constraint constructor
+@Get(
+    "courses/:courseId",
+    host="api.example.com",
+    name="getCourse",
+    isHttpsOnly=true,
+    constraints=@{RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
+    attributes={"role":"admin"}
+)
+```
 
 <h3 id="route-annotation-groups">Route Groups</h3>
 
@@ -378,20 +378,33 @@ class UserController extends Controller
 }
 ```
 
-When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.  You can add the following properties to route group annotations:
 
-The following properties can be set in `@RouteGroup`:
+```php
+use Aphiria\Routing\Annotations\RouteConstraint;
+use Aphiria\Routing\Annotations\RouteGroup;
 
-* `host` - The host name to suffix to the host of any routes contained in the controller
-* `isHttpsOnly` - Whether or not all the routes are HTTPS only
-* `attributes` - The key-value pairs of metadata that applies to all routes
-* `constraints` - The list of `@RouteConstraint` options to apply to all routes
+@RouteGroup(
+    "users",
+    host="api.example.com",
+    isHttpsOnly=true,
+    constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
+    attributes={"role":"admin"}
+)
+```
   
 <h3 id="route-annotation-middleware">Middleware</h3>
 
-Middleware can be defined via the `@Middleware` attribute.  The first value must be the name of the middleware class, and the following option is available:
+Middleware are added separately:
 
-* `attributes` - The key-value pairs of metadata for the middleware
+```php
+use Aphiria\Routing\Annotations\Middleware;
+
+@Middleware(
+    Authorization::class,
+    attributes={"role":"admin"}
+)
+```
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
@@ -507,16 +520,18 @@ You can enforce certain constraints to pass before matching on a route.  These c
 
 The following constraints are built-into Aphiria:
 
-* `alpha`
-* `alphanumeric`
-* `between($min, $max, bool $minIsInclusive = true, bool $maxIsInclusive = true)`
-* `date(string $commaSeparatedListOfAcceptableFormats)`
-* `in(string $commaSeparatedListOfAcceptableValues)`
-* `int`
-* `notIn(string $commaSeparatedListOfUnacceptableValues)`
-* `numeric`
-* `regex(string $regex)`
-* `uuidv4`
+Name | Description
+------ | ------
+`alpha` | The value must only contain alphabet characters
+`alphanumeric` | The value must only contain alphanumeric characters
+`between` | The value must fall between a min and max (takes in whether or not the min and max values are inclusive)
+`date` | The value must match a date-time format
+`in` | The value must be in a list of acceptable values
+`int` | The value must be an integer
+`notIn` | The value must not be in a list of values
+`numeric` | The value must be numeric
+`regex` | The value must satisfy a regular expression
+`uuidv4` | The value must be a UUID v4
 
 <h3 id="making-your-own-custom-constraints">Making Your Own Custom Constraints</h3>
 

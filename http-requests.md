@@ -33,46 +33,57 @@
 
 <h2 id="basics">Basics</h2>
 
-Requests are HTTP messages sent by clients to servers.  They contain the following methods:
-
-* `getBody(): ?IHttpBody`
-* `getHeaders(): HttpHeaders`
-* `getMethod(): string`
-* `getProperties(): IDictionary`
-* `getProtocolVersion(): string`
-* `getUri(): Uri`
-* `setBody(IHttpBody $body): void`
-
-> **Note:** The properties dictionary is a useful place to store metadata about a request, eg route variables.
-
-<h2 id="creating-requests">Creating Requests</h2>
-
-Creating a request is easy:
+Requests are HTTP messages sent by clients to servers.  They contain data like the URI that was requested, the HTTP method (eg `GET`), the headers, and the body (if one was present).
 
 ```php
 use Aphiria\Net\Http\Request;
+use Aphiria\Net\Http\StringBody;
 use Aphiria\Net\Uri;
 
 $request = new Request('GET', new Uri('https://example.com'));
-```
 
-You can set HTTP headers by calling
+// Get the body
+$body = $request->getBody(); // Could be null
 
-```php
+// Set the body
+$request->setBody(new StringBody('foo'));
+
+// Grab the headers (you can add new headers to the returned hash table)
+$headers = $request->getHeaders();
+
+// Set a header
 $request->getHeaders()->add('Foo', 'bar');
+
+// Grab the URI:
+$uri = $request->getUri();
+
+// Grab the HTTP method, eg "GET"
+$method = $request->getMethod();
+
+// Grab any special metadata properties (a custom hash table that you can define)
+$properties = $request->getProperties();
+
+// Grab the protocol version, eg 1.1:
+
+$protocolVersion = $request->getProtocolVersion();
 ```
 
-You can either set the body via the constructor or via `Request::setBody()`:
+<h2 id="creating-requests">Creating Requests</h2>
+
+Manually creating a request is easy:
 
 ```php
+use Aphiria\Net\Http\HttpHeaders;
+use Aphiria\Net\Http\Request;
 use Aphiria\Net\Http\StringBody;
+use Aphiria\Net\Uri;
 
-// Via constructor:
-$body = new StringBody('foo');
-$request = new Request('POST', new Uri('https://example.com'), null, $body);
-
-// Or via setBody():
-$request->setBody($body);
+$request = new Request(
+    'GET',
+    new Uri('https://example.com'),
+    new HttpHeaders(),
+    new StringBody('foo')
+);
 ```
 
 <h3 id="creating-requests-from-superglobals">Creating Requests From Superglobals</h3>
@@ -110,10 +121,23 @@ Headers provide metadata about the HTTP message.  In Aphiria, they're implemente
 
 HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IHttpBody`.  They provide a few methods to read and write their contents to streams and to strings:
 
-* `__toString(): string`
-* `readAsStream(): IStream`
-* `readAsString(): string`
-* `writeToStream(IStream $stream): void`
+```php
+use Aphiria\IO\Streams\Stream;
+use Aphiria\Net\Http\StringBody;
+
+$body = new StringBody('foo');
+
+// Read the body as a stream
+$stream = $body->readAsStream();
+
+// Read the body as a string
+$body->readAsStream(); // "foo"
+(string)$body; // "foo"
+
+// Write the body to a stream
+$streamToWriteTo = new Stream(fopen('php://temp', 'w+b'));
+$body->writeToStream($streamToWriteTo);
+```
 
 <h3 id="string-bodies">String Bodies</h3>
 
@@ -141,23 +165,25 @@ $body = new StreamBody($stream);
 
 A URI identifies a resource, typically over a network.  They contain such information as the scheme, host, port, path, query string, and fragment.  Aphiria represents them in `Aphiria\Net\Uri`, and they include the following methods:
 
-* `__toString(): string`
-* `getAuthority(bool $includeUserInfo = true): ?string`
-* `getFragment(): ?string`
-* `getHost(): ?string`
-* `getPassword(): ?string`
-* `getPath(): ?string`
-* `getPort(): ?int`
-* `getQueryString(): ?string`
-* `getScheme(): ?string`
-* `getUser(): ?string`
-
-To create an instance of `Uri`, pass the raw URI string into the constructor:
-
 ```php
 use Aphiria\Net\Uri;
 
-$uri = new Uri('https://example.com/foo?bar=baz#blah');
+$uri = new Uri('https://dave:abc123@example.com:443/foo?bar=baz#hash');
+$uri->getScheme(); // "https"
+$uri->getAuthority(); // "//user:password@example.com:443"
+$uri->getUser(); // "dave"
+$uri->getPassword(); // "abc123"
+$uri->getHost(); // "example.com"
+$uri->getPort(); // 443
+$uri->getPath(); // "/foo"
+$uri->getQueryString(); // "bar=baz"
+$uri->getFragment(); // "hash"
+```
+
+To serialize a URI, just cast it to a string:
+
+```php
+(string)$uri; // "https://dave:abc123@example.com:443/foo?bar=baz#hash"
 ```
 
 <h2 id="getting-post-data">Getting POST Data</h2>

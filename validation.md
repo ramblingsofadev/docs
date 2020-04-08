@@ -168,33 +168,24 @@ A constraint is something that a value must pass to be considered valid.  For ex
 
 Aphiria comes with some useful constraints built-in:
 
-* `AlphaConstraint`
-* `AlphanumericConstraint`
-* `BetweenConstraint`
-  * Takes in a min value, a max value, whether or not the min is inclusive, and whether or not the max is inclusive
-* `CallbackConstraint`
-  * Takes in a callback that accepts a value and returns whether or not the value passes
-* `DateConstraint`
-  * Takes in single or multiple `DateTime` formats that can be used to match the input value
-* `EachConstraint`
-  * Takes in single or multiple `IConstraint`s and applies them to each value in the input value (input value must be iterable)
-* `EmailConstraint`
-* `EqualsConstraint`
-  * Takes in a value that must be equal to the input value
-* `InConstraint`
-  * Takes in a list of values that must contain the input value
-* `IntegerConstraint`
-* `IPAddressConstraint`
-* `MaxConstraint`
-  * Takes in a max value and whether or not it is inclusive
-* `MinConstraint`
-  * Takes in a min value and whether or not it is inclusive
-* `NotInConstraint`
-  * Takes in a list of values that must not contain the input value
-* `NumericConstraint`
-* `RegexConstraint`
-  * Takes in a regex that will be applied to determine if the input value passes
-* `RequiredConstraint`
+Name | Description
+------ | ------
+`AlphaConstraint` | The value must only contain alphabet characters
+`AlphanumericConstraint` | The value must only contain alphanumeric characters
+`BetweenConstraint` | The value must fall in between two values (takes in whether or not the min and max are inclusive)
+`CallbackConstraint` | The value must satisfy a callback that returns a boolean
+`DateConstraint` | The value must match a date-time format
+`EachConstraint` | The value must satisfy a list of constraints (takes in a list of `IConstraint`)
+`EqualsConstraint` | The value must equal a value
+`InConstraint` | The value must be in a list of acceptable values
+`IntegerConstraint` | The value must be an integer
+`IPAddressConstraint` | The value must be an IP address
+`MaxConstraint` | The value cannot exceed a max value (takes in whether or not the max is inclusive)
+`MinConstraint` | The value cannot go below a min value (takes in whether or not the min is inclusive)
+`NotInConstraint` | The value must not be in a list of values
+`NumericConstraint` | The value must be numeric
+`RegexConstraint` | The value must satisfy a regular expression
+`RequiredConstraint` | The value must not be null
 
 <h3 id="custom-constraints">Custom Constraints</h3>
 

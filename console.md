@@ -351,15 +351,15 @@ Outputs allow you to write messages to an end user.  The different outputs inclu
    * Used when we don't want any messages to be written
    * Useful for when one command calls another
 
-Each output offers three methods:
+Each output offers a few methods:
 
 1. `readLine()`
    * Reads a line of input
-1. `write()`
+2. `write()`
    * Writes a message to the existing line
-2. `writeln()`
+3. `writeln()`
    * Writes a message to a new line
-3. `clear()`
+4. `clear()`
    * Clears the current screen
    * Only works in `ConsoleOutput`
 
@@ -392,12 +392,16 @@ Jim    - Gaffigan - pale
 
 There are a few useful functions for customizing the padding formatter:
 
-* `setEolChar()`
-  * Sets the end-of-line character
-* `setPadAfter()`
-  * Sets whether to pad before or after strings
-* `setPaddingString()`
-  * Sets the padding string
+```php
+// Set the end-of-line character
+$paddingFormatter->setEolChar("\n");
+
+// Set whether or not to pad after strings
+$paddingFormatter->setPadAfter(true);
+
+// Set the string to use for padding
+$paddingFormatter->setPaddingString(' ');
+```
 
 <h3 id="tables">Tables</h3>
 
@@ -443,18 +447,25 @@ This will return:
 
 There are a few useful functions for customizing the look of tables:
 
-* `setCellPaddingString()`
-  * Sets the cell padding string
-* `setEolChar()`
-  * Sets the end-of-line character
-* `setHorizontalBorderChar()`
-  * Sets the horizontal border character
-* `setIntersectionChar()`
-  * Sets the row/column intersection character
-* `setPadAfter()`
-  * Sets whether to pad before or after strings
-* `setVerticalBorderChar()`
-  * Sets the vertical border character
+```php
+// Set the cell padding string
+$table->setCellPaddingString(' ');
+
+// Set the end-of-line character
+$table->setEolChar("\n");
+
+// Set the horizontal border character
+$table->setHorizontalBorderChar('-');
+
+// Set the vertical border character
+$table->setVerticalBorderChar('|');
+
+// Set the intersection character
+$table->setIntersectionChar('+');
+
+// Set whether or not to pad after strings
+$table->setPadAfter(true);
+```
     
 <h3 id="progress-bars">Progress Bars</h3>
 

@@ -64,17 +64,19 @@ Similarly, Aphiria can [automatically deserialize request bodies](#request-body-
 
 The following helper methods come bundled with `Controller`:
 
-* `badRequest()`
-* `conflict()`
-* `created()`
-* `forbidden()`
-* `found()`
-* `internalServerError()`
-* `movedPermanently()`
-* `noContent()`
-* `notFound()`
-* `ok()`
-* `unauthorized()`
+Method | Status Code
+------ | ------
+`badRequest()` | 400
+`conflict()` | 409
+`created()` | 201
+`forbidden()` | 403
+`found()` | 302
+`internalServerError()` | 500
+`movedPermanently()` | 301
+`noContent()` | 204
+`notFound()` | 404
+`ok()` | 200
+`unauthorized()` | 401
 
 If your controller method has a `void` return type, a 204 "No Content" response will be created automatically.
 
