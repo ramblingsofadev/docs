@@ -42,11 +42,14 @@ use Aphiria\Net\Uri;
 
 $request = new Request('GET', new Uri('https://example.com'));
 
-// Get the body
-$body = $request->getBody(); // Could be null
+// Grab the HTTP method, eg "GET"
+$method = $request->getMethod();
 
-// Set the body
-$request->setBody(new StringBody('foo'));
+// Grab the URI:
+$uri = $request->getUri();
+
+// Grab the protocol version, eg 1.1:
+$protocolVersion = $request->getProtocolVersion();
 
 // Grab the headers (you can add new headers to the returned hash table)
 $headers = $request->getHeaders();
@@ -54,18 +57,14 @@ $headers = $request->getHeaders();
 // Set a header
 $request->getHeaders()->add('Foo', 'bar');
 
-// Grab the URI:
-$uri = $request->getUri();
+// Get the body
+$body = $request->getBody(); // Could be null
 
-// Grab the HTTP method, eg "GET"
-$method = $request->getMethod();
+// Set the body
+$request->setBody(new StringBody('foo'));
 
 // Grab any special metadata properties (a custom hash table that you can define)
 $properties = $request->getProperties();
-
-// Grab the protocol version, eg 1.1:
-
-$protocolVersion = $request->getProtocolVersion();
 ```
 
 <h2 id="creating-requests">Creating Requests</h2>
@@ -131,7 +130,7 @@ $body = new StringBody('foo');
 $stream = $body->readAsStream();
 
 // Read the body as a string
-$body->readAsStream(); // "foo"
+$body->readAsString(); // "foo"
 (string)$body; // "foo"
 
 // Write the body to a stream
@@ -170,7 +169,7 @@ use Aphiria\Net\Uri;
 
 $uri = new Uri('https://dave:abc123@example.com:443/foo?bar=baz#hash');
 $uri->getScheme(); // "https"
-$uri->getAuthority(); // "//user:password@example.com:443"
+$uri->getAuthority(); // "//dave:abc123@example.com:443"
 $uri->getUser(); // "dave"
 $uri->getPassword(); // "abc123"
 $uri->getHost(); // "example.com"

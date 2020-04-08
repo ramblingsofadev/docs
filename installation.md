@@ -50,22 +50,22 @@ Be sure to [configure your server](#server-config) to finish the installation.
 
 Aphiria is broken into various libraries, each of which can be installed individually:
 
-* aphiria/api
-* aphiria/application
-* aphiria/collections
-* aphiria/configuration
-* aphiria/console
-* aphiria/dependency-injection
-* aphiria/exceptions
-* aphiria/framework
-* aphiria/io
-* aphiria/middleware
-* aphiria/net
-* aphiria/reflection
-* aphiria/router
-* aphiria/serialization
-* aphiria/sessions
-* aphiria/validation
+* `aphiria/api`
+* `aphiria/application`
+* `aphiria/collections`
+* `aphiria/configuration`
+* `aphiria/console`
+* `aphiria/dependency-injection`
+* `aphiria/exceptions`
+* `aphiria/framework`
+* `aphiria/io`
+* `aphiria/middleware`
+* `aphiria/net`
+* `aphiria/reflection`
+* `aphiria/router`
+* `aphiria/serialization`
+* `aphiria/sessions`
+* `aphiria/validation`
 
 <h2 id="server-config">Server Config</h2>
 

@@ -45,17 +45,17 @@ $response->getReasonPhrase(); // "OK"
 // Get the protocol version
 $response->getProtocolVersion(); // 1.1
 
-// Get the body (could be null)
-$response->getBody();
-
-// Set the body
-$response->setBody(new StringBody('foo'));
-
 // Get the headers (you can add new headers to the returned hash table)
 $response->getHeaders();
 
 // Set a header
 $response->getHeaders()->add('Foo', 'bar');
+
+// Get the body (could be null)
+$response->getBody();
+
+// Set the body
+$response->setBody(new StringBody('foo'));
 ```
 
 <h2 id="json-responses">JSON Responses</h2>
@@ -94,24 +94,16 @@ use Aphiria\Net\Http\Headers\Cookie;
 
 (new ResponseFormatter)->setCookie(
     $response,
-    new Cookie('userid', 123, 3600)
-);
-```
-
-Here's how to create a cookie:
-
-```php
-use Aphiria\Net\Http\Headers\Cookie;
-
-$cookie = new Cookie(
-    'token', // The name
-    'abc123', // The value
-    time() + 3600, // The expiration (can also be a DateTime)
-    '/', // The path (can be null)
-    'example.com', // The domain (can be null)
-    true, // Whether or not the cookie is HTTPS-only
-    true, // Whether or not the cookie is not readable by client scripts
-    Cookie::SAME_SITE_LAX // The same-site setting (can be null)
+    new Cookie(
+        'token', // The name
+        'abc123', // The value
+        time() + 3600, // The expiration (defaults to null, can also be a DateTime)
+        '/', // The path (defaults to null)
+        'example.com', // The domain (defaults to null)
+        true, // Whether or not the cookie is HTTPS-only (defaults to false)
+        true, // Whether or not the cookie is not readable by client scripts (defaults to true)
+        Cookie::SAME_SITE_LAX // The same-site setting (defaults to lax)
+    )
 );
 ```
 
