@@ -340,11 +340,18 @@ class UserModule implements IModule
 
 <h2 id="adding-custom-components">Adding Custom Components</h2>
 
-You can add your own custom components to application builders.  They typically have `with*()` methods to let you configure the component, and a `build()` method that actually finishes building the component.
+You can add your own custom components to application builders.  They typically have `with*()` methods to let you configure the component, and a `build()` method (called internally) that actually finishes building the component.
 
 > **Note:** Binders aren't dispatched until just before `build()` is called on the components.  This means you can't inject dependencies from binders into your components - they won't have been bound yet.  So, if you need any dependencies inside the `build()` method, use the DI container to resolve them.
 
-Let's say you prefer to use Symfony's router, and want to be able to add routes from your modules.  The first thing you should do is add a binder for the router so that the DI container can resolve it:
+Let's say you prefer to use Symfony's router, and want to be able to add routes from your modules.  This requires a few simple steps:
+
+1. Create a binder for the Symfony services
+3. Create a component to let you add routes from modules
+2. Register the binder and component to your app
+4. Start using the component
+
+First, let's create a binder for the router so that the DI container can resolve it:
 
 ```php
 use Aphiria\DependencyInjection\Binders\Binder;
@@ -368,7 +375,7 @@ class SymfonyRouterBinder extends Binder
 }
 ```
 
-Now, let's define a component that allows us to add routes.
+Next, let's define a component to let us add routes.
 
 ```php
 use Aphiria\Api\Application;
@@ -412,17 +419,44 @@ class SymfonyRouterComponent implements IComponent
 }
 ```
 
-All that's left is to register the component, and start using it.
+Let's register the binder and component to our app:
 
 ```php
-use Aphiria\Framework\Api\Builders\ApiApplicationBuilder;
-use Symfony\Component\Routing\Route;
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\DependencyInjection\IContainer;
+use Aphiria\Framework\Application\AphiriaComponents;
 
-$appBuilder = new ApiApplicationBuilder($container);
-$appBuilder->withComponent(new SymfonyRouterComponent($container));
+class App implements IModule
+{
+    use AphiriaComponents;
 
-// Now use it
+    private IContainer $container;
 
-$appBuilder->getComponent(SymfonyRouterComponent::class)
-    ->withRoutes('GetUserById', new Route('users/{id}'));
+    public function __construct(IContainer $container)
+    {
+        $this->container = $container;
+    }
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $appBuilder->withComponent(new SymfonyRouterComponent($this->container));
+        $this->withBinders($appBuilder, [new SymfonyRouterBinder()]);
+    }
+}
+```
+
+All that's left is to start using it from a module:
+
+```php
+use Aphiria\Application\IModule;
+use Aphiria\Application\Builders\IApplicationBuilder;
+
+class MyModule implements IModule
+{
+    public function build(IApplicationBuilder $appBuilder) : void{
+        $appBuilder->getComponent(SymfonyRouterComponent::class)
+            ->withRoutes('GetUserById', new Route('users/{id}'));
+    }
+}
 ```
