@@ -451,10 +451,12 @@ All that's left is to start using it from a module:
 ```php
 use Aphiria\Application\IModule;
 use Aphiria\Application\Builders\IApplicationBuilder;
+use Symfony\Component\Routing\Route;
 
 class MyModule implements IModule
 {
-    public function build(IApplicationBuilder $appBuilder) : void{
+    public function build(IApplicationBuilder $appBuilder) : void
+    {
         $appBuilder->getComponent(SymfonyRouterComponent::class)
             ->withRoutes('GetUserById', new Route('users/{id}'));
     }
