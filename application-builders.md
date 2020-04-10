@@ -440,8 +440,8 @@ class App implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $appBuilder->withComponent(new SymfonyRouterComponent($this->container));
-        $this->withBinders($appBuilder, [new SymfonyRouterBinder()]);
+        $this->withComponent($appBuilder, new SymfonyRouterComponent($this->container))
+            ->withBinders($appBuilder, new SymfonyRouterBinder());
     }
 }
 ```
