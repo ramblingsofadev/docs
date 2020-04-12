@@ -334,10 +334,16 @@ foreach ($multipartBody->getParts() as $multipartBodyPart) {
 
 <h3 id="getting-mime-type-of-body">Getting the MIME Type of the Body</h3>
 
-To grab the MIME type of an HTTP body, call
+To grab the actual MIME type of an HTTP body, call
 
 ```php
-(new RequestParser)->getMimeType($multipartBodyPart);
+(new RequestParser)->getActualMimeType($multipartBodyPart);
+```
+
+To get the MIME type that was specified by the client, call
+
+```php
+(new RequestParser)->getClientMimeType($multipartBodyPart);
 ```
 
 <h3 id="creating-multipart-requests">Creating Multipart Requests</h3>

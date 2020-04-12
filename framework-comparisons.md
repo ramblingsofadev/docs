@@ -51,12 +51,13 @@ Before we get into library comparisons, let's compare the frameworks at a high l
 * Very decoupled design makes it simple to pick-and-choose the libraries you want to use
 * Unopinionated, ie it doesn't prescribe _how_ to do something - it places that completely in the developers' hands (akin to an Android phone)
 * Favors code-based configuration over magic string-based configuration
+* Can easily convert to-and-from PSRs
 * Thorough, searchable documentation
 
 <h4 id="aphiria-general-cons">Cons</h4>
 
 * Little community support
-* Does not embrace many PSRs (could be a deal-breaker for some)
+* Does not natively use some PSRs
 * No built-in support for background processing of data
 
 <h3 id="symfony-general">Symfony</h3>
@@ -185,10 +186,11 @@ PHP's abstractions around HTTP requests and responses are pretty bare bones.  Mo
 * Clean abstractions of HTTP messages
 * Helper classes to simplify common tasks with messages, eg setting cookies, determining if a request is JSON, constructing multi-part requests, etc
 * Contains support for content negotiation and media type formatters
+* Can convert to-and-from PSR-7
 
 <h4 id="aphiria-http-library-cons">Cons</h4>
 
-* Does not support PSR-7
+* Does not use PSR-7 natively
 * Does not contain an HTTP client
 
 <h3 id="symfony-http-library">Symfony</h3>
@@ -196,22 +198,24 @@ PHP's abstractions around HTTP requests and responses are pretty bare bones.  Mo
 <h4 id="symfony-http-library-pros">Pros</h4>
 
 * Contains an HTTP client to send and receive messages
-* Supports converting Symfony requests/responses to PSR-7 (but does not natively implement PSR-7)
+* Can convert to-and-from PSR-7
 
 <h4 id="symfony-http-library-cons">Cons</h4>
 
 * Requires additional libraries for handling things like reading and writing cookies easily
+* Does not use PSR-7 natively
 
 <h3 id="laravel-http-library">Laravel</h3>
 
 <h4 id="laravel-http-library-pros">Pros</h4>
 
 * Lots of convenience methods for common tasks
-* Supports converting requests/responses to PSR-7 because it extends Symfony's HTTP library
+* Can convert to-and-from PSR-7 because it extends Symfony's HTTP library
 
 <h4 id="laravel-http-library-cons">Cons</h4>
 
 * Not necessarily a con, but trades off proper abstractions for convenience
+* Does not use PSR-7 natively
 
 <h2 id="di-container">Dependency Injection Container</h2>
 
@@ -226,10 +230,11 @@ A dependency injection (DI) container lets a developer tell the application "Whe
 * Supports automatic lazy execution of binders so that binders that aren't used are not executed
 * Straightforward methods to bind and resolve dependencies from the DI Container
 * Supports targeted bindings
+* Can convert to PSR-11
 
 <h4 id="aphiria-di-container-cons">Cons</h4>
 
-* Does not implement PSR-11
+* Does not use PSR-11 natively
 
 <h3 id="symfony-di-container">Symfony</h3>
 
@@ -250,7 +255,7 @@ A dependency injection (DI) container lets a developer tell the application "Whe
 * Support for auto-wiring
 * Supports service providers for registering dependencies for modules
 * Supports targeted (contextual) bindings
-* Supports PSR-11
+* Supports PSR-11 natively
 
 <h4 id="laravel-di-container-cons">Cons</h4>
 
