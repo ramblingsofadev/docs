@@ -408,7 +408,7 @@ use Aphiria\Routing\Annotations\Middleware;
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [configuration](application-builders.md) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](application-builders.md) library provides a convenience method for this:
 
 ```php
 use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
