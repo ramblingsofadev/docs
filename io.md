@@ -290,11 +290,12 @@ In some cases, such as multi-part responses, you may need to append multiple str
 use Aphiria\IO\Streams\MultiStream;
 use Aphiria\IO\Streams\Stream;
 
-$multiStream = new MultiStream();
 $stream1 = new Stream('php://temp', 'r+');
 $stream1->write('foo');
 $stream2 = new Stream('php://temp', 'r+');
 $stream2->write('bar');
+
+$multiStream = new MultiStream();
 $multiStream->addStream($stream1);
 $multiStream->addStream($stream2);
 echo (string)$multiStream; // "foobar"
