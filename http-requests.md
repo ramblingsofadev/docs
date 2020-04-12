@@ -9,7 +9,6 @@
 1. [Basics](#basics)
 2. [Creating Requests](#creating-requests)
    1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)
-   2. [Trusted Proxies](#trusted-proxies)
 3. [Headers](#headers)
 4. [Bodies](#bodies)
    1. [String Bodies](#string-bodies)
@@ -26,6 +25,7 @@
     1. [Saving Uploaded Files](#saving-uploaded-files)
     2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
     3. [Creating Multipart Requests](#creating-multipart-requests)
+14. [Trusted Proxies](#trusted-proxies)
 
 </div>
 
@@ -96,16 +96,6 @@ $request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
 ```
 
 Aphiria reads all the information it needs from the `$_SERVER` superglobal - it doesn't need the others.
-
-<h3 id="trusted-proxies">Trusted Proxies</h3>
-
-If you're using a load balancer or some sort of proxy server, you'll need to add it to the list of trusted proxies.  You can also use your proxy to set custom, trusted headers.  You may specify them in the factory constructor:
-
-```php
-// The client IP will be read from the "X-My-Proxy-Ip" header when using a trusted proxy
-$factory = new RequestFactory(['192.168.1.1'], ['HTTP_CLIENT_IP' => 'X-My-Proxy-Ip']);
-$request = $factory->createRequestFromSuperglobals($_SERVER);
-```
 
 <h2 id="headers">Headers</h2>
 
@@ -385,4 +375,14 @@ $request = new Request(
     $headers,
     $body
 );
+```
+
+<h2 id="trusted-proxies">Trusted Proxies</h2>
+
+If you're using a load balancer or some sort of proxy server, you'll need to add it to the list of trusted proxies.  You can also use your proxy to set custom, trusted headers.  You may specify them in the factory constructor:
+
+```php
+// The client IP will be read from the "X-My-Proxy-Ip" header when using a trusted proxy
+$factory = new RequestFactory(['192.168.1.1'], ['HTTP_CLIENT_IP' => 'X-My-Proxy-Ip']);
+$request = $factory->createRequestFromSuperglobals($_SERVER);
 ```
