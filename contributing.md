@@ -37,11 +37,11 @@ To report a bug, <a href="https://github.com/aphiria" target="_blank">create a n
 
 <h3 id="fixing-bug">Fixing a Bug</h3>
 
-To fix a bug, create a pull request on the latest stable branch (`1.0`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a> with the fix and relevant PHPUnit tests.
+To fix a bug, create a pull request on the latest stable branch (`1.0`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a> with the fix and relevant PHPUnit tests that provide 100% code coverage.
 
 <h2 id="features">Features</h2>
 
-We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request on the latest stable branch (`master`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a>.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, create a pull request on the `develop` branch.  All new features should come with PHPUnit tests proving their functionality.  Pull requests should never be sent to the `master` branch.
+We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request on the latest stable branch (`master`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a>.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, create a pull request on the `develop` branch.  All new features **must** provide unit tests with 100% code coverage.  Pull requests should never be sent to the `master` branch.
 
 Aphiria strives to not create any unnecessary library dependencies.  This even includes having dependencies on other Aphiria libraries.  If your change will introduce a new dependency to a library, create an issue and ask about it before implementing it.
 
