@@ -22,7 +22,7 @@
 
 <h2 id="basics">Basics</h2>
 
-A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers can either extend `Controller` or be a [`Closure`](#closure-controllers).  Let's say you needed an endpoint to get a user.  Simple:
+A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers must extend `Controller`.  Let's say you needed an endpoint to get a user.  Simple:
 
 ```php
 use Aphiria\Api\Controllers\Controller;

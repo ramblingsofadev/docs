@@ -46,7 +46,6 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
   * [Binding framework-agnostic middleware to routes](#binding-middleware)
   * [The ability to add custom matching constraints on route variables](#route-variable-constraints)
   * [The ability to match on header values](#versioned-api-example), which makes things like versioning your routes a cinch
-  * [Binding controller methods and closures to the route action](#route-actions)
 * It is fast
   * <a href="https://github.com/aphiria/aphiria/blob/master/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
@@ -145,7 +144,7 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 
 <h3 id="route-builders">Route Builders</h3>
 
-Route builders give you a fluent syntax for mapping your routes to closures or controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
+Route builders give you a fluent syntax for mapping your routes to controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
   
  ```php
 $routeBuilders->delete('/foo');
@@ -197,8 +196,6 @@ A route action contains the controller method to call when a route is matched.
 $routeBuilders->get('users/:userId')
     ->mapsToMethod(UserController::class, 'getUserById');
 ```
-
-To determine the type of action (controller method or closure) the matched route uses, check `RouteAction::usesMethod()`.
 
 <h2 id="binding-middleware">Binding Middleware</h2>
 

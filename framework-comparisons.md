@@ -105,7 +105,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 
 <h4 id="aphiria-routing-cons">Cons</h4>
 
-* None
+* Does not support closure actions
 
 <h3 id="symfony-routing">Symfony</h3>
 
@@ -120,6 +120,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 
 * Config-based route definitions are not easy to write without IDE plugins
 * Middleware support is tightly coupled to Symfony HTTP and middleware libraries
+* Does not support closure actions
 
 <h3 id="laravel-routing">Laravel</h3>
 
@@ -127,6 +128,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 
 * Intuitive syntax
 * Supports URL generation
+* Supports closure actions, although not when using route caching
 
 <h4 id="laravel-routing-cons">Cons</h4>
 
