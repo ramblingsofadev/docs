@@ -14,8 +14,7 @@
    4. [Validating Request Bodies](#validating-request-bodies)
 3. [Parsing Request Data](#parsing-request-data)
 4. [Formatting Response Data](#formatting-response-data)
-5. [Closure Controllers](#closure-controllers)
-6. [Controller Dependencies](#controller-dependencies)
+5. [Controller Dependencies](#controller-dependencies)
 
 </div>
 
@@ -240,17 +239,6 @@ final class LoginController extends Controller
     }
 }
 ```
-
-<h2 id="closure-controllers">Closure Controllers</h2>
-
-Sometimes, a controller class is overkill for a route that does very little.  In this case, you can use a `Closure` when defining your routes:
-
-```php
- $routeBuilders->get('ping')
-    ->mapsToClosure(fn () => $this->ok());
-```
-
-Closures support the same [parameter resolution](#parameter-resolution) features as controller methods.  Here's the cool part - Aphiria will bind an instance of `Controller` to your closure, which means you can use [all the methods](#basics), [request parsers](#parsing-request-data), and [response formatters](#formatting-response-data) available inside of `Controller` via `$this`.
 
 <h2 id="controller-dependencies">Controller Dependencies</h2>
 

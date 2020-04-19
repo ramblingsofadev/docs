@@ -46,6 +46,7 @@ If you're already using the <a href="https://github.com/aphiria/app" target="_bl
 
 use Aphiria\Console\Application;
 use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\DependencyInjection\Container;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -54,7 +55,7 @@ $commands = new CommandRegistry();
 // Register your commands here...
 
 global $argv;
-exit((new Application($commands))->handle($argv));
+exit((new Application($commands, new Container()))->handle($argv));
 ```
 
 Now, you're set to start [running commands](#running-commands).
@@ -78,7 +79,7 @@ In Aphiria, a command defines the name, [arguments](#arguments), and [options](#
 Let's take a look at an example:
 
 ```php
-use Aphiria\Console\Commands\Command;
+use Aphiria\Console\Commands\{Command, ICommandHandler};
 use Aphiria\Console\Input\{Argument, ArgumentTypes, Input, Option, OptionTypes};
 use Aphiria\Console\Output\IOutput;
 
@@ -88,18 +89,24 @@ $greetingCommand = new Command(
     [new Option('yell', 'y', OptionTypes::OPTIONAL_VALUE, 'Yell the greeting?', 'yes')],
     'Greets a person'
 );
-$greetingCommandHandler = function (Input $input, IOutput $output) {
-    $greeting = "Hello, {$input->arguments['name']}";
 
-    if ($input->options['yell'] === 'yes') {
-        $greeting = strtoupper($greeting);
+// Defined in a separate file
+class GreetingCommandHandler implements ICommandHandler
+{
+    public function handle(Input $input,IOutput $output)
+    {
+        $greeting = "Hello, {$input->arguments['name']}";
+        
+        if ($input->options['yell'] === 'yes') {
+            $greeting = strtoupper($greeting);
+        }
+    
+        $output->writeln($greeting);
     }
-
-    $output->writeln($greeting);
-};
+}
 ```
 
-Your command handler can either be a `Closure` that takes the input and output as parameters, or it can implement `ICommandHandler`, which has a single method `handle()` that accepts the same parameters.  If you pass in a `Closure`, it will be wrapped in a `ClosureCommandHandler`.
+Your command handler should implement `ICommandHandler`, which has a single method `handle()` that accepts the same parameters.
 
 The following properties are available to you in `Input`:
 
@@ -115,23 +122,21 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 <h3 id="registering-commands">Registering Commands</h3>
 
-Before you can use the example command, you must register it so that the `Application` knows about it.  Your command handler should be wrapped in a parameterless closure that will return the handler.  This allows us to defer resolving a handler until we actually need it.  This is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
+Before you can use the example command, you must register it so that the `Application` knows about it.  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
 > **Note:** If you're using the application builder library, refer to [its documentation](application-builders.md#component-console-commands) to learn how to register your commands to your app.
 
 ```php
 use Aphiria\Console\Application;
 use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\DependencyInjection\Container;
 
 $commands = new CommandRegistry();
-$commands->registerCommand(
-    $greetingCommand,
-    fn () => $greetingCommandHandler
-);
+$commands->registerCommand($greetingCommand, GreetingCommandHandler::class);
 
 // Actually run the application
 global $argv;
-exit((new Application($commands))->handle($argv));
+exit((new Application($commands, new Container()))->handle($argv));
 ```
 
 To call this command, run this from the command line:
@@ -145,8 +150,6 @@ This will output:
 ```
 HELLO, DAVE
 ```
-
-> **Note:** Aphiria uses `opis/closure` to serialize and deserialize closures.  At this time, it does not support short closures.  So, any manually registered command handler factories **must** use long-form closures.
 
 <h3 id="arguments">Arguments</h3>
 
@@ -197,22 +200,7 @@ $option = new Option('foo', 'f', $types, 'The foo option');
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
-It's possible to call a command from another command by using `Application`:
-
-```php
-use Aphiria\Console\Input\Input;
-use Aphiria\Console\Output\IOutput;
-
-$commandHandler = function (Input $input, IOutput $output) use ($app) {
-    $app->handle('foo arg1 --option1=value', $output);
-    
-    // Do other stuff...
-};
-
-// Register your commands...
-```
-
-Alternatively, if your handler is a class, you could inject the app via the constructor:
+It's possible to call a command from another command by injecting `ICommandBus`:
 
 ```php
 use Aphiria\Console\Commands\ICommandBus;
@@ -222,19 +210,17 @@ use Aphiria\Console\Output\IOutput;
 
 final class FooCommandHandler implements ICommandHandler
 {
-    private ICommandBus $app;
-    
-    public function __construct(ICommandBus $app)
+    private ICommandBus $commandBus;
+
+    public function __construct(ICommandBus $commandBus)
     {
-        $this->app = $app;
+        $this->commandBus = $commandBus;
     }
-    
-    public function handle(Input $input, IOutput $output)
+
+    public function handle(Input $input,IOutput $output)
     {
-        $this->app->handle('foo arg1 --option1=value', $output);
-    
-        // Do other stuff...
-    };
+        $this->commandBus->handle('foo arg1 --option1=value', $output);
+    }
 }
 ```
 

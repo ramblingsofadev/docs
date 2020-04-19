@@ -191,16 +191,11 @@ Learn more about how [Aphiria's application builder library](application-builder
 
 <h2 id="route-actions">Route Actions</h2>
 
-Aphiria supports mapping routes to both controller methods and to closures:
+A route action contains the controller method to call when a route is matched.
 
 ```php
-// Map to a controller method
 $routeBuilders->get('users/:userId')
     ->mapsToMethod(UserController::class, 'getUserById');
-
-// Map to a closure
-$routeBuilders->get('users/:userId/name')
-    ->mapsToClosure(fn () => /* Handle the request */);
 ```
 
 To determine the type of action (controller method or closure) the matched route uses, check `RouteAction::usesMethod()`.
