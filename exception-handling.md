@@ -10,7 +10,7 @@
 2. [API Exception Renderer](#api-exception-renderer)
    1. [Exception Responses](#exception-responses)
 3. [Console Exception Renderer](#console-exception-renderer)
-   1. [Exception Results](#exception-results)
+   1. [Output Writers](#output-writers)
 3. [Logging](#logging)
    1. [Exception Log Levels](#exception-log-levels)
 
@@ -88,12 +88,12 @@ $globalExceptionHandler->registerWithPhp();
 
 `ConsoleExceptionRenderer` renders exceptions for Aphiria console applications.  To render the exception, it goes through the following steps:
 
-1. If an [exception result](#exception-results) is registered for the thrown exception, it's used
+1. If an [output writer](#output-writers) is registered for the thrown exception, it's used
 2. Otherwise, the exception message and stack trace is output to the console
 
-<h3 id="exception-results">Exception Results</h3>
+<h3 id="output-writers">Output Writers</h3>
 
-Exception results are a wrapper around a console status code and a list of messages to write to the console.  You can map exceptions to exception results.
+Output writers allow you to write errors to the output and return a status code.
 
 ```php
 use Aphiria\Console\Output\IOutput;
