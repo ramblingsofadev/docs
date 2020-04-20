@@ -127,7 +127,7 @@ final class RoleMiddleware extends AttributeMiddleware
 To actually specify `role`, pass it into your route configuration:
 
 ```php
-$routeBuilders->get('foo')
+$routes->get('foo')
     ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(RoleMiddleware::class, ['role' => 'admin']);
 ```
@@ -138,7 +138,6 @@ Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHand
 
 ```php
 use Aphiria\Middleware\MiddlewarePipelineFactory;
-use Aphiria\Net\Http\RequestFactory;
 
 // Assume these are defined by your application
 $loggingMiddleware = new LoggingMiddleware();

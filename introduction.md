@@ -48,11 +48,11 @@ Now, we'll actually set up our app to include these endpoints.  Let's say we nee
 
 ```php
 $appBuilder->withBinders(fn () => [new UserServiceBinder]);
-$appBuilder->withRoutes(function (RouteBuilderRegistry $routeBuilders) {
-    $routeBuilders->post('users')
+$appBuilder->withRoutes(function (RouteCollectionBuilder $routes) {
+    $routes->post('users')
         ->mapsToMethod(UserController::class, 'createUser');
 
-    $routeBuilders->get('users/:id')
+    $routes->get('users/:id')
         ->mapsToMethod(UserController::class, 'getUser');
 });
 ```

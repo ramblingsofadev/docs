@@ -33,7 +33,7 @@ use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaComponents;
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
 class UserModule implements IModule
 {
@@ -43,8 +43,8 @@ class UserModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         $this->withBinders($appBuilder, [new UserBinder()])
-            ->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
-                $routeBuilders->get('users/:id')
+            ->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
+                $routes->get('users/:id')
                     ->mapsToMethod(UserController::class, 'getUserById');
             })
             ->withCommands($appBuilder, function (CommandRegistry $commands) {
@@ -147,7 +147,7 @@ You can register [routes](routing.md) for your module, and you can enable route 
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
 class UserModule implements IModule
 {
@@ -156,8 +156,8 @@ class UserModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         // Add some routes
-        $this->withRoutes($appBuilder, function (RouteBuilderRegistry $routeBuilders) {
-            $routeBuilders->get('users/:id')
+        $this->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
+            $routes->get('users/:id')
                 ->mapsToMethod(UserController::class, 'getUserById');
         });
 

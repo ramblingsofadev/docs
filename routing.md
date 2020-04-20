@@ -56,22 +56,19 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
 Let's look at a fully-functional example:
 
 ```php
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
-use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 use App\Books\Api\{BookController, Authorization};
 
 // Register the routes
-$routeBuilders = new RouteBuilderRegistry();
-$routeBuilders->get('/books/:bookId')
+$routes = new RouteCollectionBuilder();
+$routes->get('/books/:bookId')
     ->mapsToMethod(BookController::class, 'getBooksById')
     ->withMiddleware(Authorization::class);
-$routes = new RouteCollection();
-$routes->addMany($routeBuilders->buildAll());
 
 // Set up the route matcher
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
+$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes->build()))->createTrie());
 
 // Finally, let's find a matching route
 $result = $routeMatcher->matchRoute(
@@ -147,12 +144,12 @@ This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 Route builders give you a fluent syntax for mapping your routes to controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
   
  ```php
-$routeBuilders->delete('/foo');
-$routeBuilders->get('/foo');
-$routeBuilders->options('/foo');
-$routeBuilders->patch('/foo');
-$routeBuilders->post('/foo');
-$routeBuilders->put('/foo');
+$routes->delete('/foo');
+$routes->get('/foo');
+$routes->options('/foo');
+$routes->patch('/foo');
+$routes->post('/foo');
+$routes->put('/foo');
 ```
 
 Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
@@ -164,7 +161,7 @@ Each method returns an instance of `RouteBuilder`, and accepts the following par
 * `bool $isHttpsOnly` (optional)
   * Whether or not this route is HTTPS-only
   
- You can also call `RouteBuilderRegistry::route()` and pass in the HTTP method(s) you'd like to map to.
+ You can also call `RouteCollectionBuilder::route()` and pass in the HTTP method(s) you'd like to map to.
 
 <h3 id="using-aphirias-net-library">Using Aphiria's Net Library</h3>
 
@@ -193,7 +190,7 @@ Learn more about how [Aphiria's application builder library](application-builder
 A route action contains the controller method to call when a route is matched.
 
 ```php
-$routeBuilders->get('users/:userId')
+$routes->get('users/:userId')
     ->mapsToMethod(UserController::class, 'getUserById');
 ```
 
@@ -204,7 +201,7 @@ Middleware are a great way to modify both the request and the response on an end
 To bind a single middleware class to your route, call:
 
 ```php
-$routeBuilders->get('foo')
+$routes->get('foo')
     ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(FooMiddleware::class);
 ```
@@ -212,7 +209,7 @@ $routeBuilders->get('foo')
 To bind many middleware classes, call:
 
 ```php
-$routeBuilders->get('foo')
+$routes->get('foo')
     ->mapsToMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         FooMiddleware::class,
@@ -227,13 +224,13 @@ Under the hood, these class names get converted to instances of `MiddlewareBindi
 Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
 
 ```php
-$routeBuilders->get('foo')
+$routes->get('foo')
     ->mapsToMethod(MyController::class, 'myMethod')
     ->withMiddleware(Authorization::class, ['role' => 'admin']);
 
 // Or
 
-$routeBuilders->get('foo')
+$routes->get('foo')
     ->mapsToMethod(MyController::class, 'myMethod')
     ->withManyMiddleware([
         new MiddlewareBinding(Authorization::class, ['role' => 'admin']),
@@ -252,19 +249,19 @@ foreach ($result->middlewareBindings as $middlewareBinding) {
 
 <h2 id="grouping-routes">Grouping Routes</h2>
 
-Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  You can group these routes together using `RouteBuilderRegistry::group()` and specifying the options to apply to all routes within the group:
+Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  You can group these routes together using `RouteCollectionBuilder::group()` and specifying the options to apply to all routes within the group:
 
 ```php
-use Aphiria\Routing\Builders\{RouteBuilderRegistry, RouteGroupOptions};
+use Aphiria\Routing\Builders\{RouteCollectionBuilder, RouteGroupOptions};
 
-$routeBuilders->group(
+$routes->group(
     new RouteGroupOptions('courses/:courseId', 'example.com'),
-    function (RouteBuilderRegistry $routeBuilders) {
+    function (RouteCollectionBuilder $routes) {
         // This route's path will use the group's path
-        $routeBuilders->get('')
+        $routes->get('')
             ->mapsToMethod(CourseController::class, 'getCourseById');
 
-        $routeBuilders->get('/professors')
+        $routes->get('/professors')
             ->mapsToMethod(CourseController::class, 'getCourseProfessors');
     }
 );
@@ -274,10 +271,10 @@ This creates two routes with a host suffix of _example.com_ and a route prefix o
 
 ```php
 use Aphiria\Middleware\MiddlewareBinding;
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Builders\RouteGroupOptions;
 
-$routeBuilders->group(
+$routes->group(
     new RouteGroupOptions(
         'courses/:courseId', // The path template
         'api.example.com', // The nullable host template
@@ -286,7 +283,7 @@ $routeBuilders->group(
         ['role' => 'admin'], // The constraint attributes
         [new MiddlewareBinding(Authentication::class)] // The middleware
     ),
-    function (RouteBuilderRegistry $routeBuilders) {
+    function (RouteCollectionBuilder $routes) {
         // ...
     }
 )
@@ -446,13 +443,13 @@ Let's say your app sends an API version header, and you want to match an endpoin
 
 ```php
 // This route will require an API-VERSION value of 'v1.0'
-$routeBuilders->get('comments')
+$routes->get('comments')
     ->mapsToMethod(CommentController::class, 'getAllComments1_0')
     ->withAttribute('API-VERSION', 'v1.0')
     ->withConstraint(new ApiVersionConstraint);
 
 // This route will require an API-VERSION value of 'v2.0'
-$routeBuilders->get('comments')
+$routes->get('comments')
     ->mapsToMethod(CommentController::class, 'getAllComments2_0')
     ->withAttribute('API-VERSION', 'v2.0')
     ->withConstraint(new ApiVersionConstraint);
@@ -568,19 +565,16 @@ $constraintFactory->registerConstraintFactory(MinLengthConstraint::getSlug(), fn
 Finally, register this constraint factory with the trie compiler:
 
 ```php
-use Aphiria\Routing\Builders\RouteBuilderRegistry;
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
-use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\{TrieCompiler, TrieFactory};
 
-$routeBuilders = new RouteBuilderRegistry();
-$routeBuilders->get('parts/:serialNumber(minLength(6))')
+$routes = new RouteCollectionBuilder();
+$routes->get('parts/:serialNumber(minLength(6))')
     ->mapsToMethod(PartController::class, 'getPartBySerialNumber');
-$routes = new RouteCollection();
-$routes->addMany($routeBuilders->buildAll());
 
 $trieCompiler = new TrieCompiler($constraintFactory);
-$trieFactory = new TrieFactory($routes, null, $trieCompiler);
+$trieFactory = new TrieFactory($routes->build(), null, $trieCompiler);
 $routeMatcher = new TrieRouteMatcher($trieFactory->createTrie());
 ```
 
