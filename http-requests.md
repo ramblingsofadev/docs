@@ -108,7 +108,7 @@ Headers provide metadata about the HTTP message.  In Aphiria, they're implemente
 
 <h2 id="bodies">Bodies</h2>
 
-HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IHttpBody`.  They provide a few methods to read and write their contents to streams and to strings:
+HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IBody`.  They provide a few methods to read and write their contents to streams and to strings:
 
 ```php
 use Aphiria\IO\Streams\Stream;
