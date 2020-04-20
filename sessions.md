@@ -136,7 +136,7 @@ class UserController extends Controller
         $this->session = $session;
     }
 
-    public function logIn(LoginDto $loginDto): IHttpResponseMessage
+    public function logIn(LoginDto $loginDto): IResponse
     {
         // Do the login...
 

@@ -303,7 +303,7 @@ Let's actually define a route:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Annotations\{Middleware, Put};
 use App\Users\Api\Authorization;
 use App\Users\User;
@@ -314,7 +314,7 @@ class UserController extends Controller
      * @Put("users/:id")
      * @Middleware(Authorization::class, attributes={"role"="admin"})
      */
-    public function updateUser(User $user): IHttpResponseMessage
+    public function updateUser(User $user): IResponse
     {
         // ...
     }
@@ -345,7 +345,7 @@ Just like with our [route builders](#grouping-routes), we can also group routes 
 
 ```php
 use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IHttpResponseMessage;
+use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Annotations\RouteGroup;
 use Aphiria\Routing\Annotations\{Middleware, Put};
 use App\Users\Api\Authorization;
@@ -360,7 +360,7 @@ class UserController extends Controller
      * @Put(":id")
      * @Middleware(Authorization::class)
      */
-    public function createUser(User $user): IHttpResponseMessage
+    public function createUser(User $user): IResponse
     {
         // ...
     }

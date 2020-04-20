@@ -24,11 +24,11 @@ Middleware have a simple signature:
 
 ```php
 use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IHttpRequestMessage, IHttpResponseMessage};
+use Aphiria\Net\Http\{IRequest, IResponse};
 
 interface IMiddleware
 {
-    public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage;
+    public function handle(IRequest $request, IRequestHandler $next): IResponse;
 }
 ```
 
@@ -46,11 +46,11 @@ To manipulate the request before it gets to the controller, make changes to it b
 ```php
 use Aphiria\Middleware\IMiddleware;
 use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IHttpRequestMessage, IHttpResponseMessage};
+use Aphiria\Net\Http\{IRequest, IResponse};
 
 final class RequestManipulator implements IMiddleware
 {
-    public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage
+    public function handle(IRequest $request, IRequestHandler $next): IResponse
     {
         // Do our work before returning $next->handle($request)
         $request->getProperties()->add('Foo', 'bar');
@@ -67,11 +67,11 @@ To manipulate the response after the controller has done its work, do the follow
 ```php
 use Aphiria\Middleware\IMiddleware;
 use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IHttpRequestMessage, IHttpResponseMessage};
+use Aphiria\Net\Http\{IRequest, IResponse};
 
 final class ResponseManipulator implements IMiddleware
 {
-    public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage
+    public function handle(IRequest $request, IRequestHandler $next): IResponse
     {
         $response = $next->handle($request);
 
@@ -90,7 +90,7 @@ Occasionally, you'll find yourself wanting to pass primitive values to middlewar
 ```php
 use Aphiria\Middleware\AttributeMiddleware;
 use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{HttpException, IHttpRequestMessage, IHttpResponseMessage};
+use Aphiria\Net\Http\{HttpException, IRequest, IResponse};
 
 final class RoleMiddleware extends AttributeMiddleware
 {
@@ -102,7 +102,7 @@ final class RoleMiddleware extends AttributeMiddleware
         $this->authService = $authService;
     }
 
-    public function handle(IHttpRequestMessage $request, IRequestHandler $next): IHttpResponseMessage
+    public function handle(IRequest $request, IRequestHandler $next): IResponse
     {
         $accessToken = null;
 

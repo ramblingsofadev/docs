@@ -23,13 +23,13 @@
 Responses are HTTP messages that are sent by servers back to the client.  They contain data like a status code, headers, and body.
 
 ```php
-use Aphiria\Net\Http\HttpHeaders
+use Aphiria\Net\Http\Headers
 use Aphiria\Net\Http\Response;
 use Aphiria\Net\Http\StringBody;
 
 $response = new Response(
     200,
-    new HttpHeaders(),
+    new Headers(),
     new StringBody('foo')
 );
 

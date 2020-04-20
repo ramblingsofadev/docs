@@ -128,7 +128,7 @@ By default, `ContentNegotiator` uses `AcceptLanguageMatcher` to find the best la
 ```php
 use Aphiria\Net\Http\ContentNegotiation\ILanguageMatcher;
 use Aphiria\Net\Http\Formatting\RequestParser;
-use Aphiria\Net\Http\IHttpRequestMessage;
+use Aphiria\Net\Http\IRequest;
 
 final class QueryStringLanguageMatcher implements ILanguageMatcher
 {
@@ -139,7 +139,7 @@ final class QueryStringLanguageMatcher implements ILanguageMatcher
         $this->requestParser = new RequestParser();
     }
 
-    public function getBestLanguageMatch(IHttpRequestMessage $request): ?string
+    public function getBestLanguageMatch(IRequest $request): ?string
     {
         $queryStringVars = $this->requestParser->parseQueryString($request);
         $bestLanguage = null;

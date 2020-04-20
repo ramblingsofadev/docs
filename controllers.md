@@ -48,7 +48,7 @@ final class UserController extends Controller
 {
     // ...
     
-    public function getUser(int $id): IHttpResponseMessage
+    public function getUser(int $id): IResponse
     {
         $user = $this->users->getUserById($id);
 
@@ -84,16 +84,16 @@ If you need access to the current request, use `$this->request` within your cont
 Setting headers is simple, too:
 
 ```php
-use Aphiria\Net\Http\HttpHeaders;
+use Aphiria\Net\Http\Headers;
 
 final class UserController extends Controller
 {
     // ...
     
-    public function getUser(int $id): IHttpResponseMessage
+    public function getUser(int $id): IResponse
     {
         $user = $this->users->getUserById($id);
-        $headers = new HttpHeaders();
+        $headers = new Headers();
         $headers->add('Cache-Control', 'no-cache');
         
         return $this->ok($user, $headers);
@@ -114,7 +114,7 @@ final class UserController extends Controller
 {
     // ...
     
-    public function createUser(UserDto $userDto): IHttpResponseMessage
+    public function createUser(UserDto $userDto): IResponse
     {
         $user = $this->users->createUser($userDto->email, $userDto->password);
         
@@ -153,7 +153,7 @@ final class UserController extends Controller
 {
     // ...
 
-    public function createManyUsers(): IHttpResponseMessage
+    public function createManyUsers(): IResponse
     {
         $users = $this->readRequestBodyAs(User::class . '[]');
         $this->users->createManyUsers($users);
@@ -176,7 +176,7 @@ final class UserController extends Controller
 {
     private IRequestBodyValidator $validator;
 
-    public function createManyUsers(): IHttpResponseMessage
+    public function createManyUsers(): IResponse
     {
         $users = $this->readRequestBodyAs(User::class . '[]');
         $this->validator->validate($this->request, $users);
@@ -195,7 +195,7 @@ final class JsonPrettifierController extends Controller
 {
     // ...
 
-    public function prettifyJson(): IHttpResponseMessage
+    public function prettifyJson(): IResponse
     {
         if (!$this->requestParser->isJson($this->request)) {
             return $this->badRequest();
@@ -203,7 +203,7 @@ final class JsonPrettifierController extends Controller
         
         $bodyAsString = $this->request->getBody()->readAsString();
         $prettyJson = json_encode($bodyAsString, JSON_PRETTY_PRINT);
-        $headers = new HttpHeaders();
+        $headers = new Headers();
         $headers->add('Content-Type', 'application/json');
         $response = new Response(200, $headers, new StringBody($prettyJson));
         
@@ -221,7 +221,7 @@ final class LoginController extends Controller
 {
     // ...
 
-    public function logIn(LoginDto $login): IHttpResponseMessage
+    public function logIn(LoginDto $login): IResponse
     {
         $authResults = null;
         

@@ -28,7 +28,7 @@ final class UserController extends Controller
         $this->users = $users;
     }
 
-    public function createUser(User $user): IHttpResponseMessage
+    public function createUser(User $user): IResponse
     {
         $createdUser = $this->users->createUser($user->email, $user->password);
 

@@ -60,13 +60,13 @@ You might not want all exceptions to result in a 500.  For example, if you have 
 use Aphiria\Exceptions\GlobalExceptionHandler;
 use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
 use Aphiria\Net\Http\HttpStatusCodes;
-use Aphiria\Net\Http\IHttpRequestMessage;
+use Aphiria\Net\Http\IRequest;
 use Aphiria\Net\Http\IResponseFactory;
 
 $exceptionRenderer = new ApiExceptionRenderer();
 $exceptionRenderer->registerResponseFactory(
     UserNotFoundException::class,
-    function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
+    function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
         return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
     }
 );
@@ -74,7 +74,7 @@ $exceptionRenderer->registerResponseFactory(
 // You can also register many exceptions-to-response factories:
 $exceptionRenderer->registerManyResponseFactories([
     UserNotFoundException::class => 
-        function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
+        function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
             return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
         },
     // ...

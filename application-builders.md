@@ -298,7 +298,7 @@ use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Net\Http\HttpStatusCodes;
-use Aphiria\Net\Http\IHttpRequestMessage;
+use Aphiria\Net\Http\IRequest;
 use Aphiria\Net\Http\IResponseFactory;
 use Psr\Log\LogLevel;
 
@@ -312,7 +312,7 @@ class UserModule implements IModule
         $this->withHttpExceptionResponseFactory(
             $appBuilder,
             UserNotFoundException::class,
-            function (UserNotFoundException $ex, IHttpRequestMessage $request, IResponseFactory $responseFactory) {
+            function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
                 return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
             }
         );

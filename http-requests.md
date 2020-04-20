@@ -72,7 +72,7 @@ $properties = $request->getProperties();
 Manually creating a request is easy:
 
 ```php
-use Aphiria\Net\Http\HttpHeaders;
+use Aphiria\Net\Http\Headers;
 use Aphiria\Net\Http\Request;
 use Aphiria\Net\Http\StringBody;
 use Aphiria\Net\Uri;
@@ -80,7 +80,7 @@ use Aphiria\Net\Uri;
 $request = new Request(
     'GET',
     new Uri('https://example.com'),
-    new HttpHeaders(),
+    new Headers(),
     new StringBody('foo')
 );
 ```
@@ -99,12 +99,12 @@ Aphiria reads all the information it needs from the `$_SERVER` superglobal - it 
 
 <h2 id="headers">Headers</h2>
 
-Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\HttpHeaders`, which extends  [`Aphiria\Collections\HashTable`](collections.md#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
+Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\Headers`, which extends  [`Aphiria\Collections\HashTable`](collections.md#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
 
 * `getFirst(string $name): mixed`
 * `tryGetFirst(string $name, &$value): bool`
 
-> **Note:** Header names that are passed into the methods in `HttpHeaders` are automatically normalized to Train-Case.  In other words, `foo_bar` will become `Foo-Bar`.
+> **Note:** Header names that are passed into the methods in `Headers` are automatically normalized to Train-Case.  In other words, `foo_bar` will become `Foo-Bar`.
 
 <h2 id="bodies">Bodies</h2>
 
@@ -307,8 +307,8 @@ $multipartBody = (new RequestParser)->readAsMultipart($request);
 
 Each `MultipartBodyPart` contains the following methods:
 
-* `getBody(): ?IHttpBody`
-* `getHeaders(): HttpHeaders`
+* `getBody(): ?IBody`
+* `getHeaders(): Headers`
 
 <h3 id="saving-uploaded-files">Saving Uploaded Files</h3>
 
@@ -341,7 +341,7 @@ To get the MIME type that was specified by the client, call
 The Net library makes it straightforward to create a multipart request manually.  The following example creates a request to upload two images:
 
 ```php
-use Aphiria\Net\Http\HttpHeaders;
+use Aphiria\Net\Http\Headers;
 use Aphiria\Net\Http\MultipartBody;
 use Aphiria\Net\Http\MultipartBodyPart;
 use Aphiria\Net\Http\Request;
@@ -349,13 +349,13 @@ use Aphiria\Net\Http\StreamBody;
 use Aphiria\Net\Uri;
 
 // Build the first image's headers and body
-$image1Headers = new HttpHeaders();
+$image1Headers = new Headers();
 $image1Headers->add('Content-Disposition', 'form-data; name="image1"; filename="foo.png"');
 $image1Headers->add('Content-Type', 'image/png');
 $image1Body = new StreamBody(fopen('path/to/foo.png', 'rb'));
 
 // Build the second image's headers and body
-$image2Headers = new HttpHeaders();
+$image2Headers = new Headers();
 $image2Headers->add('Content-Disposition', 'form-data; name="image2"; filename="bar.png"');
 $image2Headers->add('Content-Type', 'image/png');
 $image2Body = new StreamBody(fopen('path/to/bar.png', 'rb'));
@@ -365,7 +365,7 @@ $body = new MultipartBody([
     new MultipartBodyPart($image1Headers, $image1Body),
     new MultipartBodyPart($image2Headers, $image2Body)
 ]);
-$headers = new HttpHeaders();
+$headers = new Headers();
 $headers->add('Content-Type', "multipart/form-data; boundary={$body->getBoundary()}");
 
 // Build the request
