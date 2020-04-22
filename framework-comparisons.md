@@ -273,11 +273,12 @@ A console library permits a user to enter a command via a console application an
 
 * Trivial to get up and running on its own
 * Provides support for output formatting, eg padding/table/progress bar formatting
+* Support for password masking
 * Support for annotation-based commands
 
 <h4 id="aphiria-console-cons">Cons</h4>
 
-* No support for password masking
+* Little community support
 
 <h3 id="symfony-console">Symfony</h3>
 
