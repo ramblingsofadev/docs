@@ -20,6 +20,7 @@
 5. [Prompts](#prompts)
    1. [Confirmation](#confirmation)
    2. [Multiple Choice](#multiple-choice)
+   3. [Hiding Input](#hiding-input)
 6. [Output](#output)
 7. [Formatters](#formatters)
    1. [Padding](#padding)
@@ -325,6 +326,15 @@ Select your favorite airplane
 ```
 
 If the `$choices` array is associative, then the keys will map to values rather than 1)...N).
+
+<h3 id="hiding-input">Hiding Input</h3>
+
+For security reasons, such as when entering a password, you might want to hide a user's input as they're typing it.  To do so, just mark a question as hidden:
+
+```php
+$question = new Question('Password', null, true);
+$prompt->ask($question, $output);
+```
 
 <h2 id="output">Output</h2>
 
