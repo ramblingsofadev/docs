@@ -50,7 +50,7 @@ class UserModule implements IModule
             ->withCommands($appBuilder, function (CommandRegistry $commands) {
                 $commands->registerCommand(
                     new GenerateUserReportCommand(),
-                    fn () => new GenerateUserReportCommandHandler()
+                    GenerateUserReportCommandHandler::class
                 );
             });
     }
@@ -215,7 +215,7 @@ class UserModule implements IModule
         $this->withCommands($appBuilder, function (CommandRegistry $commands) {
             $commands->registerCommand(
                 new GenerateUserReportCommand(),
-                fn () => new GenerateUserReportCommandHandler()
+                GenerateUserReportCommandHandler::class
             );
         });
 
