@@ -221,6 +221,9 @@ class UserModule implements IModule
 
         // Enable command annotations
         $this->withCommandAnnotations($appBuilder);
+
+        // Register build-in framework commands
+        $this->withFrameworkCommands($appBuilder);
     }
 }
 ```

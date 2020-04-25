@@ -30,6 +30,7 @@
    1. [Built-In Elements](#built-in-elements)
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
+9. [Built-In Commands]
 
 </div>
 
@@ -591,4 +592,29 @@ To override a built-in element, just re-register it:
 $elements->registerElement(
     new Element('success', new Style(Colors::GREEN, Colors::BLACK))
 );
+```
+
+<h2 id="built-in-commands">Built-In Commands</h2>
+
+Aphiria provides some commands out of the box to make it easier to work with the framework.
+
+Name | Description
+------ | ------
+`framework:flushcaches` | Flushes all the framework's caches, eg the binder metadata, constraints, command, route, and trie caches
+
+If you're using the [application builder](application-builders.md#component-console-commands), you can register all framework commands in a module via:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+
+class MyModule implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder) : void{
+        $this->withFrameworkCommands($appBuilder);
+    }
+}
 ```
