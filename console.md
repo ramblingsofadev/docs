@@ -7,6 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Basics](#basics)
+   1. [Why Is This Library Included?](#why-is-this-library-included)
 2. [Running Commands](#running-commands)
    1. [Getting Help](#getting-help)
 3. [Creating Commands](#creating-commands)
@@ -30,7 +31,7 @@
    1. [Built-In Elements](#built-in-elements)
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
-9. [Built-In Commands]
+9. [Built-In Commands](#built-in-commands)
 
 </div>
 
@@ -61,6 +62,10 @@ exit((new Application($commands, new Container()))->handle($argv));
 ```
 
 Now, you're set to start [running commands](#running-commands).
+
+<h3 id="why-is-this-library-included">Why Is This Library Included?</h3>
+
+At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [annotation support](#command-annotations) and a great [fluent syntax](application-builders.md#component-console-commands) for configuring commands.
 
 <h2 id="running-commands">Running Commands</h2>
 
