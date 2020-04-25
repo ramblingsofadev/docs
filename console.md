@@ -605,6 +605,7 @@ Aphiria provides some commands out of the box to make it easier to work with the
 
 Name | Description
 ------ | ------
+`app:serve` | Runs your application locally
 `framework:flushcaches` | Flushes all the framework's caches, eg the binder metadata, constraints, command, route, and trie caches
 
 If you're using the [application builder](application-builders.md#component-console-commands), you can register all framework commands in a module via:
