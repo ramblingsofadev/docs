@@ -458,7 +458,7 @@ use Symfony\Component\Routing\Route;
 
 class MyModule implements IModule
 {
-    public function build(IApplicationBuilder $appBuilder) : void
+    public function build(IApplicationBuilder $appBuilder): void
     {
         $appBuilder->getComponent(SymfonyRouterComponent::class)
             ->withRoutes('GetUserById', new Route('users/{id}'));

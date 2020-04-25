@@ -643,7 +643,7 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\Caching\FileTrieCache;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Let's say that your environment name is stored in an environment var named 'ENV_NAME'
-$trieCache = getenv('ENV_NAME') === 'production' ? new FileTrieCache('/tmp/trie.cache') : null;
+$trieCache = getenv('ENV_NAME') === 'production' ? new FileTrieCache('/tmp/trie.cache'): null;
 $trieFactory = new TrieFactory($routes, $trieCache);
 
 // Finish setting up your route matcher...

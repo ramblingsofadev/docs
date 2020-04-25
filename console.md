@@ -618,7 +618,8 @@ class MyModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder) : void{
+    public function build(IApplicationBuilder $appBuilder): void
+    {
         $this->withFrameworkCommands($appBuilder);
     }
 }
