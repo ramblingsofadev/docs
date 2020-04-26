@@ -224,6 +224,9 @@ class UserModule implements IModule
 
         // Register built-in framework commands
         $this->withFrameworkCommands($appBuilder);
+
+        // Register built-in framework commands, but exclude certain ones
+        $this->withFrameworkCommands($appBuilder, ['app:serve']);
     }
 }
 ```
