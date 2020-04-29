@@ -232,7 +232,7 @@ final class LoginController extends Controller
         
         // Write a cookie containing the auth token back to the response
         $response = new Response(200);
-        $authTokenCookie = new Cookie('authtoken', $authResults->getAuthToken(), time() + 3600);
+        $authTokenCookie = new Cookie('authtoken', $authResults->getAuthToken(), 3600);
         $this->responseFormatter->setCookie($response, $authTokenCookie);
         
         return $response;

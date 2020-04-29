@@ -97,7 +97,7 @@ use Aphiria\Net\Http\Headers\Cookie;
     new Cookie(
         'token', // The name
         'abc123', // The value
-        time() + 3600, // The expiration (defaults to null, can also be a DateTime)
+        3600, // The max age of the cookie in seconds (defaults to null)
         '/', // The path (defaults to null)
         'example.com', // The domain (defaults to null)
         true, // Whether or not the cookie is HTTPS-only (defaults to false)
