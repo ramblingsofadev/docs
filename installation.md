@@ -79,8 +79,8 @@ Aphiria is broken into various libraries, each of which can be installed individ
 
 To run Aphiria locally, run the following in a terminal:
 
-```bash
-php -S localhost:80 -t public localhost_router.php
+```php
+php aphiria app:serve
 ```
     
 This will run PHP's built-in web server. The site will be accessible at http://localhost.
