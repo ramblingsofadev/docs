@@ -9,6 +9,7 @@
 1. [Basics](#basics)
 2. [Creating Requests](#creating-requests)
    1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)
+   2. [Request Builders](#request-builders)
 3. [Headers](#headers)
 4. [Bodies](#bodies)
    1. [String Bodies](#string-bodies)
@@ -96,6 +97,55 @@ $request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
 ```
 
 Aphiria reads all the information it needs from the `$_SERVER` superglobal - it doesn't need the others.
+
+<h3 id="request-builders">Request Builders</h3>
+
+Aphiria comes with a fluent syntax for building your requests, which is somewhat similar to PSR-7.  Let's look at a simple example:
+
+```php
+use Aphiria\Net\Http\RequestBuilder;
+
+$request = (new RequestBuilder())->withMethod('GET')
+    ->withUri('http://example.com')
+    ->withHeader('Cookie', 'foo=bar')
+    ->build();
+```
+
+Aphiria also supports using automatic [content negotiation](content-negotiation.md) to simplify how you add a body to your request.  By default, your requests will use JSON:
+
+```php
+$request = (new RequestBuilder())->withMethod('POST')
+    ->withUri('http://example.com/users')
+    ->withBody(new User('Dave'))
+    ->build();
+```
+
+`withBody()` also supports using an [`IBody`](#bodies).
+
+You can specify multiple headers in one call:
+
+```php
+$request = (new RequestBuilder())->withManyHeaders(['Foo' => 'bar', 'Baz' => 'buzz'])
+    // ...
+```
+
+You can also set any request properties:
+
+```php
+$request = (new RequestBuilder())->withProperty('routeVars', ['id' => 123])
+    // ...
+```
+
+If you'd like to use a different request target type besides origin form, you may:
+
+```php
+use Aphiria\Net\Http\RequestTargetTypes;
+
+$request = (new RequestBuilder())->withRequestTargetType(RequestTargetTypes::ABSOLUTE_FORM)
+    // ...
+```
+
+> **Note:*  Keep in mind that each `with*()` method will return a clone of the request builder.
 
 <h2 id="headers">Headers</h2>
 
