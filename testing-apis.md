@@ -83,56 +83,56 @@ Name | Description
 [`assertParsedBodyPassesCallback()`](#assert-parsed-body-passes-callback) | Asserts that the [parsed response body](content-negotiation.md) passes a callback function
 [`assertStatusCodeEquals()`](#assert-status-code-equals) | Asserts that the response status code equals a particular value
 
-<h3 id="assert-cookie-equals">`assertCookieEquals`</h3>
+<h3 id="assert-cookie-equals">assertCookieEquals</h3>
 
 ```php
 // Assert that the response sets a cookie named "userId" with value "123"
 $this->assertCookieEquals('123', $response, 'userId');
 ```
 
-<h3 id="assert-has-cookie">`assertHasCookie`</h3>
+<h3 id="assert-has-cookie">assertHasCookie</h3>
 
 ```php
 // Assert that the response sets a cookie named "userId"
 $this->assertHasCookie($response, 'userId');
 ```
 
-<h3 id="assert-has-header">`assertHasHeader`</h3>
+<h3 id="assert-has-header">assertHasHeader</h3>
 
 ```php
 // Assert that the response sets a header named "Authorization"
 $this->assertHasHeader($response, 'Authorization');
 ```
 
-<h3 id="assert-header-equals">`assertHeaderEquals`</h3>
+<h3 id="assert-header-equals">assertHeaderEquals</h3>
 
 ```php
 // Assert that the response sets a header named "Authorization" with value "Bearer abc123"
 $this->assertHeaderEquals('Bearer abc123', $response, 'Authorization');
 ```
 
-<h3 id="assert-header-matches-regex">`assertHeaderMatchesRegex`</h3>
+<h3 id="assert-header-matches-regex">assertHeaderMatchesRegex</h3>
 
 ```php
 // Assert that the response sets a header named "Authorization" with a value that passes the regex
 $this->assertHeaderMatchesRegex('/^Bearer [a-z0-9]$/i', $response, 'Authorization');
 ```
 
-<h3 id="assert-parsed-body-equals">`assertParsedBodyEquals`</h3>
+<h3 id="assert-parsed-body-equals">assertParsedBodyEquals</h3>
 
 ```php
 // Assert that the response body, after content negotiation, equals a value
 $this->assertParsedBodyEquals(new User('Dave'), $response);
 ```
 
-<h3 id="assert-parsed-body-passes-callback">`assertParsedBodyPassesCallback`</h3>
+<h3 id="assert-parsed-body-passes-callback">assertParsedBodyPassesCallback</h3>
 
 ```php
 // Assert that the response body, after content negotiation, passes a callback
 $this->assertParsedBodyPassesCallback($response, User::class, fn ($user) => $user->name === 'Dave');
 ```
 
-<h3 id="assert-status-code-equals">`assertStatusCodeEquals`</h3>
+<h3 id="assert-status-code-equals">assertStatusCodeEquals</h3>
 
 ```php
 // Assert that the response status code equals a value

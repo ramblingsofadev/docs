@@ -145,7 +145,7 @@ $request = (new RequestBuilder())->withRequestTargetType(RequestTargetTypes::ABS
     // ...
 ```
 
-> **Note:*  Keep in mind that each `with*()` method will return a clone of the request builder.
+> **Note:**  Keep in mind that each `with*()` method will return a clone of the request builder.
 
 <h2 id="headers">Headers</h2>
 
