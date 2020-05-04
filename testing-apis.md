@@ -26,7 +26,7 @@
 
 Integration tests are a great way to make sure your application is working end-to-end as expected.  Aphiria, with the help of <a href="https://phpunit.de/" target="_blank">PHPUnit</a>, comes with some great tools to help you send requests to your application and parse the responses.  Aphiria uses automatic [content-negotiation](content-negotiation.md) in your integration tests, which frees you to make assertions using your app's models without worrying about how to (de)serialize data.  The integration tests won't actually send a request over HTTP, either.  Instead, it creates an in-memory instance of your application, and sends the requests to that.  The nice part about not having to go over HTTP is that you don't worry about having to set up firewall rules for testing your application in staging slots.
 
-> **Note:** All of the examples here are assuming that you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, and extending `IntegrationTestCase`.
+> **Note:** All the examples here are assuming that you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, and extending `IntegrationTestCase`.  By default, tests will run in the `testing` environment.  If you wish to change this, you can by editing the `APP_ENV` value in _phpunit.xml.dist_.
 
 <h2 id="sending-requests">Sending Requests</h2>
 
@@ -53,6 +53,16 @@ Use the following methods to send requests and get [responses](http-responses.md
 * `options()`
 * `post()`
 * `put()`
+
+When specifying a URI, you can use either pass just the path or the fully-qualified URI.  If you're using a path, the `APP_URL` environment variable will be prepended automatically.
+
+```php
+$this->get('/books/123');
+
+// Or
+
+$this->get('http://localhost/books/123');
+```
 
 You can pass in headers in your calls:
 
