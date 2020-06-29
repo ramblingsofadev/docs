@@ -11,7 +11,7 @@
 3. [Negotiating Responses](#negotiating-responses)
    1. [Negotiating Language](#negotiating-language)
 4. [Media Type Formatters](#media-type-formatters)
-   1. [Customizing (De)Serialization][#customizing-deserialization]
+   1. [Customizing (De)Serialization](#customizing-deserialization)
 
 </div>
 
