@@ -11,6 +11,7 @@
 3. [Negotiating Responses](#negotiating-responses)
    1. [Negotiating Language](#negotiating-language)
 4. [Media Type Formatters](#media-type-formatters)
+   1. [Customizing (De)Serialization][#customizing-deserialization]
 
 </div>
 
@@ -35,13 +36,13 @@ use Aphiria\Net\Http\ContentNegotiation\AcceptCharsetEncodingMatcher;
 use Aphiria\Net\Http\ContentNegotiation\AcceptLanguageMatcher;
 use Aphiria\Net\Http\ContentNegotiation\ContentNegotiator;
 use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatterMatcher;
-use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\FormUrlEncodedMediaTypeFormatter;
 use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\JsonMediaTypeFormatter;
+use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\XmlMediaTypeFormatter;
 
 // Register whatever media type formatters you support
 $mediaTypeFormatters = [
     new JsonMediaTypeFormatter(),
-    new FormUrlEncodedMediaTypeFormatter()
+    new XmlMediaTypeFormatter()
 ];
 $contentNegotiator = new ContentNegotiator(
     $mediaTypeFormatters, 
@@ -170,9 +171,13 @@ $mediaTypeFormatter->writeToStream($valueToWrite, $response->getBody());
 
 Aphiria provides the following formatters out of the box:
 
-* `FormUrlEncodedMediaTypeFormatter`
 * `HtmlMediaTypeFormatter`
 * `JsonMediaTypeFormatter`
 * `PlainTextMediaTypeFormatter`
+* `XmlMediaTypeFormatter`
 
-Under the hood, `FormUrlEncodedMediaTypeFormatter` and `JsonMediaTypeFormatter` use Aphiria's [serialization library](serialization.md) to (de)serialize values.  `HtmlMediaTypeFormatter` and `PlainTextMediaTypeFormatter` only handle strings - they do not deal with objects or arrays.
+> **Note:** `HtmlMediaTypeFormatter` and `PlainTextMediaTypeFormatter` only handle strings - they do not deal with objects or arrays.
+
+<h3 id="customizing-deserialization">Customizing (De)Serialization</h3>
+
+Under the hood, `JsonMediaTypeFormatter` and `XmlMediaTypeFormatter` use Symfony's <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">serialization component</a> to (de)serialize values.  Aphiria provides a <a href="https://github.com/aphiria/aphiria/blob/master/src/Framework/src/Serialization/Binders/SymfonySerializerBinder.php" target="_blank">binder</a> and some config settings in _config.php_ under `aphiria.serialization` to help you get started.  For more in-depth tutorials on how to customize Symfony's serializer, refer to <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">its documentation</a>.

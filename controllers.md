@@ -165,7 +165,7 @@ final class UserController extends Controller
 
 <h3 id="validating-request-bodies">Validating Request Bodies</h3>
 
-It's possible to combine the power of the [serialization](serialization.md) and [validation](validation.md) libraries to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [changing the exception response factory](exception-handling.md#exception-responses) for an `InvalidRequestBodyException`.
+It's possible to combine the power of <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> and [Aphiria's validation library](validation.md) to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [changing the exception response factory](exception-handling.md#exception-responses) for an `InvalidRequestBodyException`.
 
 If a request body cannot be automatically deserialized, as in the case of [arrays of objects in request bodies](#arrays-in-request-bodies), you must manually perform validation.
 

@@ -441,4 +441,4 @@ $validator = new Validator($objectConstraints);
 
 <h2 id="validating-request-bodies">Validating Request Bodies</h2>
 
-It's possible to use the validation library along with the [serialization library](serialization.md) to validate deserialized request bodies.  Read the [controller documentation](controllers.md#validating-request-bodies) for more details.
+It's possible to use the validation library along with <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> to validate deserialized request bodies.  Read the [controller documentation](controllers.md#validating-request-bodies) for more details.

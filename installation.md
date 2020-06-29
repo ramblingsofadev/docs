@@ -64,7 +64,6 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * `aphiria/psr-adapters`
 * `aphiria/reflection`
 * `aphiria/router`
-* `aphiria/serialization`
 * `aphiria/sessions`
 * `aphiria/validation`
 

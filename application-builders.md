@@ -14,8 +14,7 @@
    3. [Middleware](#component-middleware)
    4. [Console Commands](#component-console-commands)
    5. [Validator](#component-validator)
-   6. [Serializer](#component-serializer)
-   7. [Exception Handler](#component-exception-handler)
+   6. [Exception Handler](#component-exception-handler)
 3. [Adding Custom Components](#adding-custom-components)
 
 </div>
@@ -256,39 +255,6 @@ class UserModule implements IModule
 
         // Enable validator annotations
         $this->withValidatorAnnotations($appBuilder);
-    }
-}
-```
-
-<h3 id="component-serializer">Serializer</h3>
-
-Your modules can configure [custom encoders](serialization.md#encoders) for your models.
-
-```php
-use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
-use Aphiria\Serialization\Encoding\EncodingContext;
-use Aphiria\Serialization\Encoding\IEncoder;
-
-class UserModule implements IModule
-{
-    use AphiriaComponents;
-
-    public function build(IApplicationBuilder $appBuilder): void
-    {
-        // Add an encoder to simplify serializing an object
-        $this->withEncoder($appBuilder, User::class, new class() implements IEncoder {
-            public function decode($userHash, string $type, EncodingContext $context): User
-            {
-                return new User($userHash['id'], $userHash['email']);
-            }
-
-            public function encode($user, EncodingContext $context)
-            {
-                return ['id' => $user->id, 'email' => $user->email];
-            }
-        });
     }
 }
 ```
