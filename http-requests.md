@@ -135,6 +135,8 @@ $request = (new NegotiatedRequestBuilder())->withMethod('POST')
     ->build();
 ```
 
+> **Note:** By default, negotiated request bodies will be serialized to JSON, but you can specify a different default content type, eg `new NegotiatedRequestBuilder(null, 'text/xml')`.
+
 You can specify multiple headers in one call:
 
 ```php
