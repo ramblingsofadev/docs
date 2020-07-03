@@ -54,6 +54,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * `aphiria/application`
 * `aphiria/collections`
 * `aphiria/console`
+* `aphiria/content-negotiation`
 * `aphiria/dependency-injection`
 * `aphiria/exceptions`
 * `aphiria/framework`

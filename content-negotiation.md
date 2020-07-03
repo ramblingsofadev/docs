@@ -32,12 +32,12 @@ Content negotiation is a process between the client and server to determine how 
 Setting up your content negotiator is straightforward:
 
 ```php
-use Aphiria\Net\Http\ContentNegotiation\AcceptCharsetEncodingMatcher;
-use Aphiria\Net\Http\ContentNegotiation\AcceptLanguageMatcher;
-use Aphiria\Net\Http\ContentNegotiation\ContentNegotiator;
-use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatterMatcher;
-use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\JsonMediaTypeFormatter;
-use Aphiria\Net\Http\ContentNegotiation\MediaTypeFormatters\XmlMediaTypeFormatter;
+use Aphiria\ContentNegotiation\AcceptCharsetEncodingMatcher;
+use Aphiria\ContentNegotiation\AcceptLanguageMatcher;
+use Aphiria\ContentNegotiation\ContentNegotiator;
+use Aphiria\ContentNegotiation\MediaTypeFormatterMatcher;
+use Aphiria\ContentNegotiation\MediaTypeFormatters\JsonMediaTypeFormatter;
+use Aphiria\ContentNegotiation\MediaTypeFormatters\XmlMediaTypeFormatter;
 
 // Register whatever media type formatters you support
 $mediaTypeFormatters = [
@@ -104,7 +104,7 @@ We negotiate the response content by inspecting the `Accept`, `Accept-Charset`, 
 Constructing a response with all the appropriate headers is a little involved when doing it manually, which is why Aphiria provides `NegotiatedResponseFactory` to handle it for you:
 
 ```php
-use Aphiria\Net\Http\ContentNegotiation\NegotiatedResponseFactory;
+use Aphiria\ContentNegotiation\NegotiatedResponseFactory;
 
 $responseFactory = new NegotiatedResponseFactory($contentNegotiator);
 // Assume $user is a POPO User object
@@ -127,7 +127,7 @@ Content-Length: 36
 By default, `ContentNegotiator` uses `AcceptLanguageMatcher` to find the best language to respond in from the `Accept-Language` header.  However, if your locale is, for example, set as a query string parameter, you can use a custom language matcher and inject it into your `ContentNegotiator`.
 
 ```php
-use Aphiria\Net\Http\ContentNegotiation\ILanguageMatcher;
+use Aphiria\ContentNegotiation\ILanguageMatcher;
 use Aphiria\Net\Http\Formatting\RequestParser;
 use Aphiria\Net\Http\IRequest;
 

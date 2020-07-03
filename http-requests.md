@@ -111,16 +111,29 @@ $request = (new RequestBuilder())->withMethod('GET')
     ->build();
 ```
 
-Aphiria also supports using automatic [content negotiation](content-negotiation.md) to simplify how you add a body to your request.  By default, your requests will use JSON:
+You can specify a body of a request:
 
 ```php
+use Aphiria\Net\Http\StringBody;
+
 $request = (new RequestBuilder())->withMethod('POST')
+    ->withUri('http://example.com/users')
+    ->withBody(new StringBody('{"name":"Dave"}'))
+    ->withHeader('Content-Type', 'application/json');
+```
+
+> **Note:** If you specify a body, you **must** also specify a content type.  You can also pass in `null` to remove a body from the request.
+
+Aphiria also has a request builder that uses automatic [content negotiation](content-negotiation.md) so that you can pass in a model to serialize in the body.
+
+```php
+use Aphiria\ContentNegotiation\NegotiatedRequestBuilder;
+
+$request = (new NegotiatedRequestBuilder())->withMethod('POST')
     ->withUri('http://example.com/users')
     ->withBody(new User('Dave'))
     ->build();
 ```
-
-`withBody()` also supports using an [`IBody`](#bodies).
 
 You can specify multiple headers in one call:
 
