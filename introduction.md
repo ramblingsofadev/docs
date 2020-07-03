@@ -57,7 +57,7 @@ $appBuilder->withRoutes(function (RouteCollectionBuilder $routes) {
 });
 ```
 
-The [application builder](application-builders.md) simplifies registering all [binders](application-builders.md#component-binders), [routes](application-builders.md#component-routes), and other parts of your application in a [modular way](application-builders.md#basics).
+The [application builder](configuration.md#application-builders) simplifies registering all [binders](configuration.md#component-binders), [routes](configuration.md#component-routes), and other parts of your application in a [modular way](configuration.md#modules).
 
 Hopefully, these examples demonstrate how easy it is to build an application with Aphiria.
 
@@ -71,7 +71,7 @@ Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  I
  
 * A lot of coupling between framework libraries, making it difficult to substitute in third party libraries
 * Lack of support for [automatic content negotiation](content-negotiation.md)
-* Lack of simple, [code-based application configuration](application-builders.md)
+* Lack of simple, [code-based application configuration](configuration.md#application-builders)
 * No [code-based model validators](validation.md)
 * No baked-in, optional support for [route](routing.md#route-annotations), [command](console.md#command-annotations), or [validator](validation.md#validation-annotations) annotations
 * Generally too much magic going on behind the scenes

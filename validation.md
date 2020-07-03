@@ -399,7 +399,7 @@ The following annotations come with Aphiria:
 
 <h3 id="using-annotations">Using Annotations</h3>
 
-To actually use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](application-builders.md) library provides a convenience method for this:
+To actually use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
 
 ```php
 use Aphiria\Configuration\Builders\AphiriaComponentBuilder;

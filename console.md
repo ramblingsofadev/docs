@@ -65,7 +65,7 @@ Now, you're set to start [running commands](#running-commands).
 
 <h3 id="why-is-this-library-included">Why Is This Library Included?</h3>
 
-At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [annotation support](#command-annotations) and a great [fluent syntax](application-builders.md#component-console-commands) for configuring commands.
+At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [annotation support](#command-annotations) and a great [fluent syntax](configuration.md#component-console-commands) for configuring commands.
 
 <h2 id="running-commands">Running Commands</h2>
 
@@ -131,7 +131,7 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 Before you can use the example command, you must register it so that the `Application` knows about it.  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
-> **Note:** If you're using the application builder library, refer to [its documentation](application-builders.md#component-console-commands) to learn how to register your commands to your app.
+> **Note:** If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to register your commands to your app.
 
 ```php
 use Aphiria\Console\Application;
@@ -263,7 +263,7 @@ final class GreetingCommandHandler implements ICommandHandler
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](application-builders.md) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
 
 ```php
 use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
@@ -608,7 +608,7 @@ Name | Description
 `app:serve` | Runs your application locally
 `framework:flushcaches` | Flushes all the framework's caches, eg the binder metadata, constraints, command, route, and trie caches
 
-If you're using the [application builder](application-builders.md#component-console-commands), you can register all framework commands in a module via:
+If you're using the [application builder](configuration.md#component-console-commands), you can register all framework commands in a module via:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;

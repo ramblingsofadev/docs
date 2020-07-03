@@ -183,7 +183,7 @@ $result = $routeMatcher->matchRoute(
 
 <h3 id="using-aphirias-application-builder-library">Using Aphiria's Application Builder Library</h3>
 
-Learn more about how [Aphiria's application builder library](application-builders.md#component-routes) can simplify registering your routes.
+Learn more about how [Aphiria's application builder library](configuration.md#component-routes) can simplify registering your routes.
 
 <h2 id="route-actions">Route Actions</h2>
 
@@ -397,7 +397,7 @@ use Aphiria\Routing\Annotations\Middleware;
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](application-builders.md) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
 
 ```php
 use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
