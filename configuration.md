@@ -93,7 +93,7 @@ A component is a piece of your application that is shared across domains.  Below
 
 <h3 id="component-binders">Binders</h3>
 
-You can configure your module to require [binders](binders.md).
+You can configure your module to require [binders](di-container.md#binders).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -112,34 +112,6 @@ class UserModule implements IModule
         // Or use an array of binders
 
         $this->withBinders($appBuilder, [new UserBinder()]);
-    }
-}
-```
-
-You can also configure your app to use a particular [binder dispatcher](binders.md#lazy-dispatching):
-
-```php
-use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Configuration\GlobalConfiguration;
-use Aphiria\DependencyInjection\Binders\LazyBinderDispatcher;
-use Aphiria\DependencyInjection\Binders\Metadata\Caching\FileBinderMetadataCollectionCache;
-use Aphiria\Framework\Application\AphiriaComponents;
-
-class App implements IModule
-{
-    use AphiriaComponents;
-
-    public function build(IApplicationBuilder $appBuilder): void
-    {
-        if (\getenv('APP_ENV') === 'production') {
-            $cachePath = GlobalConfiguration::getString('aphiria.binders.metadataCachePath');
-            $cache = new FileBinderMetadataCollectionCache($cachePath);
-        } else {
-            $cache = null;
-        }
-
-        $this->withBinderDispatcher($appBuilder, new LazyBinderDispatcher($cache));
     }
 }
 ```
@@ -498,7 +470,7 @@ return [
 You can load this PHP file into a configuration object:
 
 ```php
-use Aphiria\Configuration\PhpConfigurationFileReader;
+use Aphiria\Application\Configuration\PhpConfigurationFileReader;
 
 $config = (new PhpConfigurationFileReader)->readConfiguration('config.php');
 ```
@@ -516,7 +488,7 @@ $supportedLanguages = $config->getArray('api.supportedLanguages');
 Similarly, you can read JSON config files.
 
 ```php
-use Aphiria\Configuration\JsonConfigurationFileReader;
+use Aphiria\Application\Configuration\JsonConfigurationFileReader;
 
 $config = (new JsonConfigurationFileReader)->readConfiguration('config.json');
 ```
@@ -526,10 +498,10 @@ $config = (new JsonConfigurationFileReader)->readConfiguration('config.json');
 You can create your own custom file reader.  Let's look at an example that reads from YAML files:
 
 ```php
-use Aphiria\Configuration\HashTableConfiguration;
-use Aphiria\Configuration\IConfiguration;
-use Aphiria\Configuration\IConfigurationFileReader;
-use Aphiria\Configuration\InvalidConfigurationFileException;
+use Aphiria\Application\Configuration\HashTableConfiguration;
+use Aphiria\Application\Configuration\IConfiguration;
+use Aphiria\Application\Configuration\IConfigurationFileReader;
+use Aphiria\Application\Configuration\InvalidConfigurationFileException;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlConfigurationFileReader implements IConfigurationFileReader
@@ -553,10 +525,10 @@ class YamlConfigurationFileReader implements IConfigurationFileReader
   
 <h2 id="global-configuration">Global Configuration</h2>
 
-`GlobalConfiguration` is a static class that can access values from multiple sources registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](binders.md).  Let's look at its methods:
+`GlobalConfiguration` is a static class that can access values from multiple sources registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](di-container.md#binders).  Let's look at its methods:
 
 ```php
-use Aphiria\Configuration\GlobalConfiguration;
+use Aphiria\Application\Configuration\GlobalConfiguration;
 
 // Get the value as an array
 GlobalConfiguration::getArray('foo');
@@ -602,7 +574,7 @@ These methods mimic the `IConfiguration` interface, but are static.  Like `IConf
 `GlobalConfigurationBuilder` simplifies configuring different sources and building your global configuration.  In this example, we're loading from a PHP file, a JSON file, and from environment variables:
 
 ```php
-use Aphiria\Configuration\GlobalConfigurationBuilder;
+use Aphiria\Application\Configuration\GlobalConfigurationBuilder;
 
 $globalConfigurationBuilder = new GlobalConfigurationBuilder();
 $globalConfigurationBuilder->withPhpFileConfigurationSource('config.php')

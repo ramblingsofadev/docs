@@ -402,7 +402,7 @@ The following annotations come with Aphiria:
 To actually use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
 
 ```php
-use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
+use Aphiria\Application\Configuration\Builders\AphiriaComponentBuilder;
 use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
 
 // Assume we already have $container set up

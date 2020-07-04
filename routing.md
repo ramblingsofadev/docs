@@ -400,7 +400,7 @@ use Aphiria\Routing\Annotations\Middleware;
 Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
 
 ```php
-use Aphiria\Configuration\Builders\AphiriaComponentBuilder;
+use Aphiria\Application\Configuration\Builders\AphiriaComponentBuilder;
 use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
 
 // Assume we already have $container set up
