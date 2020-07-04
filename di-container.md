@@ -163,7 +163,7 @@ Although this is simple, it's probably a little heavy-handed to register all you
 
 Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then sets up a factory for each of those bindings that calls `Binder::bind()` only when at least one of the binder's bindings is used.  This prevents you from having to list out the bindings a binder registers to get this sort of functionality (like other frameworks force you to do).
 
-Let's build on the `UserBinder` from the [previous example](#basics) and set up our app to lazily dispatch it:
+Let's build on the `UserBinder` from the [previous example](#binders) and set up our app to lazily dispatch it:
 
 ```php
 use Aphiria\DependencyInjection\Binders\LazyBinderDispatcher;
