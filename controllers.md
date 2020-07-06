@@ -242,4 +242,4 @@ final class LoginController extends Controller
 
 <h2 id="controller-dependencies">Controller Dependencies</h2>
 
-The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' and middleware's constructors for dependencies and instantiate them.  You can read more about the container [here](di-container.md).
+The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' and middleware's constructors for dependencies and instantiate them.  You can read more about the container [here](dependency-injection.md).

@@ -44,7 +44,7 @@ final class UserController extends Controller
 
 In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `User`.  Likewise, Aphiria determines how to serialize the user in `getUser()` to whatever format the client wants (eg JSON).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
-Now, we'll actually set up our app to include these endpoints.  Let's say we need a [binder](di-container.md#binders) so that an instance of `IUserService` can be injected into the controller.  Easy.
+Now, we'll actually set up our app to include these endpoints.  Let's say we need a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  Easy.
 
 ```php
 $appBuilder->withBinders(fn () => [new UserServiceBinder]);
@@ -63,7 +63,7 @@ Hopefully, these examples demonstrate how easy it is to build an application wit
 
 <h2 id="getting-started">Getting Started</h2>
 
-To get up and running, follow our [installation guide](installation.md) to create a skeleton app that uses Aphiria.  Then, [learn how to define some routes](routing.md),  [create some controllers](controllers.md), and [configure your dependencies](di-container.md#binders).  From there, you can browse the docs in any order you choose, although the order they're listed in might be the best way to read them.
+To get up and running, follow our [installation guide](installation.md) to create a skeleton app that uses Aphiria.  Then, [learn how to define some routes](routing.md),  [create some controllers](controllers.md), and [configure your dependencies](dependency-injection.md#binders).  From there, you can browse the docs in any order you choose, although the order they're listed in might be the best way to read them.
 
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 

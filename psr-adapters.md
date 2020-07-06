@@ -40,7 +40,7 @@ A lot of major frameworks, eg Symfony and Laravel, have also decided not to adop
 
 These negatives aside, PSR-7 did do a decent job in some of its modeling of HTTP messages.  In fact, some of Aphiria's message models are somewhat similar to PSR-7, but attempt to improve their shortcomings.
 
-PSR-11 was too limiting, eg no [targeted bindings](di-container.md#targeted-bindings), and didn't provide enough value to justify supporting it.
+PSR-11 was too limiting, eg no [targeted bindings](dependency-injection.md#targeted-bindings), and didn't provide enough value to justify supporting it.
 
 <h2 id="psr-7">PSR-7</h2>
 
@@ -129,7 +129,7 @@ $psr7UploadedFiles = $psr7Factory->createPsr7UploadedFiles($aphiriaRequest);
 
 <h2 id="psr-11">PSR-11</h2>
 
-PSR-11's aim was to give a simple interface for [dependency injection containers](di-container.md) to implement.  Although `IContainer` does not natively support PSR-11, it's trivial to create a container [that does](#creating-a-psr-11-container).
+PSR-11's aim was to give a simple interface for [dependency injection containers](dependency-injection.md) to implement.  Although `IContainer` does not natively support PSR-11, it's trivial to create a container [that does](#creating-a-psr-11-container).
 
 <h3 id="creating-a-psr-11-container">Creating a PSR-11 Container</h3>
 
