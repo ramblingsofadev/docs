@@ -1,4 +1,4 @@
-<h1 id="doc-title">DI Container</h1>
+<h1 id="doc-title">Dependency Injection</h1>
 
 <nav class="toc-nav" markdown="1">
 
