@@ -34,12 +34,11 @@ Validating your data, especially input, is critical for ensuring that your appli
 ```php
 final class User
 {
-    public function __construct(public int $id, public string $email, public string $name)
-    {
-        $this->id = $id;
-        $this->email = $email;
-        $this->name = $name;
-    }
+    public function __construct(
+        public int $id, 
+        public string $email, 
+        public string $name
+    ) {}
 }
 ```
 

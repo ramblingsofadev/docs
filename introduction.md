@@ -62,7 +62,7 @@ To get up and running, follow our [installation guide](installation.md) to creat
 
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 
-Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks (even <a href="https://www.opulencephp.com" target="_blank" title="Opulence">Opulence</a>), and usually found at least one major problem with them all:
+Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks, and usually found at least one major problem with them all:
  
 * A lot of coupling between framework libraries, making it difficult to substitute in third party libraries
 * Lack of support for [automatic content negotiation](content-negotiation.md)
