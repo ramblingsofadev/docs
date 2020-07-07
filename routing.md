@@ -531,12 +531,7 @@ use Aphiria\Routing\UriTemplates\Constraints\IRouteVariableConstraint;
 
 final class MinLengthConstraint implements IRouteVariableConstraint
 {
-    private int $minLength;
-
-    public function __construct(int $minLength)
-    {
-        $this->minLength = $minLength;
-    }
+    public function __construct(int $minLength) {}
 
     public static function getSlug(): string
     {

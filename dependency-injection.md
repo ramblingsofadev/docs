@@ -94,12 +94,7 @@ If you only want to use a specific binding when resolving a type, you can use wh
 ```php
 final class UserService implements IUserService
 {
-    private IUserRepository $userRepository;
-    
-    public function __construct(IUserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
+    public function __construct(private IUserRepository $userRepository) {}
 
     // ...
 }

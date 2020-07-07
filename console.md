@@ -217,12 +217,7 @@ use Aphiria\Console\Output\IOutput;
 
 final class FooCommandHandler implements ICommandHandler
 {
-    private ICommandBus $commandBus;
-
-    public function __construct(ICommandBus $commandBus)
-    {
-        $this->commandBus = $commandBus;
-    }
+    public function __construct(private ICommandBus $commandBus) {}
 
     public function handle(Input $input,IOutput $output)
     {

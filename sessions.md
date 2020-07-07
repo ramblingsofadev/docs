@@ -128,13 +128,8 @@ use Aphiria\Sessions\ISession;
 
 class UserController extends Controller
 {
-    private ISession $session;
-
     // The session will be automatically injected into the controller by the router
-    public function __construct(ISession $session)
-    {
-        $this->session = $session;
-    }
+    public function __construct(private ISession $session) {}
 
     public function logIn(LoginDto $loginDto): IResponse
     {

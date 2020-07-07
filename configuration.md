@@ -337,13 +337,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 class SymfonyRouterComponent implements IComponent
 {
-    private IContainer $container;
     private array $routes = [];
 
-    public function __construct(IContainer $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private IContainer $container) {}
 
     public function build(): void
     {
@@ -381,12 +377,7 @@ class App implements IModule
 {
     use AphiriaComponents;
 
-    private IContainer $container;
-
-    public function __construct(IContainer $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(private IContainer $container) {}
 
     public function build(IApplicationBuilder $appBuilder): void
     {

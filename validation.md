@@ -34,11 +34,7 @@ Validating your data, especially input, is critical for ensuring that your appli
 ```php
 final class User
 {
-    public int $id;
-    public string $email;
-    public string $name;
-
-    public function __construct(int $id, string $email, string $name)
+    public function __construct(public int $id, public string $email, public string $name)
     {
         $this->id = $id;
         $this->email = $email;
@@ -196,12 +192,7 @@ use Aphiria\Validation\Constraints\IConstraint;
 
 final class MaxLengthConstraint implements IConstraint
 {
-    private int $maxLength;
-
-    public function __construct(int $maxLength)
-    {
-        $this->maxLength = $maxLength;
-    }
+    public function __construct(private int $maxLength) {}
 
     public function getErrorMessageId(): string
     {
@@ -307,10 +298,9 @@ final class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTem
     private array $errorMessages;
     private string $defaultLocale;
 
-    public function __construct(string $path, string $defaultLocale)
+    public function __construct(string $path, private string $defaultLocale)
     {
         $this->errorMessages = require $path;
-        $this->defaultLocale = $defaultLocale;
     }
 
     public function getErrorMessageTemplate(string $errorMessageId, string $locale = null): string

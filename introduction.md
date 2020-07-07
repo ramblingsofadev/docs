@@ -21,12 +21,7 @@ Aphiria is a suite of decoupled libraries that help you write expressive REST AP
 ```php
 final class UserController extends Controller
 {
-    private IUserService $users;
-
-    public function __construct(IUserService $users)
-    {
-        $this->users = $users;
-    }
+    public function __construct(private IUserService $users) {}
 
     public function createUser(User $user): IResponse
     {

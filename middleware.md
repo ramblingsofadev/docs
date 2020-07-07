@@ -94,13 +94,8 @@ use Aphiria\Net\Http\{HttpException, IRequest, IResponse};
 
 final class RoleMiddleware extends AttributeMiddleware
 {
-    private IAuthService $authService;
-
     // Inject any dependencies your middleware needs
-    public function __construct(IAuthService $authService)
-    {
-        $this->authService = $authService;
-    }
+    public function __construct(private IAuthService $authService) {}
 
     public function handle(IRequest $request, IRequestHandler $next): IResponse
     {
