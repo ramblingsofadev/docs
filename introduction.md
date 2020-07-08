@@ -25,9 +25,9 @@ final class UserController extends Controller
 
     public function createUser(Credentials $creds): IResponse
     {
-        $createdUser = $this->users->createUser($creds->email, $creds->password);
+        $user = $this->users->createUser($creds->email, $creds->password);
 
-        return $this->created("users/{$createdUser->id}", $createdUser);
+        return $this->created("/users/{$user->id}", $user);
     }
 
     public function getUser(int $id): User
@@ -39,7 +39,7 @@ final class UserController extends Controller
 
 In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
-Now, we'll actually set up our app to include these endpoints.  Let's say we need a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  Easy - just create a [module](configuration.md#modules).
+To use these endpoints, we'll need to include a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller, and we need to define our routes.  You can centrally configure all of these parts of your user domain in a [module](configuration.md#modules).
 
 ```php
 class UserModule implement IModule
@@ -50,17 +50,17 @@ class UserModule implement IModule
     {
         $this->withBinders($appBuilder, fn () => [new UserServiceBinder])
             ->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
-                $routes->post('users')
+                $routes->post('/users')
                     ->mapsToMethod(UserController::class, 'createUser');
             
-                $routes->get('users/:id')
+                $routes->get('/users/:id')
                     ->mapsToMethod(UserController::class, 'getUser');
             });
     }
 }
 ```
 
-Each area of your domain can use a module to configure its application logic, eg registering [binders](configuration.md#component-binders), [routes](configuration.md#component-routes), [validators](configuration.md#component-validator), and other components.
+Modules allow you to configure each of your business domains individually, making it trivial to plug-and-play new ones.  For example, you can specify [binders](configuration.md#component-binders), [routes](configuration.md#component-routes), [validators](configuration.md#component-validator), and other components that your domain needs.
 
 Hopefully, these examples demonstrate how easy it is to build an application with Aphiria.
 
