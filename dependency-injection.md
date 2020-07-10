@@ -20,19 +20,23 @@
 
 <h2 id="basics">Basics</h2>
 
-A dependency injection (DI) container gives you a way of telling your app "When you need an instance of `IFoo`, use this implementation".
+Dependency injection (DI) is the process of passing (injecting) dependencies that a class needs, typically done via the constructor.  Benefits to DI include:
+
+* Better testability - you can mock dependencies and inject them in unit tests
+* Easier to detect when a class has too many dependencies - the constructors become bloated
+* Cleaner abstraction in your interfaces - they don't leak the dependencies they need
+
+A common way of defining what dependencies to inject for a particular class is using a DI container.  You can tell the container "When I need to use a particular interface, use this implementation of that interface".  Here's an example:
 
 ```php
 use Aphiria\DependencyInjection\Container;
-use App\UserService;
-use App\IUserService;
 
 $container = new Container();
 $container->bindInstance(IUserService::class, new UserService());
 
 // ...
 
-// Will be an instance of UserService
+// Will return the same instance that was bound above
 $userService = $container->resolve(IUserService::class);
 ```
 
@@ -81,7 +85,7 @@ If you'd like to try resolving a binding without an exception being thrown, use 
 $userService = null;
 
 if (!$container->tryResolve(IUserService::class, $userService)) {
-    $userService = new UserService(new UserRepository());
+    $userService = new UserService();
 }
 
 // ...
@@ -124,7 +128,7 @@ The container will scan `UserService::__construct()`, see the `IUserRepository` 
 
 <h2 id="binders">Binders</h2>
 
-A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain.
+A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain via the `bind()` method.
 
 ```php
 use Aphiria\DependencyInjection\Binders\Binder;
@@ -156,7 +160,7 @@ Although this is simple, it's probably a little heavy-handed to register all you
 
 <h3 id="lazy-dispatching">Lazy Dispatching</h3>
 
-Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then sets up a factory for each of those bindings that calls `Binder::bind()` only when at least one of the binder's bindings is used.  This prevents you from having to list out the bindings a binder registers to get this sort of functionality (like other frameworks force you to do).
+Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then binds factories to lazily invoke `bind()` only when the binding's interface is resolved.  This is all done for you - you don't have to list out a binder's bindings to get this lazy dispatching like other frameworks have you do.
 
 Let's build on the `UserBinder` from the [previous example](#binders) and set up our app to lazily dispatch it:
 
@@ -170,13 +174,13 @@ $metadataCache = getenv('ENV_NAME') === 'production'
     ? new FileBinderMetadataCollectionCache('/tmp/binderMetadataCollectionCache.txt')
     : null;
 $binderDispatcher = new LazyBinderDispatcher($metadataCache);
-$binderDispatcher->dispatch([new UserBinder], $container);
+$binderDispatcher->dispatch([new UserBinder()], $container);
 ```
 
-That's it.  Now, whenever we call `$container->resolve(IUserService::class)`, it will automatically run `UserBinder::bind()` once and use the binding defined inside to resolve it every time after.  Additionally, any binder that resolves interfaces bound by `UserBinder` will also be dispatched.
+That's it.  The first time we dispatch the binders, the binder metadata will be collected and cached for future requests.  Also, whenever a binder resolves an interface bound in another binder, that other binder will be automatically dispatched, too.
 
 > **Note:** It's recommended that you only use caching for production environments.  Otherwise, changes you make to your binders might not be reflected.
 
 <h3 id="using-application-builders">Using Application Builders</h3>
 
-The [application builder](configuration.md#application-builders) library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](configuration.md#component-binders) to learn more about it.
+The application builder library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](configuration.md#component-binders) to learn more about it.
