@@ -36,7 +36,7 @@ This will disable automatically parsing POST data into `$_POST` and uploaded fil
 
 <h2 id="installing">Installing</h2>
 
-Aphiria can be easily downloaded and installed using Composer:
+Aphiria comes with a <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a> to help you quickly get up and running.  It can be installed using Composer:
 
 ```bash
 composer create-project aphiria/app --prefer-dist

@@ -33,27 +33,27 @@ Before you attempt to write a bug fix, first read the documentation to see if yo
 
 <h3 id="reporting-bug">Reporting a Bug</h3>
 
-To report a bug, <a href="https://github.com/aphiria" target="_blank">create a new issue</a> for the appropriate library with a descriptive title, steps to reproduce the bug (eg a failing PHPUnit test), and information about your environment.
+To report a bug with either the <a href="https://github.com/aphiria/aphiria/issues" target="_blank">framework</a> or <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, create a new GitHub issue with a descriptive title, steps to reproduce the bug (eg a failing PHPUnit test), and information about your environment.
 
 <h3 id="fixing-bug">Fixing a Bug</h3>
 
-To fix a bug, create a pull request on the latest stable branch (`1.0`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a> with the fix and relevant PHPUnit tests that provide 100% code coverage.
+To fix a bug, create a pull request with the fix and relevant PHPUnit tests that provide 100% code coverage.
 
 <h2 id="features">Features</h2>
 
-We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request on the latest stable branch (`master`) of the <a href="https://github.com/aphiria" title="Aphiria repositories" target="_blank">library's repository</a>.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, create a pull request on the `develop` branch.  All new features **must** provide unit tests with 100% code coverage.  Pull requests should never be sent to the `master` branch.
+We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, please open an issue first to discuss it prior to opening a pull request.  All new features **must** provide unit tests with 100% code coverage.
 
-Aphiria strives to not create any unnecessary library dependencies.  This even includes having dependencies on other Aphiria libraries.  If your change will introduce a new dependency to a library, create an issue and ask about it before implementing it.
+Aphiria strives to not create any unnecessary library dependencies.  This even includes having dependencies on other Aphiria libraries whenever possible.  If your change will introduce a new dependency to a library, create an issue and ask about it before implementing it.
 
 <h2 id="security-vulnerabilities">Security Vulnerabilities</h2>
 
-Aphiria takes security seriously.  If you find a security vulnerability, please email us at <a href="mailto:admin@aphiria.com">bugs@aphiria.com</a>.
+Aphiria takes security seriously.  If you find a security vulnerability, please email us at <a href="mailto:bugs@aphiria.com">bugs@aphiria.com</a>.
 
 <h2 id="coding-style">Coding Style</h2>
 
 Aphiria follows <a href="http://www.php-fig.org/psr/psr-1/" title="PSR-1 spec" target="_blank">PSR-1</a>, <a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2 spec" target="_blank">PSR-2</a>, and  <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  It uses PHP CS Fixer to enforce code style (available by running `composer run-script lint-fix` from the terminal).
 
-All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition instead of inheritance.
+All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
 
 <h3 id="phpdoc">PHPDoc</h3>
 
@@ -87,7 +87,7 @@ final class Book
      * Sets the title of the book
      *
      * @param string $title The title of the book
-     * @return $this For object chaining
+     * @return self For object chaining
      */
     public function setTitle(string $title): self
     {
@@ -107,7 +107,7 @@ Inspired by <a href="http://www.amazon.com/Code-Complete-Practical-Handbook-Cons
 All variable names:
 
 * Must be lower camel case, eg `$emailAddress`
-* Must NOT use Hungarian Notation
+* Must not use Hungarian Notation, eg `$arrUsers`
 
 <h3 id="functions-methods">Functions/Methods</h3>
 
@@ -115,7 +115,7 @@ All function/method names:
 
 * Must be succinct
   * Your method name should describe exactly what it does, nothing more, and nothing less
-  * If you are having trouble naming a method, that's probably a sign that it is doing too much and should be refactored
+  * If you are having trouble naming a method, that's probably a sign it is doing too much and should be refactored
 * Must be lower camel case, eg `compileList()`
   * Acronyms in function/method names &le; 2 characters long, capitalize each character, eg `startIO()`
   * "Id" is an abbreviation (not an acronym) for "Identifier", so it should be capitalized `Id`
@@ -151,6 +151,7 @@ All class names:
 Class properties should appear before any methods.  The following is the preferred ordering of class properties and methods:
 
 <h4 id="properties">Properties</h4>
+
 1. Constants
 2. Public static properties
 3. Public properties
@@ -160,6 +161,7 @@ Class properties should appear before any methods.  The following is the preferr
 7. Private properties
 
 <h4 id="methods">Methods</h4>
+
 1. Magic methods
 2. Public static methods
 3. Public abstract methods
@@ -177,7 +179,7 @@ Class properties should appear before any methods.  The following is the preferr
 All abstract class names:
 
 * Must be Pascal case, eg `ConnectionPool`
-* Must NOT use `Abstract`, `Base`, or any other word in the name that implies it is an abstract class
+* Must not use `Abstract`, `Base`, or any other word in the name that implies it is an abstract class
   
 <h3 id="interfaces">Interfaces</h3>
 
@@ -190,4 +192,4 @@ All interface names:
 All trait names:
 
 * Must be Pascal case, eg `ListValidator`
-* Must be NOT use `T`, `Trait`, or any other word in the name that implies it is a trait
+* Must be not use `T`, `Trait`, or any other word in the name that implies it is a trait

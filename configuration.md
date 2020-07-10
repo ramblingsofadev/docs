@@ -89,7 +89,7 @@ class App
 
 <h2 id="components">Components</h2>
 
-A component is a piece of your application that is shared across domains.  Below, we'll go over the components that are bundled with Aphiria, and some decoration methods to help configure them.
+A component is a piece of your application that is shared across business domains.  Below, we'll go over the components that are bundled with Aphiria, and some decoration methods to help configure them.
 
 <h3 id="component-binders">Binders</h3>
 
@@ -110,7 +110,6 @@ class UserModule implements IModule
         $this->withBinders($appBuilder, new UserBinder());
 
         // Or use an array of binders
-
         $this->withBinders($appBuilder, [new UserBinder()]);
     }
 }
@@ -355,7 +354,7 @@ class SymfonyRouterComponent implements IComponent
         });
     }
 
-    // Our own method for adding routes
+    // Define a method for adding routes from modules
     public function withRoutes(string $name, Route $route): self
     {
         $this->routes[$name] = $route;
@@ -387,11 +386,11 @@ class App implements IModule
 }
 ```
 
-All that's left is to start using it from a module:
+All that's left is to start using the component from a module:
 
 ```php
-use Aphiria\Application\IModule;
 use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
 use Symfony\Component\Routing\Route;
 
 class MyModule implements IModule
@@ -506,7 +505,7 @@ class YamlConfigurationFileReader implements IConfigurationFileReader
         $hashTable = Yaml::parseFile($path);
 
         if (!\is_array($hashTable)) {
-            throw new InvalidConfigurationFileException("Configuration in $path must be an array");
+            throw new InvalidConfigurationFileException("Failed to convert YAML in $path to an array");
         }
 
         return new HashTableConfiguration($hashTable, $pathDelimiter);
@@ -516,7 +515,7 @@ class YamlConfigurationFileReader implements IConfigurationFileReader
   
 <h2 id="global-configuration">Global Configuration</h2>
 
-`GlobalConfiguration` is a static class that can access values from multiple sources registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
+`GlobalConfiguration` is a static class that can access values from multiple configurations registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
 
 ```php
 use Aphiria\Application\Configuration\GlobalConfiguration;
@@ -562,7 +561,7 @@ These methods mimic the `IConfiguration` interface, but are static.  Like `IConf
 
 <h3 id="building-the-global-configuration">Building The Global Configuration</h3>
 
-`GlobalConfigurationBuilder` simplifies configuring different sources and building your global configuration.  In this example, we're loading from a PHP file, a JSON file, and from environment variables:
+`GlobalConfigurationBuilder` simplifies configuring different sources and building your global configuration.  In this example, we're loading from a PHP file, a JSON file, and environment variables:
 
 ```php
 use Aphiria\Application\Configuration\GlobalConfigurationBuilder;
@@ -576,4 +575,4 @@ $globalConfigurationBuilder->withPhpFileConfigurationSource('config.php')
 
 > **Note:** The reading of files and environment variables is deferred until `build()` is called.
 
-After `build()` is called, you can start accessing `GlobalConfiguration`.
+After `build()` is called, you can start accessing the values from `config.php`, `config.json`, and environment variables via `GlobalConfiguration`.
