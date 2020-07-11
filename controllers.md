@@ -26,12 +26,13 @@ A controller contains the methods that are invoked when a [request comes through
 
 ```php
 use Aphiria\Api\Controllers\Controller;
+use App\Users\IUserService;
 use App\Users\User;
 
 final class UserController extends Controller
 {
-    // ...
-    
+    public function __construct(private IUserService $users) {}
+
     public function getUser(int $id): User
     {
         return $this->users->getUserById($id);
@@ -165,7 +166,7 @@ final class UserController extends Controller
 
 <h3 id="validating-request-bodies">Validating Request Bodies</h3>
 
-It's possible to combine the power of <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> and [Aphiria's validation library](validation.md) to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [changing the exception response factory](exception-handling.md#exception-responses) for an `InvalidRequestBodyException`.
+It's possible to combine the power of <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> with [Aphiria's validation library](validation.md) to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [changing the exception response factory](exception-handling.md#exception-responses) for an `InvalidRequestBodyException`.
 
 If a request body cannot be automatically deserialized, as in the case of [arrays of objects in request bodies](#arrays-in-request-bodies), you must manually perform validation.
 
@@ -174,7 +175,7 @@ use Aphiria\Api\Validation\IRequestBodyValidator;
 
 final class UserController extends Controller
 {
-    private IRequestBodyValidator $validator;
+    public function __construct(private IRequestBodyValidator $validator) {}
 
     public function createManyUsers(): IResponse
     {
@@ -193,8 +194,6 @@ Your controllers might need to do more advanced reading of request data, such as
 ```php
 final class JsonPrettifierController extends Controller
 {
-    // ...
-
     public function prettifyJson(): IResponse
     {
         if (!$this->requestParser->isJson($this->request)) {
@@ -214,7 +213,7 @@ final class JsonPrettifierController extends Controller
 
 <h2 id="formatting-response-data">Formatting Response Data</h2>
 
-If you need to write data back to the response, eg cookies or creating a redirect, an instance of `ResponseFormatter` is available in the controller:
+If you need to write data back to the response, eg cookies or creating a redirect, an instance of `ResponseFormatter` is automatically available in the controller:
 
 ```php
 final class LoginController extends Controller
@@ -226,7 +225,7 @@ final class LoginController extends Controller
         $authResults = null;
         
         // Assume this logic resides in your application
-        if (!$this->authenticator->tryLogin($login->username, $login->password, $authResults)) {
+        if (!$this->authenticator->tryLogIn($login->username, $login->password, $authResults)) {
             return $this->unauthorized();
         }
         

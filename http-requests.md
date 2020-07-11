@@ -124,19 +124,6 @@ $request = (new RequestBuilder())->withMethod('POST')
 
 > **Note:** If you specify a body, you **must** also specify a content type.  You can also pass in `null` to remove a body from the request.
 
-Aphiria also has a request builder that uses automatic [content negotiation](content-negotiation.md) so that you can pass in a model to serialize in the body.
-
-```php
-use Aphiria\ContentNegotiation\NegotiatedRequestBuilder;
-
-$request = (new NegotiatedRequestBuilder())->withMethod('POST')
-    ->withUri('http://example.com/users')
-    ->withBody(new User('Dave'))
-    ->build();
-```
-
-> **Note:** By default, negotiated request bodies will be serialized to JSON, but you can specify a different default content type, eg `new NegotiatedRequestBuilder(null, 'text/xml')`.
-
 You can specify multiple headers in one call:
 
 ```php
@@ -162,6 +149,19 @@ $request = (new RequestBuilder())->withRequestTargetType(RequestTargetTypes::ABS
 
 > **Note:**  Keep in mind that each `with*()` method will return a clone of the request builder.
 
+Aphiria also has a [negotiated](content-negotiation.md) request builder that can serialize your models to a request body.
+
+```php
+use Aphiria\ContentNegotiation\NegotiatedRequestBuilder;
+
+$request = (new NegotiatedRequestBuilder())->withMethod('POST')
+    ->withUri('http://example.com/users')
+    ->withBody(new User('Dave'))
+    ->build();
+```
+
+> **Note:** By default, negotiated request bodies will be serialized to JSON, but you can specify a different default content type, eg `new NegotiatedRequestBuilder(null, 'text/xml')`.
+
 <h2 id="headers">Headers</h2>
 
 Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\Headers`, which extends  [`Aphiria\Collections\HashTable`](collections.md#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
@@ -173,7 +173,7 @@ Headers provide metadata about the HTTP message.  In Aphiria, they're implemente
 
 <h2 id="bodies">Bodies</h2>
 
-HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IBody`.  They provide a few methods to read and write their contents to streams and to strings:
+HTTP bodies contain data associated with the HTTP message, and are optional.  They're represented by `Aphiria\Net\Http\IBody`, and provide a few methods to read and write their contents to streams and to strings:
 
 ```php
 use Aphiria\IO\Streams\Stream;
@@ -195,7 +195,7 @@ $body->writeToStream($streamToWriteTo);
 
 <h3 id="string-bodies">String Bodies</h3>
 
-HTTP bodies are most commonly represented as strings.  Aphiria makes it easy to create a string body via `StringBody`:
+HTTP bodies are most commonly represented as strings.
 
 ```php
 use Aphiria\Net\Http\StringBody;
@@ -242,7 +242,7 @@ To serialize a URI, just cast it to a string:
 
 <h2 id="getting-post-data">Getting POST Data</h2>
 
-In vanilla PHP, you can read URL-encoded form data via the `$_POST` superglobal.  Aphiria gives you a helper to parse the body of form requests into a [dictionary](collections.md#hash-tables).
+In vanilla PHP, you can read URL-encoded form data via the `$_POST` superglobal.  Aphiria gives you a helper to parse the body of form requests into a [hash table](collections.md#hash-tables).
 
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
@@ -254,7 +254,7 @@ echo $formInput->get('email'); // "foo@bar.com"
 
 <h2 id="getting-query-string-data">Getting Query String Data</h2>
 
-In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphiria, it's stored in the request's URI.  `Uri::getQueryString()` returns the raw query string - to return it as an [immutable dictionary](collections.md#hash-tables), use `RequestParser`:
+In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphiria, it's stored in the request's URI.  `Uri::getQueryString()` returns the raw query string - to return it as an [immutable hash table](collections.md#immutable-hash-tables), use `RequestParser`:
 
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
@@ -284,7 +284,7 @@ $json = (new RequestParser)->readAsJson($request);
 
 <h2 id="getting-request-cookies">Getting Cookies</h2>
 
-Aphiria has a helper to grab cookies from request headers as an [immutable dictionary](collections.md#immutable-hash-tables):
+Aphiria has a helper to grab cookies from request headers as an [immutable hash table](collections.md#immutable-hash-tables):
 
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
@@ -307,7 +307,7 @@ $clientIPAddress = (new RequestParser)->getClientIPAddress($request);
 
 <h2 id="header-parameters">Header Parameters</h2>
 
-Some header values are semicolon delimited, eg `Content-Type: text/html; charset=utf-8`.  It's sometimes convenient to grab those key => value pairs:
+Some header values are semicolon delimited, eg `Content-Type: text/html; charset=utf-8`.  It's sometimes convenient to grab those key-value pairs:
 
 ```php
 $contentTypeValues = $requestParser->parseParameters($request, 'Content-Type');

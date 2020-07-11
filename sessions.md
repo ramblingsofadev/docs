@@ -15,7 +15,7 @@
    5. [Deleting Data](#deleting-data)
    6. [Flushing All Data](#flushing-all-data)
    7. [Flashing Data](#flashing-data)
-   8. [Regenerating the Id](#regenerating-the-id)
+   8. [Regenerating the ID](#regenerating-the-id)
 3. [Session Handlers](#session-handlers)
 4. [Using Sessions In Controllers](#using-sessions-in-controllers)
 5. [Middleware](#middleware)
@@ -87,19 +87,15 @@ $session->flush();
 
 <h4 id="flashing-data">Flashing Data</h4>
 
-Let's say you're writing a form that can display any validation errors after submitting, and you'd like to remember these error messages only for the next request.  Use `flash()`:
+If you want to only keep data in a session only for the next request, you can use `flash()`:
 
 ```php
-$session->flash('formErrors', ['Username is required', 'Invalid email address']);
-// ...redirect back to the form...
-foreach ($session->get('formErrors') as $error) {
-    echo htmlentities($error);
-}
+$session->flash('validationErrors', ['Invalid username']);
 ```
 
-On the next request, the data in "formErrors" will be deleted.  Want to extend the lifetime of the flash data by one more request?  Use `reflash()`.
+On the next request, the data in `validationErrors` will be deleted.  Use `reflash()` if you need to extend the lifetime of the flash data by one more request.
 
-<h4 id="regenerating-the-id">Regenerating the Id</h4>
+<h4 id="regenerating-the-id">Regenerating the ID</h4>
 
 ```php
 $session->regenerateId();
@@ -107,11 +103,10 @@ $session->regenerateId();
 
 <h2 id="session-handlers">Session Handlers</h2>
 
-Session handlers are what actually read and write session data from some form of storage, eg text files, cache, or cookies, and are typically invoked in [middleware](#middleware).  All Aphiria handlers implement `\SessionHandlerInterface` (built-into PHP).  Aphiria has the concept of session "drivers", which represent the storage that powers the handlers.  For example, `FileSessionDriver` stores session data to plain-text files, and `ArraySessionDriver` writes to an in-memory array, which can be useful for development environments.  Aphiria contains a session handler already set up to use a driver:
+Session handlers are what actually read and write session data from some form of storage, eg text files, cache, or cookies, and are typically invoked in [middleware](#middleware).  All Aphiria handlers implement `\SessionHandlerInterface` (built into PHP).  Aphiria has the concept of session "drivers", which represent the storage that powers the handlers.  For example, `FileSessionDriver` stores session data to plain-text files, and `ArraySessionDriver` writes to an in-memory array, which can be useful for development environments.  Aphiria contains a session handler already set up to use a driver:
 
 ```php
-use Aphiria\Sessions\Handlers\FileSessionDriver;
-use Aphiria\Sessions\Handlers\DriverSessionHandler;
+use Aphiria\Sessions\Handlers\{DriverSessionHandler, FileSessionDriver};
 
 $driver = new FileSessionDriver('/tmp/sessions');
 $handler = new DriverSessionHandler($driver);
@@ -119,7 +114,7 @@ $handler = new DriverSessionHandler($driver);
 
 <h2 id="using-sessions-in-controllers">Using Sessions in Controllers</h2>
 
-To use sessions in your controllers, simply inject it into the controller's constructor along with a type hint:
+To use sessions in your controllers, simply inject it into the controller's constructor:
 
 ```php
 namespace App\Authentication\Api\Controllers;
@@ -144,7 +139,7 @@ class UserController extends Controller
 
 <h2 id="middleware">Middleware</h2>
 
-Middleware is the best way to handle reading session data from storage and persisting it back to storage at the end of a request.  For convenience, Aphiria provides `Aphiria\Sessions\Middleware\Session` to handle reading and writing session data to cookies.  Let's look at how to configure the middleware:
+Middleware is the best way to handle reading session data from storage and persisting it back to storage at the end of a request.  For convenience, Aphiria provides the `Session` middleware to handle reading and writing session data to cookies.  Let's look at how to configure it:
 
 ```php
 use Aphiria\Sessions\Middleware\Session as SessionMiddleware;
@@ -163,7 +158,7 @@ Refer to the [application builder library](configuration.md#component-middleware
 
 <h2 id="id-generators">ID Generators</h2>
 
-If your session has just started or if its data has been invalidated, a new session ID will need to be generated.  These Ids must be cryptographically secure to prevent session hijacking.  If you're using `Session`, you can either pass in your own ID generator (must implement `IIdGenerator`) or use the default `UuidV4IdGenerator`.
+If your session has just started or if its data has been invalidated, a new session ID will need to be generated.  These IDs must be cryptographically secure to prevent session hijacking.  If you're using `Session`, you can either pass in your own ID generator (must implement `IIdGenerator`) or use the default `UuidV4IdGenerator`.
 
 > **Note:** It's recommended you use Aphiria's `UuidV4IdGenerator` unless you know what you're doing.
 
@@ -181,5 +176,7 @@ $encrypter = new class () implements ISessionEncrypter {
 };
 $handler = new DriverSessionHandler($driver, $encrypter);
 ```
+
+> **Note:** Aphiria does not provide native support for encryption.  You must use another library to encrypt and decrypt data.
 
 Now, all your session data will be encrypted before being written and decrypted after being read.

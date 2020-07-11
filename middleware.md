@@ -85,7 +85,7 @@ final class ResponseManipulator implements IMiddleware
 
 <h3 id="middleware-attributes">Middleware Attributes</h3>
 
-Occasionally, you'll find yourself wanting to pass primitive values to middleware to indicate something such as a required role to execute an action.  In these cases, your middleware should extend `Aphiria\Middleware\AttributeMiddleware`:
+Occasionally, you'll find yourself wanting to pass primitive values to middleware to indicate something such as a required role to execute an action.  In these cases, your middleware should extend `AttributeMiddleware`:
 
 ```php
 use Aphiria\Middleware\AttributeMiddleware;
@@ -101,12 +101,11 @@ final class RoleMiddleware extends AttributeMiddleware
     {
         $accessToken = null;
 
-        if (!$request->getHeaders()->tryGetFirst('Authorization', $accessToken)) {
+        if (
+            !$request->getHeaders()->tryGetFirst('Authorization', $accessToken)
+            || !$this->authService->accessTokenIsValid($accessToken)
+        ) {
             return new Response(401);
-        }
-
-        if ($this->authService->accessTokenIsValid($accessToken)) {
-            return new Response(403);
         }
     
         // Attributes are available via $this->attributes
@@ -129,7 +128,9 @@ $routes->get('foo')
 
 <h2 id="executing-middleware">Executing Middleware</h2>
 
-Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline.  You can create this pipeline using `MiddlewarePipelineFactory`:
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, middleware will be executed automatically for you.  You can define both [global middleware](configuration.md#component-middleware) and [route middleware](routing.md#binding-middleware).
+
+If you're not using the skeleton app, you'll have to set up a pipeline to execute your middleware for you.  Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline.  You can create this pipeline using `MiddlewarePipelineFactory`:
 
 ```php
 use Aphiria\Middleware\MiddlewarePipelineFactory;
