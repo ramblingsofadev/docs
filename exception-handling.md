@@ -20,7 +20,7 @@
 
 <h2 id="global-exception-handler">Global Exception Handler</h2>
 
-Sometimes, your application is going to throw an unhandled exception or shut down unexpectedly.  When this happens, it would be nice to log details about the error and present a nicely-formatted response for the user.  Aphiria provides `GlobalExceptionHandler` to do just this.  It can be used to render exceptions for both HTTP and console applications, and is framework-agnostic.
+At some point, your application is going to throw an unhandled exception or shut down unexpectedly.  When this happens, it would be nice to log details about the error and present a nicely-formatted response for the user.  Aphiria provides `GlobalExceptionHandler` to do just this.  It can be used to render exceptions for both HTTP and console applications, and is framework-agnostic.
 
 Let's look at an example:
 
@@ -34,17 +34,17 @@ $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 $globalExceptionHandler->registerWithPhp();
 ```
 
-That's it.  Now, whenever an unhandled error or exception is thrown, the global exception handler will catch it, [log it](#logging), and [render it](#http-exception-renderer).  We'll go into more details on how to customize it below.
+That's it.  Now, whenever an unhandled error or exception is thrown, the global exception handler will catch it, [log it](#logging), and [render it](#api-exception-renderer).  We'll go into more details on how to customize it below.
 
 <h2 id="api-exception-renderer">API Exception Renderer</h2>
 
 `ApiExceptionRenderer` is provided out of the box to simplify rendering API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
   
-1. If an [exception response](#exception-responses) exists for the thrown exception, it's used
+1. If an [exception response factory](#exception-responses) exists for the thrown exception, it's used to create a response
 2. Otherwise, if the renderer is configured to use <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a>, it will create a 500 response with a problem details body
-3. Otherwise, if the renderer does not use problem details, an empty 500 response is used
+3. Otherwise, if the renderer does not use problem details, an empty 500 response is returned
 
-To turn problem detail responses off, you pass in `false` in the constructor:
+By default, problem details are enabled.  To disable them, pass in `false` in the constructor:
 
 ```php
 use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
@@ -99,7 +99,7 @@ Output writers allow you to write errors to the output and return a status code.
 use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Exceptions\Console\ConsoleExceptionRenderer;
+use Aphiria\Framework\Console\Exceptions\ConsoleExceptionRenderer;
 
 $exceptionRenderer = new ConsoleExceptionRenderer();
 $exceptionRenderer->registerOutputWriter(
@@ -127,7 +127,7 @@ $globalExceptionHandler->registerWithPhp();
 
 <h2 id="logging">Logging</h2>
 
-By default, the global exception handler is compatible with any PSR-3 logger such as <a href="https://github.com/Seldaek/monolog" target="_blank">Monolog</a>.  To use a specific logger, just pass it into the handler:
+By default, the global exception handler is compatible with any PSR-3 logger, such as <a href="https://github.com/Seldaek/monolog" target="_blank">Monolog</a>.  To use a specific logger, just pass it into the handler:
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;

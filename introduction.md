@@ -68,6 +68,8 @@ Hopefully, these examples demonstrate how easy it is to build an application wit
 
 To get up and running, follow our [installation guide](installation.md) to create a skeleton app that uses Aphiria.  Then, [learn how to define some routes](routing.md),  [create some controllers](controllers.md), and [configure your dependencies](dependency-injection.md#binders).  From there, you can browse the docs in any order you choose, although the order they're listed in might be the best way to read them.
 
+Aphiria uses a GitHub project for keeping track of new features, bug fixes, and roadmapping.  To learn more about the direction of the framework, check out the <a href="https://github.com/orgs/aphiria/projects/1" target="_blank">project</a>.
+
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 
 Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks, and usually found at least one major problem with them all:

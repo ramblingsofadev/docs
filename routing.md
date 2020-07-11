@@ -50,6 +50,7 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
   * <a href="https://github.com/aphiria/aphiria/blob/master/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
+* It supports [annotations](#route-annotations) for defining your routes
 * It supports [creating URIs from routes](#creating-route-uris)
 * It is built to support the latest PHP 7.4 features
 
@@ -267,7 +268,7 @@ $routes->group(
 );
 ```
 
-This creates two routes with a host suffix of _example.com_ and a route prefix of _users/_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  You can set several settings in group options:
+This creates two routes with a host suffix of _example.com_ and a route prefix of _courses/:courseId_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  You can set several settings in group options:
 
 ```php
 use Aphiria\Middleware\MiddlewareBinding;
@@ -329,14 +330,16 @@ The following HTTP methods have route annotations: `@Any` (any HTTP method), `@D
 use Aphiria\Routing\Annotations\Get;
 use Aphiria\Routing\Annotations\RouteConstraint;
 
-@Get(
-    "courses/:courseId",
-    host="api.example.com",
-    name="getCourse",
-    isHttpsOnly=true,
-    constraints=@{RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
-    attributes={"role":"admin"}
-)
+/**
+ * @Get(
+ *     "courses/:courseId",
+ *     host="api.example.com",
+ *     name="getCourse",
+ *     isHttpsOnly=true,
+ *     constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
+ *     attributes={"role":"admin"}
+ * )
+ */
 ```
 
 <h3 id="route-annotation-groups">Route Groups</h3>
@@ -373,13 +376,15 @@ When our routes get compiled, the route group path will be prefixed to the path 
 use Aphiria\Routing\Annotations\RouteConstraint;
 use Aphiria\Routing\Annotations\RouteGroup;
 
-@RouteGroup(
-    "users",
-    host="api.example.com",
-    isHttpsOnly=true,
-    constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
-    attributes={"role":"admin"}
-)
+/**
+ * @RouteGroup(
+ *     "users",
+ *     host="api.example.com",
+ *     isHttpsOnly=true,
+ *     constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
+ *     attributes={"role":"admin"}
+ * )
+ */
 ```
   
 <h3 id="route-annotation-middleware">Middleware</h3>
@@ -389,30 +394,34 @@ Middleware are added separately:
 ```php
 use Aphiria\Routing\Annotations\Middleware;
 
-@Middleware(
-    Authorization::class,
-    attributes={"role":"admin"}
-)
+/**
+ * @Middleware(
+ *     Authorization::class,
+ *     attributes={"role":"admin"}
+ * )
+ */
 ```
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
-use Aphiria\Application\Configuration\Builders\AphiriaComponentBuilder;
-use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
 
-// Assume we already have $container set up
-$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(AnnotationRouteRegistrant::class, $routeAnnotationRegistrant);
+final class App implements IModule
+{
+    use AphiriaComponents;
 
-(new AphiriaComponentBuilder($container))
-    ->withRoutingComponent($appBuilder)
-    ->withRoutingAnnotations($appBuilder);
-```
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withRouteAnnotations($appBuilder);
+    }
+}
 
-If you're not using the application builder library, you can manually configure the router to scan for annotations:
+Otherwise, you can manually configure the router to scan for annotations:
 
 ```php
 use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
@@ -446,13 +455,13 @@ Let's say your app sends an API version header, and you want to match an endpoin
 $routes->get('comments')
     ->mapsToMethod(CommentController::class, 'getAllComments1_0')
     ->withAttribute('API-VERSION', 'v1.0')
-    ->withConstraint(new ApiVersionConstraint);
+    ->withConstraint(new ApiVersionConstraint());
 
 // This route will require an API-VERSION value of 'v2.0'
 $routes->get('comments')
     ->mapsToMethod(CommentController::class, 'getAllComments2_0')
     ->withAttribute('API-VERSION', 'v2.0')
-    ->withConstraint(new ApiVersionConstraint);
+    ->withConstraint(new ApiVersionConstraint());
 ```
 
 > **Note:** If you plan on adding many attributes or constraints to your routes, use `RouteBuilder::withManyAttributes()` and `RouteBuilder::withManyConstraints()`, respectively.
@@ -548,13 +557,18 @@ final class MinLengthConstraint implements IRouteVariableConstraint
 Let's register our constraint with the constraint factory:
 
 ```php
-use Aphiria\Routing\UriTemplates\Constraints\{RouteVariableConstraintFactory, RouteVariableConstraintFactoryRegistrant};
+use Aphiria\Routing\UriTemplates\Constraints\RouteVariableConstraintFactory;
+use Aphiria\Routing\UriTemplates\Constraints\RouteVariableConstraintFactoryRegistrant;
 
 // Register some built-in constraints to our factory
-$constraintFactory = (new RouteVariableConstraintFactoryRegistrant)->registerConstraintFactories(new RouteVariableConstraintFactory);
+$constraintFactory = (new RouteVariableConstraintFactoryRegistrant)
+    ->registerConstraintFactories(new RouteVariableConstraintFactory);
 
 // Register our custom constraint
-$constraintFactory->registerConstraintFactory(MinLengthConstraint::getSlug(), fn (int $minLength) => new MinLengthConstraint($minLength));
+$constraintFactory->registerConstraintFactory(
+    MinLengthConstraint::getSlug(),
+    fn (int $minLength) => new MinLengthConstraint($minLength)
+);
 ```
 
 Finally, register this constraint factory with the trie compiler:
@@ -602,10 +616,16 @@ Optional route variables can be specified, too.  Let's assume the URI template i
 
 ```php
 // Will create "/archives/2019"
-$booksFor2019 = $routeUriFactory->createRouteUri('GetBooksFromArchive', ['year' => 2019]);
+$booksFor2019 = $routeUriFactory->createRouteUri(
+    'GetBooksFromArchive',
+    ['year' => 2019]
+);
 
 // Will create "/archives/2019/12"
-$booksForDec2019 = $routeUriFactory->createRouteUri('GetBooksFromArchive', ['year' => 2019, 'month' => 12]);
+$booksForDec2019 = $routeUriFactory->createRouteUri(
+    'GetBooksFromArchive',
+    ['year' => 2019, 'month' => 12]
+);
 ```
 
 <h2 id="caching">Caching</h2>
@@ -622,7 +642,7 @@ use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\RouteRegistrantCollection;
 
 $routes = new RouteCollection();
-$routeRegistrant = new RouteRegistrantCollection(new FileRouteCache('/tmp/routes.cache'));
+$routeRegistrant = new RouteRegistrantCollection(new FileRouteCache('/tmp/routeCache.txt'));
 
 // Once you're done configuring your route registrant...
 
@@ -638,7 +658,9 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\Caching\FileTrieCache;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 // Let's say that your environment name is stored in an environment var named 'ENV_NAME'
-$trieCache = getenv('ENV_NAME') === 'production' ? new FileTrieCache('/tmp/trie.cache'): null;
+$trieCache = getenv('ENV_NAME') === 'production'
+    ? new FileTrieCache('/tmp/trieCache.txt')
+    : null;
 $trieFactory = new TrieFactory($routes, $trieCache);
 
 // Finish setting up your route matcher...
