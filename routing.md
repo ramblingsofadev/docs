@@ -420,6 +420,7 @@ final class App implements IModule
         $this->withRouteAnnotations($appBuilder);
     }
 }
+```
 
 Otherwise, you can manually configure the router to scan for annotations:
 

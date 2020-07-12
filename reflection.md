@@ -18,7 +18,7 @@
 
 <h2 id="type-finder">Type Finder</h2>
 
-PHP does not provide any native way of finding types (eg classes and interfaces) from files unless you've already autoloaded them into memory.  Aphiria's `TypeFinder` can do just that, though.  You simply pass a directory or list of directories, and it will scan the directories for any types defined within.  It does this by tokenizing all PHP files and scanning for type definitions.  This is a pretty slow process, and the results should be cached whenever possible.
+PHP does not provide any native way of finding types (eg classes and interfaces) from files unless you've already autoloaded them into memory.  Aphiria's `TypeFinder` can do just that, though.  You simply pass a directory or list of directories, and it will scan them for any types defined within.  It does this by tokenizing all PHP files and scanning for type definitions.  This is a pretty slow process, and the results should be cached whenever possible.
 
 <h3 id="finding-classes">Finding Classes</h3>
 

@@ -33,7 +33,7 @@ A lot of major frameworks, eg Symfony and Laravel, have also decided not to adop
 
 * Requests and responses are immutable, which was seen as a poor application of immutability
   - It's all to easy to forget to get the new instance from any `with*()` methods, leading to bugs
-  - Inconsistencies in some of the internals of the PSR make it impossible to achieve true immutability
+  - Inconsistencies in some of the internals of PHP and the PSR make it impossible to achieve true immutability
 * HTTP message bodies are not inherently streams - they should be readable as streams
 * `ServerRequestInterface` too closely mirrors some PHP superglobals, for better or for worse
   - It relies on PHP `$_SERVER` and `$_FILES` structures, which are full of idiosyncrasies

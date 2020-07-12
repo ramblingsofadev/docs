@@ -46,7 +46,7 @@ Let's set up some constraints.
 
 ```php
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
-use Aphiria\Validation\Constraints\{EmailConstraint, Requiredconstraint};
+use Aphiria\Validation\Constraints\{EmailConstraint, RequiredConstraint};
 use Aphiria\Validation\Validator;
 use App\Users\User;
 
@@ -54,7 +54,7 @@ use App\Users\User;
 $constraintsBuilder = new ObjectConstraintsRegistryBuilder();
 $constraintsBuilder->class(User::class)
     ->hasPropertyConstraints('email', new EmailConstraint())
-    ->hasPropertyConstraints('name', new Requiredconstraint());
+    ->hasPropertyConstraints('name', new RequiredConstraint());
 $validator = new Validator($constraintsBuilder->build());
 
 // Let's validate
@@ -388,22 +388,25 @@ The following annotations come with Aphiria:
 
 <h3 id="using-annotations">Using Annotations</h3>
 
-To actually use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
-use Aphiria\Application\Configuration\Builders\AphiriaComponentBuilder;
-use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
 
-// Assume we already have $container set up
-$annotationConstraintRegistrant = new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']);
-$container->bindInstance(AnnotationObjectConstraintsRegistrant::class, $annotationConstraintRegistrant);
+final class App implements IModule
+{
+    use AphiriaComponents;
 
-(new AphiriaComponentBuilder($container))
-    ->withValidationComponent($appBuilder)
-    ->withValidationAnnotations($appBuilder);
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withValidatorAnnotations($appBuilder);
+    }
+}
 ```
 
-If you're not using the application builder library, you can manually scan for annotations:
+Otherwise, you can manually scan for annotations:
 
 ```php
 use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;

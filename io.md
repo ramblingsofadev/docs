@@ -21,9 +21,7 @@
 
 <h2 id="streams">Streams</h2>
 
-Streams allow you to read and write data in a memory-efficient way.  They make it easy to work with large files without crippling your server.  PHP has built-in support for streams, but the syntax is clunky, and it requires a bit of boilerplate code to work with.  Aphiria wraps PHP's streaming functionality into a simple interface: `Aphiria\IO\Streams\IStream` (`Stream` comes built-in).
-
-Here's how you can create a stream:
+Streams allow you to read and write data in a memory-efficient way.  PHP has built-in support for streams, but the syntax is clunky, and it requires a bit of boilerplate code to work with.  Aphiria wraps PHP's streaming functionality into a simple interface: `Aphiria\IO\Streams\IStream`.  Creating a stream is easy.
 
 ```php
 use Aphiria\IO\Streams\Stream;
@@ -107,15 +105,15 @@ $stream->close();
 
 <h3 id="multi-streams">Multi-Streams</h3>
 
-In some cases, such as multi-part responses, you may need to append multiple streams together, yet treat them like a single stream.  This is where `MultiStream` comes in handy:
+In some cases, such as [multi-part requests](http-requests.md#multipart-requests), you may need to append multiple streams together, yet treat them like a single stream.  This is where `MultiStream` comes in handy:
 
 ```php
 use Aphiria\IO\Streams\MultiStream;
 use Aphiria\IO\Streams\Stream;
 
-$stream1 = new Stream('php://temp', 'r+');
+$stream1 = new Stream('php://temp', 'r+b');
 $stream1->write('foo');
-$stream2 = new Stream('php://temp', 'r+');
+$stream2 = new Stream('php://temp', 'r+b');
 $stream2->write('bar');
 
 $multiStream = new MultiStream();
