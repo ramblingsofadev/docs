@@ -8,14 +8,83 @@
 
 1. [Introduction](#introduction)
 2. [Key-Value Pairs](#key-value-pairs)
+   1. [`KeyValuePair::getKey()`](#key-values-pairs-get-key)
+   2. [`KeyValuePair::getValue()`](#key-value-pairs-get-value)
 3. [Array Lists](#array-lists)
+   1. [`ArrayList::add()`](#array-lists-add)
+   2. [`ArrayList::addRange()`](#array-lists-add-range)
+   3. [`ArrayList::clear()`](#array-lists-clear)
+   4. [`ArrayList::containsValue()`](#array-lists-contains-value)
+   5. [`ArrayList::count()`](#array-lists-count)
+   6. [`ArrayList::get()`](#array-lists-get)
+   7. [`ArrayList::indexOf()`](#array-lists-index-of)
+   8. [`ArrayList::insert()`](#array-lists-insert)
+   9. [`ArrayList::intersect()`](#array-lists-intersect)
+   10. [`ArrayList::removeIndex()`](#array-lists-remove-index)
+   11. [`ArrayList::reverse()`](#array-lists-reverse)
+   12. [`ArrayList::sort()`](#array-lists-sort)
+   12. [`ArrayList::toArray()`](#array-lists-to-array)
+   12. [`ArrayList::union()`](#array-lists-union)
 4. [Hash Tables](#hash-tables)
+   1. [`HashTable::add()`](#hash-tables-add)
+   2. [`HashTable::addRange()`](#hash-tables-add-range)
+   3. [`HashTable::clear()`](#hash-tables-clear)
+   4. [`HashTable::containsKey()`](#hash-tables-contains-key)
+   5. [`HashTable::containsValue()`](#hash-tables-contains-value)
+   6. [`HashTable::count()`](#hash-tables-count)
+   7. [`HashTable::get()`](#hash-tables-get)
+   8. [`HashTable::getKeys()`](#hash-tables-get-keys)
+   9. [`HashTable::getValues()`](#hash-tables-get-values)
+   10. [`HashTable::removeKey()`](#hash-tables-remove-key)
+   11. [`HashTable::removeValue()`](#hash-tables-remove-value)
+   12. [`HashTable::toArray()`](#hash-tables-to-array)
+   13. [`HashTable::tryGet()`](#hash-tables-try-get)
 5. [Hash Sets](#hash-sets)
+   1. [`HashSet::add()`](#hash-sets-add)
+   2. [`HashSet::addRange()`](#hash-sets-add-range)
+   3. [`HashSet::clear()`](#hash-sets-clear)
+   4. [`HashSet::containsValue()`](#hash-sets-contains-value)
+   5. [`HashSet::count()`](#hash-sets-count)
+   6. [`HashSet::intersect()`](#hash-sets-intersect)
+   7. [`HashSet::removeValue()`](#hash-sets-remove-value)
+   8. [`HashSet::sort()`](#hash-sets-sort)
+   9. [`HashSet::toArray()`](#hash-sets-to-array)
+   10. [`HashSet::union()`](#hash-sets-union)
 6. [Stacks](#stacks)
+   1. [`Stack::clear()`](#stacks-clear)
+   2. [`Stack::containsValue()`](#stacks-contains-value)
+   3. [`Stack::count()`](#stacks-count)
+   4. [`Stack::peek()`](#stacks-peek)
+   5. [`Stack::pop()`](#stacks-pop)
+   1. [`Stack::push()`](#stacks-push)
+   1. [`Stack::toArray()`](#stacks-to-array)
 7. [Queues](#queues)
+   1. [`Queue::clear()`](#queues-clear)
+   2. [`Queue::containsValue()`](#queues-contains-value)
+   3. [`Queue::count()`](#queues-count)
+   4. [`Queue::dequeue()`](#queues-dequeue)
+   5. [`Queue::enqueue()`](#queues-enqueue)
+   6. [`Queue::peek()`](#queues-peek)
+   7. [`Queue::toArray()`](#queues-to-array)
 8. [Immutable Array Lists](#immutable-array-lists)
+   1. [`ImmutableArrayList::containsValue()`](#immutable-array-lists-contains-value)
+   2. [`ImmutableArrayList::count()`](#immutable-array-lists-count)
+   3. [`ImmutableArrayList::get()`](#immutable-array-lists-get)
+   4. [`ImmutableArrayList::indexOf()`](#immutable-array-lists-index-of)
+   5. [`ImmutableArrayList::toArray()`](#immutable-array-lists-to-array)
 9. [Immutable Hash Tables](#immutable-hash-tables)
+   1. [`ImmutableHashTable::containsKey()`](#immutable-hash-tables-contains-key)
+   2. [`ImmutableHashTable::containsValue()`](#immutable-hash-tables-contains-value)
+   3. [`ImmutableHashTable::count()`](#immutable-hash-tables-count)
+   4. [`ImmutableHashTable::get()`](#immutable-hash-tables-get)
+   5. [`ImmutableHashTable::getKeys()`](#immutable-hash-tables-get-keys)
+   6. [`ImmutableHashTable::getValues()`](#immutable-hash-tables-get-values)
+   7. [`ImmutableHashTable::toArray()`](#immutable-hash-tables-to-array)
+   8. [`ImmutableHashTable::tryGet()`](#immutable-hash-tables-try-get)
 10. [Immutable Hash Sets](#immutable-hash-sets)
+    1. [`ImmutableHashSet::containsValue()`](#immutable-hash-sets-contains-value)
+    2. [`ImmutableHashSet::count()`](#immutable-hash-sets-count)
+    3. [`ImmutableHashSet::toArray()`](#immutable-hash-sets-to-array)
 
 </div>
 
@@ -27,8 +96,7 @@ Unfortunately, PHP's support for collections is relatively incomplete.  The `arr
 
 <h2 id="key-value-pairs">Key-Value Pairs</h2>
 
-Like its name implies, `KeyValuePair` holds a key and a value.  An example usage of in Aphiria's [`HashTable`](#hash-tables) and [`ImmutableHashTable` 
-](#immutable-hash-tables).  To instantiate one, pass in the key and value:
+Like its name implies, `KeyValuePair` holds a key and a value.  Unlike key-value pairs in native PHP arrays, keys in `KeyValuePair` can be any value, including an object.  To instantiate one, pass in the key and value:
 
 ```php
 use Aphiria\Collections\KeyValuePair;
@@ -36,7 +104,7 @@ use Aphiria\Collections\KeyValuePair;
 $kvp = new KeyValuePair('thekey', 'thevalue');
 ```
 
-<h3 id="key-value-pairs-getting-keys">KeyValuePair::getKey()</h3>
+<h3 id="key-value-pairs-get-key-keys">KeyValuePair::getKey()</h3>
 
 _Runtime: O(1)_
 
@@ -46,7 +114,7 @@ To get the key-value pair's key, call
 $kvp->getKey();
 ```
 
-<h3 id="key-value-pairs-get">KeyValuePair::getValue()</h3>
+<h3 id="key-value-pairs-get-value">KeyValuePair::getValue()</h3>
 
 _Runtime: O(1)_
 
@@ -154,7 +222,7 @@ $arrayList->insert(23, 'foo');
 
 <h3 id="array-lists-intersect">ArrayList::intersect()</h3>
 
-_Runtime: O(nm)_
+_Runtime: O(nm)_, n = number of values in the array list, and m = number of values in the parameter array
 
 You can intersect an array list's values with an array by calling
 
@@ -162,9 +230,7 @@ You can intersect an array list's values with an array by calling
 $arrayList->intersect(['foo', 'bar']);
 ```
 
-If the array list doesn't contain the value, `null` will be returned.
-
-<h3 id="array-lists-remove-value">ArrayList::removeIndex()</h3>
+<h3 id="array-lists-remove-index">ArrayList::removeIndex()</h3>
 
 _Runtime: O(1)_
 
@@ -212,7 +278,7 @@ $array = $arrayList->toArray();
 
 <h3 id="array-lists-union">ArrayList::union()</h3>
 
-_Runtime: O(nm)_
+_Runtime: O(nm)_, n = number of values in the array list, and m = number of values in the parameter array
 
 You can union an array list's values with an array via
 

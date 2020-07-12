@@ -51,6 +51,7 @@ Use the following methods to send requests and get [responses](http-responses.md
 * `delete()`
 * `get()`
 * `options()`
+* `patch()`
 * `post()`
 * `put()`
 
@@ -76,7 +77,7 @@ All methods except `get()` also support passing in a body:
 $this->post('/users', [], new User(1, 'foo@bar.com'));
 ```
 
-If you pass in an instance of `IBody`, that will be used as the request body.  Otherwise, [content negotiation](content-negotiation.md) will be applied on the value you pass in.
+If you pass in an instance of `IBody`, that will be used as the request body.  Otherwise, [content negotiation](content-negotiation.md) will be applied to the value you pass in.
 
 <h2 id="response-assertions">Response Assertions</h2>
 
@@ -125,7 +126,7 @@ $this->assertHeaderEquals('Bearer abc123', $response, 'Authorization');
 
 ```php
 // Assert that the response sets a header named "Authorization" with a value that passes the regex
-$this->assertHeaderMatchesRegex('/^Bearer [a-z0-9]$/i', $response, 'Authorization');
+$this->assertHeaderMatchesRegex('/^Bearer [a-z0-9]+$/i', $response, 'Authorization');
 ```
 
 <h3 id="assert-parsed-body-equals">assertParsedBodyEquals</h3>
