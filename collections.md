@@ -8,83 +8,83 @@
 
 1. [Introduction](#introduction)
 2. [Key-Value Pairs](#key-value-pairs)
-   1. [`KeyValuePair::getKey()`](#key-values-pairs-get-key)
-   2. [`KeyValuePair::getValue()`](#key-value-pairs-get-value)
+   1. [`getKey()`](#key-value-pairs-get-key)
+   2. [`getValue()`](#key-value-pairs-get-value)
 3. [Array Lists](#array-lists)
-   1. [`ArrayList::add()`](#array-lists-add)
-   2. [`ArrayList::addRange()`](#array-lists-add-range)
-   3. [`ArrayList::clear()`](#array-lists-clear)
-   4. [`ArrayList::containsValue()`](#array-lists-contains-value)
-   5. [`ArrayList::count()`](#array-lists-count)
-   6. [`ArrayList::get()`](#array-lists-get)
-   7. [`ArrayList::indexOf()`](#array-lists-index-of)
-   8. [`ArrayList::insert()`](#array-lists-insert)
-   9. [`ArrayList::intersect()`](#array-lists-intersect)
-   10. [`ArrayList::removeIndex()`](#array-lists-remove-index)
-   11. [`ArrayList::reverse()`](#array-lists-reverse)
-   12. [`ArrayList::sort()`](#array-lists-sort)
-   12. [`ArrayList::toArray()`](#array-lists-to-array)
-   12. [`ArrayList::union()`](#array-lists-union)
+   1. [`add()`](#array-lists-add)
+   2. [`addRange()`](#array-lists-add-range)
+   3. [`clear()`](#array-lists-clear)
+   4. [`containsValue()`](#array-lists-contains-value)
+   5. [`count()`](#array-lists-count)
+   6. [`get()`](#array-lists-get)
+   7. [`indexOf()`](#array-lists-index-of)
+   8. [`insert()`](#array-lists-insert)
+   9. [`intersect()`](#array-lists-intersect)
+   10. [`removeIndex()`](#array-lists-remove-index)
+   11. [`reverse()`](#array-lists-reverse)
+   12. [`sort()`](#array-lists-sort)
+   12. [`toArray()`](#array-lists-to-array)
+   12. [`union()`](#array-lists-union)
 4. [Hash Tables](#hash-tables)
-   1. [`HashTable::add()`](#hash-tables-add)
-   2. [`HashTable::addRange()`](#hash-tables-add-range)
-   3. [`HashTable::clear()`](#hash-tables-clear)
-   4. [`HashTable::containsKey()`](#hash-tables-contains-key)
-   5. [`HashTable::containsValue()`](#hash-tables-contains-value)
-   6. [`HashTable::count()`](#hash-tables-count)
-   7. [`HashTable::get()`](#hash-tables-get)
-   8. [`HashTable::getKeys()`](#hash-tables-get-keys)
-   9. [`HashTable::getValues()`](#hash-tables-get-values)
-   10. [`HashTable::removeKey()`](#hash-tables-remove-key)
-   11. [`HashTable::removeValue()`](#hash-tables-remove-value)
-   12. [`HashTable::toArray()`](#hash-tables-to-array)
-   13. [`HashTable::tryGet()`](#hash-tables-try-get)
+   1. [`add()`](#hash-tables-add)
+   2. [`addRange()`](#hash-tables-add-range)
+   3. [`clear()`](#hash-tables-clear)
+   4. [`containsKey()`](#hash-tables-contains-key)
+   5. [`containsValue()`](#hash-tables-contains-value)
+   6. [`count()`](#hash-tables-count)
+   7. [`get()`](#hash-tables-get)
+   8. [`getKeys()`](#hash-tables-get-keys)
+   9. [`getValues()`](#hash-tables-get-values)
+   10. [`removeKey()`](#hash-tables-remove-key)
+   11. [`removeValue()`](#hash-tables-remove-value)
+   12. [`toArray()`](#hash-tables-to-array)
+   13. [`tryGet()`](#hash-tables-try-get)
 5. [Hash Sets](#hash-sets)
-   1. [`HashSet::add()`](#hash-sets-add)
-   2. [`HashSet::addRange()`](#hash-sets-add-range)
-   3. [`HashSet::clear()`](#hash-sets-clear)
-   4. [`HashSet::containsValue()`](#hash-sets-contains-value)
-   5. [`HashSet::count()`](#hash-sets-count)
-   6. [`HashSet::intersect()`](#hash-sets-intersect)
-   7. [`HashSet::removeValue()`](#hash-sets-remove-value)
-   8. [`HashSet::sort()`](#hash-sets-sort)
-   9. [`HashSet::toArray()`](#hash-sets-to-array)
-   10. [`HashSet::union()`](#hash-sets-union)
+   1. [`add()`](#hash-sets-add)
+   2. [`addRange()`](#hash-sets-add-range)
+   3. [`clear()`](#hash-sets-clear)
+   4. [`containsValue()`](#hash-sets-contains-value)
+   5. [`count()`](#hash-sets-count)
+   6. [`intersect()`](#hash-sets-intersect)
+   7. [`removeValue()`](#hash-sets-remove-value)
+   8. [`sort()`](#hash-sets-sort)
+   9. [`toArray()`](#hash-sets-to-array)
+   10. [`union()`](#hash-sets-union)
 6. [Stacks](#stacks)
-   1. [`Stack::clear()`](#stacks-clear)
-   2. [`Stack::containsValue()`](#stacks-contains-value)
-   3. [`Stack::count()`](#stacks-count)
-   4. [`Stack::peek()`](#stacks-peek)
-   5. [`Stack::pop()`](#stacks-pop)
-   1. [`Stack::push()`](#stacks-push)
-   1. [`Stack::toArray()`](#stacks-to-array)
+   1. [`clear()`](#stacks-clear)
+   2. [`containsValue()`](#stacks-contains-value)
+   3. [`count()`](#stacks-count)
+   4. [`peek()`](#stacks-peek)
+   5. [`pop()`](#stacks-pop)
+   1. [`push()`](#stacks-push)
+   1. [`toArray()`](#stacks-to-array)
 7. [Queues](#queues)
-   1. [`Queue::clear()`](#queues-clear)
-   2. [`Queue::containsValue()`](#queues-contains-value)
-   3. [`Queue::count()`](#queues-count)
-   4. [`Queue::dequeue()`](#queues-dequeue)
-   5. [`Queue::enqueue()`](#queues-enqueue)
-   6. [`Queue::peek()`](#queues-peek)
-   7. [`Queue::toArray()`](#queues-to-array)
+   1. [`clear()`](#queues-clear)
+   2. [`containsValue()`](#queues-contains-value)
+   3. [`count()`](#queues-count)
+   4. [`dequeue()`](#queues-dequeue)
+   5. [`enqueue()`](#queues-enqueue)
+   6. [`peek()`](#queues-peek)
+   7. [`toArray()`](#queues-to-array)
 8. [Immutable Array Lists](#immutable-array-lists)
-   1. [`ImmutableArrayList::containsValue()`](#immutable-array-lists-contains-value)
-   2. [`ImmutableArrayList::count()`](#immutable-array-lists-count)
-   3. [`ImmutableArrayList::get()`](#immutable-array-lists-get)
-   4. [`ImmutableArrayList::indexOf()`](#immutable-array-lists-index-of)
-   5. [`ImmutableArrayList::toArray()`](#immutable-array-lists-to-array)
+   1. [`containsValue()`](#immutable-array-lists-contains-value)
+   2. [`count()`](#immutable-array-lists-count)
+   3. [`get()`](#immutable-array-lists-get)
+   4. [`indexOf()`](#immutable-array-lists-index-of)
+   5. [`toArray()`](#immutable-array-lists-to-array)
 9. [Immutable Hash Tables](#immutable-hash-tables)
-   1. [`ImmutableHashTable::containsKey()`](#immutable-hash-tables-contains-key)
-   2. [`ImmutableHashTable::containsValue()`](#immutable-hash-tables-contains-value)
-   3. [`ImmutableHashTable::count()`](#immutable-hash-tables-count)
-   4. [`ImmutableHashTable::get()`](#immutable-hash-tables-get)
-   5. [`ImmutableHashTable::getKeys()`](#immutable-hash-tables-get-keys)
-   6. [`ImmutableHashTable::getValues()`](#immutable-hash-tables-get-values)
-   7. [`ImmutableHashTable::toArray()`](#immutable-hash-tables-to-array)
-   8. [`ImmutableHashTable::tryGet()`](#immutable-hash-tables-try-get)
+   1. [`containsKey()`](#immutable-hash-tables-contains-key)
+   2. [`containsValue()`](#immutable-hash-tables-contains-value)
+   3. [`count()`](#immutable-hash-tables-count)
+   4. [`get()`](#immutable-hash-tables-get)
+   5. [`getKeys()`](#immutable-hash-tables-get-keys)
+   6. [`getValues()`](#immutable-hash-tables-get-values)
+   7. [`toArray()`](#immutable-hash-tables-to-array)
+   8. [`tryGet()`](#immutable-hash-tables-try-get)
 10. [Immutable Hash Sets](#immutable-hash-sets)
-    1. [`ImmutableHashSet::containsValue()`](#immutable-hash-sets-contains-value)
-    2. [`ImmutableHashSet::count()`](#immutable-hash-sets-count)
-    3. [`ImmutableHashSet::toArray()`](#immutable-hash-sets-to-array)
+    1. [`containsValue()`](#immutable-hash-sets-contains-value)
+    2. [`count()`](#immutable-hash-sets-count)
+    3. [`toArray()`](#immutable-hash-sets-to-array)
 
 </div>
 
@@ -138,7 +138,7 @@ $arrayList = new ArrayList(['foo', 'bar']);
 
 > **Note:** `ArrayList` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it.
 
-<h3 id="array-lists-add">ArrayList::add()</h3>
+<h3 id="array-lists-add">add()</h3>
 
 _Runtime: O(1)_
 
@@ -148,7 +148,7 @@ You can add a value via
 $arrayList->add('foo');
 ```
 
-<h3 id="array-lists-add-range">ArrayList::addRange()</h3>
+<h3 id="array-lists-add-range">addRange()</h3>
 
 _Runtime: O(n), n = numbers of values added_
 
@@ -158,7 +158,7 @@ You can add multiple values at once:
 $arrayList->addRange(['foo', 'bar']);
 ```
 
-<h3 id="array-lists-clear">ArrayList::clear()</h3>
+<h3 id="array-lists-clear">clear()</h3>
 
 _Runtime: O(1)_
 
@@ -168,7 +168,7 @@ You can remove all values in the array list:
 $arrayList->clear();
 ```
 
-<h3 id="array-lists-contains-value">ArrayList::containsValue()</h3>
+<h3 id="array-lists-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -178,7 +178,7 @@ To check for a value, call
 $containsValue = $arrayList->containsValue('foo');
 ```
 
-<h3 id="array-lists-count">ArrayList::count()</h3>
+<h3 id="array-lists-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -188,7 +188,7 @@ To grab the number of values in the array list, call
 $count = $arrayList->count();
 ```
 
-<h3 id="array-lists-get">ArrayList::get()</h3>
+<h3 id="array-lists-get">get()</h3>
 
 _Runtime: O(1)_
 
@@ -200,7 +200,7 @@ $value = $arrayList->get(123);
 
 If the index is out of range, an `OutOfRangeException` will be thrown.
 
-<h3 id="array-lists-index-of">ArrayList::indexOf()</h3>
+<h3 id="array-lists-index-of">indexOf()</h3>
 
 _Runtime: O(n)_
 
@@ -210,7 +210,7 @@ To grab the index for a value, call
 $index = $arrayList->indexOf('foo');
 ```
 
-<h3 id="array-lists-insert">ArrayList::insert()</h3>
+<h3 id="array-lists-insert">insert()</h3>
 
 _Runtime: O(1)_
 
@@ -220,7 +220,7 @@ To insert a value at a specific index, call
 $arrayList->insert(23, 'foo');
 ```
 
-<h3 id="array-lists-intersect">ArrayList::intersect()</h3>
+<h3 id="array-lists-intersect">intersect()</h3>
 
 _Runtime: O(nm)_, n = number of values in the array list, and m = number of values in the parameter array
 
@@ -230,7 +230,7 @@ You can intersect an array list's values with an array by calling
 $arrayList->intersect(['foo', 'bar']);
 ```
 
-<h3 id="array-lists-remove-index">ArrayList::removeIndex()</h3>
+<h3 id="array-lists-remove-index">removeIndex()</h3>
 
 _Runtime: O(1)_
 
@@ -246,7 +246,7 @@ To remove a specific value, call
 $arrayList->removeValue('foo');
 ```
 
-<h3 id="array-lists-reverse">ArrayList::reverse()</h3>
+<h3 id="array-lists-reverse">reverse()</h3>
 
 _Runtime: O(n)_
 
@@ -256,7 +256,7 @@ To reverse the values in the list, call
 $arrayList->reverse();
 ```
 
-<h3 id="array-lists-sort">ArrayList::sort()</h3>
+<h3 id="array-lists-sort">sort()</h3>
 
 _Runtime: O(n log n)_
 
@@ -266,7 +266,7 @@ You can sort values similar to the way you can sort PHP arrays via `usort()`:
 $arrayList->sort(fn ($a, $b) => $a <=> $b);
 ```
 
-<h3 id="array-lists-to-array">ArrayList::toArray()</h3>
+<h3 id="array-lists-to-array">toArray()</h3>
 
 _Runtime: O(1)_
 
@@ -276,7 +276,7 @@ You can get the underlying array by calling
 $array = $arrayList->toArray();
 ```
 
-<h3 id="array-lists-union">ArrayList::union()</h3>
+<h3 id="array-lists-union">union()</h3>
 
 _Runtime: O(nm)_, n = number of values in the array list, and m = number of values in the parameter array
 
@@ -300,7 +300,7 @@ $hashTable = new HashTable([new KeyValuePair('foo', 'bar')]);
 
 > **Note:** `HashTable` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it. The keys will be numeric, and the values will be [key-value pairs](#key-value-pairs).
 
-<h3 id="hash-tables-add">HashTable::add()</h3>
+<h3 id="hash-tables-add">add()</h3>
 
 _Runtime: O(1)_
 
@@ -310,7 +310,7 @@ To add a value, call
 $hashTable->add('foo', 'bar');
 ```
 
-<h3 id="hash-tables-add-range">HashTable::addRange()</h3>
+<h3 id="hash-tables-add-range">addRange()</h3>
 
 _Runtime: O(n), n = number of values added_
 
@@ -324,7 +324,7 @@ $kvps = [
 $hashTable->addRange($kvps);
 ```
 
-<h3 id="hash-tables-clear">HashTable::clear()</h3>
+<h3 id="hash-tables-clear">clear()</h3>
 
 _Runtime: O(1)_
 
@@ -334,7 +334,7 @@ You can remove all values:
 $hashTable->clear();
 ```
 
-<h3 id="hash-tables-contains-key">HashTable::containsKey()</h3>
+<h3 id="hash-tables-contains-key">containsKey()</h3>
 
 _Runtime: O(1)_
 
@@ -344,7 +344,7 @@ To check for a value, call
 $containsKey = $hashTable->containsKey('foo');
 ```
 
-<h3 id="hash-tables-contains-value">HashTable::containsValue()</h3>
+<h3 id="hash-tables-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -354,7 +354,7 @@ To check for a key, call
 $containsValue = $hashTable->containsValue('foo');
 ```
 
-<h3 id="hash-tables-count">HashTable::count()</h3>
+<h3 id="hash-tables-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -364,7 +364,7 @@ To get the number of values in the hash table, call
 $count = $hashTable->count();
 ```
 
-<h3 id="hash-tables-get">HashTable::get()</h3>
+<h3 id="hash-tables-get">get()</h3>
 
 _Runtime: O(1)_
 
@@ -376,7 +376,7 @@ $value = $hashTable->get('foo');
 
 If the value does not exist, an `OutOfBoundsException` will be thrown.
 
-<h3 id="hash-tables-get-keys">HashTable::getKeys()</h3>
+<h3 id="hash-tables-get-keys">getKeys()</h3>
 
 _Runtime: O(n)_
 
@@ -386,7 +386,7 @@ You can grab all of the keys in the hash table:
 $hashTable->getKeys();
 ```
 
-<h3 id="hash-tables-get-values">HashTable::getValues()</h3>
+<h3 id="hash-tables-get-values">getValues()</h3>
 
 _Runtime: O(n)_
 
@@ -396,7 +396,7 @@ You can grab all of the values in the hash table:
 $hashTable->getValues();
 ```
 
-<h3 id="hash-tables-remove-key">HashTable::removeKey()</h3>
+<h3 id="hash-tables-remove-key">removeKey()</h3>
 
 _Runtime: O(1)_
 
@@ -406,7 +406,7 @@ To remove a value at a certain key, call
 $hashTable->removeKey('foo');
 ```
 
-<h3 id="hash-tables-remove-value">HashTable::removeValue()</h3>
+<h3 id="hash-tables-remove-value">removeValue()</h3>
 
 _Runtime: O(n)_
 
@@ -416,7 +416,7 @@ To remove a value, call
 $hashTable->removeValue('foo');
 ```
 
-<h3 id="hash-tables-to-array">HashTable::toArray()</h3>
+<h3 id="hash-tables-to-array">toArray()</h3>
 
 _Runtime: O(n)_
 
@@ -428,7 +428,7 @@ $array = $hashTable->toArray();
 
 This will return a list of `KeyValuePair` - not an associative array.  The reason for this is that keys can be non-strings, which is not supported in PHP.
 
-<h3 id="hash-tables-try-get">HashTable::tryGet()</h3>
+<h3 id="hash-tables-try-get">tryGet()</h3>
 
 _Runtime: O(1)_
 
@@ -453,7 +453,7 @@ $set = new HashSet(['foo', 'bar']);
 
 > **Note:** `HashSet` implements `IteratorAggregate`, so you can iterate over it.
 
-<h3 id="hash-sets-add">HashSet::add()</h3>
+<h3 id="hash-sets-add">add()</h3>
 
 _Runtime: O(1)_
 
@@ -463,7 +463,7 @@ You can add a value via
 $set->add('foo');
 ```
 
-<h3 id="hash-sets-add-range">HashSet::addRange()</h3>
+<h3 id="hash-sets-add-range">addRange()</h3>
 
 _Runtime: O(n), n = number of values added_
 
@@ -473,7 +473,7 @@ You can add multiple values at once:
 $set->addRange(['foo', 'bar']);
 ```
 
-<h3 id="hash-sets-clear">HashSet::clear()</h3>
+<h3 id="hash-sets-clear">clear()</h3>
 
 _Runtime: O(1)_
 
@@ -483,7 +483,7 @@ To remove all values in the set, call `clear()`:
 $set->clear();
 ```
 
-<h3 id="hash-sets-contains-value">HashSet::containsValue()</h3>
+<h3 id="hash-sets-contains-value">containsValue()</h3>
 
 _Runtime: O(1)_
 
@@ -493,7 +493,7 @@ To check for a value, call
 $containsValue = $set->containsValue('foo');
 ```
 
-<h3 id="hash-sets-count">HashSet::count()</h3>
+<h3 id="hash-sets-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -503,7 +503,7 @@ To grab the number of values in the hash set, call
 $count = $set->count();
 ```
 
-<h3 id="hash-sets-intersect">HashSet::intersect()</h3>
+<h3 id="hash-sets-intersect">intersect()</h3>
 
 _Runtime: O(nm)_
 
@@ -513,7 +513,7 @@ You can intersect a hash set with an array by calling
 $set->intersect(['foo', 'bar']);
 ```
 
-<h3 id="hash-sets-remove-value">HashSet::removeValue()</h3>
+<h3 id="hash-sets-remove-value">removeValue()</h3>
 
 _Runtime: O(1)_
 
@@ -523,7 +523,7 @@ To remove a specific value, call
 $set->removeValue('foo');
 ```
 
-<h3 id="hash-sets-sort">HashSet::sort()</h3>
+<h3 id="hash-sets-sort">sort()</h3>
 
 _Runtime: O(n log n)_
 
@@ -533,7 +533,7 @@ You can sort values similar to the way you can sort PHP arrays via `usort()`:
 $set->sort(fn ($a, $b) => $a <=> $b);
 ```
 
-<h3 id="hash-sets-to-array">HashSet::toArray()</h3>
+<h3 id="hash-sets-to-array">toArray()</h3>
 
 _Runtime: O(n)_
 
@@ -543,7 +543,7 @@ To get the underlying array, call
 $array = $set->toArray();
 ```
 
-<h3 id="hash-sets-union">HashSet::union()</h3>
+<h3 id="hash-sets-union">union()</h3>
 
 _Runtime: O(nm)_
 
@@ -565,7 +565,7 @@ $stack = new Stack();
 
 > **Note:** `Stack` implements `IteratorAggregate`, so you can iterate over it.
 
-<h3 id="stacks-clear">Stack::clear()</h3>
+<h3 id="stacks-clear">clear()</h3>
 
 _Runtime: O(1)_
 
@@ -575,7 +575,7 @@ To clear the values in the stack, call
 $stack->clear();
 ```
 
-<h3 id="stacks-contains-value">Stack::containsValue()</h3>
+<h3 id="stacks-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -585,7 +585,7 @@ To check for a value within a stack, call
 $containsValue = $stack->containsValue('foo');
 ```
 
-<h3 id="stacks-count">Stack::count()</h3>
+<h3 id="stacks-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -595,7 +595,7 @@ To get the number of values in the stack, call
 $count = $stack->count();
 ```
 
-<h3 id="stacks-peek">Stack::peek()</h3>
+<h3 id="stacks-peek">peek()</h3>
 
 _Runtime: O(1)_
 
@@ -605,7 +605,7 @@ To peek at the top value in the stack, call
 $value = $stack->peek();
 ```
 
-<h3 id="stacks-pop">Stack::pop()</h3>
+<h3 id="stacks-pop">pop()</h3>
 
 _Runtime: O(1)_
 
@@ -617,7 +617,7 @@ $value = $stack->pop();
 
 If there are no values in the stack, this will return `null`.
 
-<h3 id="stacks-push">Stack::push()</h3>
+<h3 id="stacks-push">push()</h3>
 
 _Runtime: O(1)_
 
@@ -629,7 +629,7 @@ $stack->push('foo');
 
 If there are no values in the stack, this will return `null`.
 
-<h3 id="stacks-to-array">Stack::toArray()</h3>
+<h3 id="stacks-to-array">toArray()</h3>
 
 _Runtime: O(1)_
 
@@ -651,7 +651,7 @@ $queue = new Queue();
 
 > **Note:** `Queue` implements `IteratorAggregate`, so you can iterate over it.
 
-<h3 id="queues-clear">Queue::clear()</h3>
+<h3 id="queues-clear">clear()</h3>
 
 _Runtime: O(1)_
 
@@ -661,7 +661,7 @@ To clear the queue, call
 $queue->clear();
 ```
 
-<h3 id="queues-contains-value">Queue::containsValue()</h3>
+<h3 id="queues-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -671,7 +671,7 @@ To check for a value within a queue, call
 $containsValue = $queue->containsValue('foo');
 ```
 
-<h3 id="queues-count">Queue::count()</h3>
+<h3 id="queues-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -681,7 +681,7 @@ To get the number of values in the queue, call
 $count = $queue->count();
 ```
 
-<h3 id="queues-dequeue">Queue::dequeue()</h3>
+<h3 id="queues-dequeue">dequeue()</h3>
 
 _Runtime: O(1)_
 
@@ -693,7 +693,7 @@ $value = $queue->dequeue();
 
 If there are no values in the queue, this will return `null`.
 
-<h3 id="queues-enqueue">Queue::enqueue()</h3>
+<h3 id="queues-enqueue">enqueue()</h3>
 
 _Runtime: O(1)_
 
@@ -703,7 +703,7 @@ To enqueue a value onto the queue, call
 $queue->enqueue('foo');
 ```
 
-<h3 id="queues-peek">Queue::peek()</h3>
+<h3 id="queues-peek">peek()</h3>
 
 _Runtime: O(1)_
 
@@ -715,7 +715,7 @@ $value = $queue->peek();
 
 If there are no values in the queue, this will return `null`.
 
-<h3 id="queues-to-array">Queue::toArray()</h3>
+<h3 id="queues-to-array">toArray()</h3>
 
 _Runtime: O(1)_
 
@@ -737,7 +737,7 @@ $arrayList = new ImmutableArrayList(['foo', 'bar']);
 
 > **Note:** `ImmutableArrayList` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it.
 
-<h3 id="immutable-array-lists-contains-value">ImmutableArrayList::containsValue()</h3>
+<h3 id="immutable-array-lists-contains-value">ImmutablecontainsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -747,7 +747,7 @@ To check for a value, call
 $containsValue = $arrayList->containsValue('foo');
 ```
 
-<h3 id="immutable-array-lists-count">ImmutableArrayList::count()</h3>
+<h3 id="immutable-array-lists-count">Immutablecount()</h3>
 
 _Runtime: O(1)_
 
@@ -757,7 +757,7 @@ To grab the number of values in the array list, call
 $count = $arrayList->count();
 ```
 
-<h3 id="immutable-array-lists-get">ImmutableArrayList::get()</h3>
+<h3 id="immutable-array-lists-get">Immutableget()</h3>
 
 _Runtime: O(1)_
 
@@ -769,7 +769,7 @@ $value = $arrayList->get(123);
 
 If the index is out of range, an `OutOfRangeException` will be thrown.
 
-<h3 id="immutable-array-lists-index-of">ImmutableArrayList::indexOf()</h3>
+<h3 id="immutable-array-lists-index-of">ImmutableindexOf()</h3>
 
 _Runtime: O(n)_
 
@@ -781,7 +781,7 @@ $index = $arrayList->indexOf('foo');
 
 If the array list doesn't contain the value, `null` will be returned.
 
-<h3 id="immutable-array-lists-to-array">ImmutableArrayList::toArray()</h3>
+<h3 id="immutable-array-lists-to-array">ImmutabletoArray()</h3>
 
 _Runtime: O(1)_
 
@@ -803,7 +803,7 @@ $hashTable = new ImmutableHashTable([new KeyValuePair('foo', 'bar')]);
 
 > **Note:** `ImmutableHashTable` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it. When iterating, the keys will be numeric, and the values will be [key-value pairs](#key-value-pairs).
 
-<h3 id="immutable-hash-tables-contains-key">ImmutableHashTable::containsKey()</h3>
+<h3 id="immutable-hash-tables-contains-key">ImmutablecontainsKey()</h3>
 
 _Runtime: O(1)_
 
@@ -813,7 +813,7 @@ To check for a key, call
 $containsKey = $hashTable->containsKey('foo');
 ```
 
-<h3 id="immutable-hash-tables-contains-value">ImmutableHashTable::containsValue()</h3>
+<h3 id="immutable-hash-tables-contains-value">ImmutablecontainsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -823,7 +823,7 @@ To check for a value, call
 $containsValue = $hashTable->containsValue('foo');
 ```
 
-<h3 id="immutable-hash-tables-count">ImmutableHashTable::count()</h3>
+<h3 id="immutable-hash-tables-count">Immutablecount()</h3>
 
 _Runtime: O(1)_
 
@@ -833,7 +833,7 @@ To get the number of values in the hash table, call
 $count = $hashTable->count();
 ```
 
-<h3 id="immutable-hash-tables-get">ImmutableHashTable::get()</h3>
+<h3 id="immutable-hash-tables-get">Immutableget()</h3>
 
 _Runtime: O(1)_
 
@@ -845,7 +845,7 @@ $value = $hashTable->get('foo');
 
 If the value does not exist, an `OutOfBoundsException` will be thrown.
 
-<h3 id="immutable-hash-tables-get-keys">ImmutableHashTable::getKeys()</h3>
+<h3 id="immutable-hash-tables-get-keys">ImmutablegetKeys()</h3>
 
 _Runtime: O(n)_
 
@@ -855,7 +855,7 @@ You can grab all of the keys in the hash table:
 $hashTable->getKeys();
 ```
 
-<h3 id="immutable-hash-tables-get-values">ImmutableHashTable::getValues()</h3>
+<h3 id="immutable-hash-tables-get-values">ImmutablegetValues()</h3>
 
 _Runtime: O(n)_
 
@@ -865,7 +865,7 @@ You can grab all of the values in the hash table:
 $hashTable->getValues();
 ```
 
-<h3 id="immutable-hash-tables-to-array">ImmutableHashTable::toArray()</h3>
+<h3 id="immutable-hash-tables-to-array">ImmutabletoArray()</h3>
 
 _Runtime: O(n)_
 
@@ -877,7 +877,7 @@ $array = $hashTable->toArray();
 
 This will return a list of `KeyValuePair` - not an associative array.  The reason for this is that keys can be non-strings (eg objects) in hash tables, but keys in PHP associative arrays must be serializable.
 
-<h3 id="immutable-hash-tables-try-get">ImmutableHashTable::tryGet()</h3>
+<h3 id="immutable-hash-tables-try-get">ImmutabletryGet()</h3>
 
 _Runtime: O(1)_
 
@@ -900,7 +900,7 @@ $set = new ImmutableHashSet(['foo', 'bar']);
 
 > **Note:** `ImmutableHashSet` implements `IteratorAggregate`, so you can iterate over it.
 
-<h3 id="immutable-hash-sets-contains-value">ImmutableHashSet::containsValue()</h3>
+<h3 id="immutable-hash-sets-contains-value">ImmutablecontainsValue()</h3>
 
 _Runtime: O(1)_
 
@@ -910,7 +910,7 @@ To check for a value, call
 $containsValue = $set->containsValue('foo');
 ```
 
-<h3 id="immutable-hash-sets-count">ImmutableHashSet::count()</h3>
+<h3 id="immutable-hash-sets-count">Immutablecount()</h3>
 
 _Runtime: O(1)_
 
@@ -920,7 +920,7 @@ To grab the number of values in the set, call
 $count = $set->count();
 ```
 
-<h3 id="immutable-hash-sets-to-array">ImmutableHashSet::toArray()</h3>
+<h3 id="immutable-hash-sets-to-array">ImmutabletoArray()</h3>
 
 _Runtime: O(n)_
 
