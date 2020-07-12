@@ -11,11 +11,12 @@
 2. [Running Commands](#running-commands)
    1. [Getting Help](#getting-help)
 3. [Creating Commands](#creating-commands)
-   1. [Registering Commands](#registering-commands)
+   1. [Input](#input)
    2. [Arguments](#arguments)
    3. [Options](#options)
    4. [Output](#output)
-   5. [Calling From Code](#calling-from-code)
+   5. [Registering Commands](#registering-commands)
+   6. [Calling From Code](#calling-from-code)
 4. [Command Annotations](#command-annotations)
     1. [Example](#command-annotation-example)
     4. [Scanning For Annotations](#scanning-for-annotations)
@@ -81,7 +82,7 @@ php aphiria help COMMAND_NAME
 
 <h2 id="creating-commands">Creating Commands</h2>
 
-In Aphiria, a command defines the name, [arguments](#arguments), and [options](#options) that make up a command.  Each command has a command handler, which is what actually processes a command.
+In Aphiria, a command defines the name, [arguments](#arguments), and [options](#options) that make up a command.  Each command has a command handler with method `handle()`, which is what actually processes a command.
 
 Let's take a look at an example:
 
@@ -113,7 +114,7 @@ class GreetingCommandHandler implements ICommandHandler
 }
 ```
 
-Your command handler should implement `ICommandHandler`, which has a single method `handle()`.
+<h3 id="input">Input</h3>
 
 The following properties are available to you in `Input`:
 
@@ -127,42 +128,9 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 > **Note:** `$input->options` stores option values by their long names.  Do not try to access them by their short names.
 
-<h3 id="registering-commands">Registering Commands</h3>
-
-Before you can use the example command, you must register it so that the application knows about it.  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
-
-> **Note:** If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to register your commands to your app.
-
-```php
-use Aphiria\Console\Application;
-use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\DependencyInjection\Container;
-
-$commands = new CommandRegistry();
-$commands->registerCommand($greetingCommand, GreetingCommandHandler::class);
-
-// Actually run the application
-global $argv;
-exit((new Application($commands, new Container()))->handle($argv));
-```
-
-To call this command, run this from the command line:
-
-```bash
-php aphiria greet Dave -y
-```
-
-This will output:
-
-```
-HELLO, DAVE
-```
-
 <h3 id="arguments">Arguments</h3>
 
-Console commands can accept arguments from the user.  Arguments can be required, optional, and/or arrays.  You specify the type by bitwise OR-ing the different arguments types.  Array arguments allow a variable number of arguments to be passed in, like `php aphiria foo arg1 arg2 arg3 ...`.  The only catch is that array arguments must be the last argument defined for the command.
-
-Let's take a look at an example argument:
+Console commands can accept arguments from the user.  Arguments can be required, optional, and/or arrays.  Array arguments allow a variable number of arguments to be passed in, like `php aphiria foo arg1 arg2 arg3 ...`.  The only catch is that array arguments must be the last argument defined for the command.  You specify the type by bitwise OR-ing the different arguments types.
 
 ```php
 use Aphiria\Console\Input\Argument;
@@ -195,7 +163,7 @@ Long option names can specify values in two ways:  `--foo=bar` or `--foo bar`.  
 
 Options can be arrays, eg `--foo=bar --foo=baz` will set the "foo" option to `["bar", "baz"]`.
 
-Like arguments, option types can be specified by bitwise OR-ing types together.  Let's look at an example:
+Like arguments, option types can be specified by bitwise OR-ing types together.
 
 ```php
 use Aphiria\Console\Input\Option;
@@ -225,6 +193,39 @@ Each output offers a few methods:
 4. `clear()`
    * Clears the current screen
    * Only works in `ConsoleOutput`
+
+<h3 id="registering-commands">Registering Commands</h3>
+
+Before you can use the example command, you must register it so that the application knows about it.
+
+> **Note:** If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to register your commands to your app.
+
+```php
+use Aphiria\Console\Application;
+use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\DependencyInjection\Container;
+
+$commands = new CommandRegistry();
+$commands->registerCommand($greetingCommand, GreetingCommandHandler::class);
+
+// Actually run the application
+global $argv;
+exit((new Application($commands, new Container()))->handle($argv));
+```
+
+To call this command, run this from the command line:
+
+```bash
+php aphiria greet Dave -y
+```
+
+This will output:
+
+```
+HELLO, DAVE
+```
+
+> **Note:**  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
@@ -603,14 +604,14 @@ Name | Description
 `app:serve` | Runs your application locally
 `framework:flushcaches` | Flushes all the framework's caches, eg the binder metadata, constraints, command, route, and trie caches
 
-If you're using the [application builder](configuration.md#component-console-commands), you can register all framework commands in a module via:
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can register all framework commands in `App`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class MyModule implements IModule
+class App implements IModule
 {
     use AphiriaComponents;
 
