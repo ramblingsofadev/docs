@@ -258,24 +258,25 @@ final class GreetingCommandHandler implements ICommandHandler
 
 <h3 id="scanning-for-annotations">Scanning For Annotations</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  The [application builder](configuration.md#application-builders) library provides a convenience method for this:
+Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
-use Aphiria\Application\Configuration\Builders\AphiriaComponentBuilder;
-use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
-use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
 
-// Assume we already have $container set up
-$commands = new CommandRegistry();
-$container->bindInstance(CommandRegistry::class, $commands);
-$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN'], $container);
-$container->bindInstance(AnnotationCommandRegistrant::class, $annotationCommandRegistrant);
+final class App implements IModule
+{
+    use AphiriaComponents;
 
-(new AphiriaComponentBuilder($container))
-    ->withConsoleAnnotations($appBuilder);
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withCommandAnnotations($appBuilder);
+    }
+}
 ```
 
-If you're not using the application builder library, you can manually configure your app to scan for annotations:
+Otherwise, you can manually configure your app to scan for annotations:
 
 ```php
 use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
