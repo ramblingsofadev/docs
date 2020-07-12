@@ -14,7 +14,8 @@
    1. [Registering Commands](#registering-commands)
    2. [Arguments](#arguments)
    3. [Options](#options)
-   4. [Calling From Code](#calling-from-code)
+   4. [Output](#output)
+   5. [Calling From Code](#calling-from-code)
 4. [Command Annotations](#command-annotations)
     1. [Example](#command-annotation-example)
     4. [Scanning For Annotations](#scanning-for-annotations)
@@ -22,16 +23,15 @@
    1. [Confirmation](#confirmation)
    2. [Multiple Choice](#multiple-choice)
    3. [Hiding Input](#hiding-input)
-6. [Output](#output)
-7. [Formatters](#formatters)
+6. [Formatters](#formatters)
    1. [Padding](#padding)
    2. [Tables](#tables)
    3. [Progress Bars](#progress-bars)
-8. [Style Elements](#style-elements)
+7. [Style Elements](#style-elements)
    1. [Built-In Elements](#built-in-elements)
    2. [Custom Elements](#custom-elements)
    3. [Overriding Built-In Elements](#overriding-built-in-elements)
-9. [Built-In Commands](#built-in-commands)
+8. [Built-In Commands](#built-in-commands)
 
 </div>
 
@@ -41,7 +41,7 @@
 
 Console applications are great for administrative tasks and code generation.  With Aphiria, you can easily create your own console commands, display question prompts, and use HTML-like syntax for output styling.
 
-If you're already using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can skip to the [next section](#running-commands).  Otherwise, let's create a file called _aphiria_ and paste the following code into it:
+If you're already using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can skip to the [next section](#running-commands).  Otherwise, let's create a file called _aphiria_ in your project's root directory and paste the following code into it:
 
 ```php
 #!/usr/bin/env php
@@ -100,7 +100,7 @@ $greetingCommand = new Command(
 // Defined in a separate file
 class GreetingCommandHandler implements ICommandHandler
 {
-    public function handle(Input $input,IOutput $output)
+    public function handle(Input $input, IOutput $output)
     {
         $greeting = "Hello, {$input->arguments['name']}";
         
@@ -113,7 +113,7 @@ class GreetingCommandHandler implements ICommandHandler
 }
 ```
 
-Your command handler should implement `ICommandHandler`, which has a single method `handle()` that accepts the same parameters.
+Your command handler should implement `ICommandHandler`, which has a single method `handle()`.
 
 The following properties are available to you in `Input`:
 
@@ -129,7 +129,7 @@ If you're checking to see if an option that does not have a value is set, use `a
 
 <h3 id="registering-commands">Registering Commands</h3>
 
-Before you can use the example command, you must register it so that the `Application` knows about it.  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
+Before you can use the example command, you must register it so that the application knows about it.  Command handlers will only be resolved when they're called, which is especially useful when your handler is a class with expensive-to-instantiate dependencies, such as database connections.
 
 > **Note:** If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to register your commands to your app.
 
@@ -160,7 +160,7 @@ HELLO, DAVE
 
 <h3 id="arguments">Arguments</h3>
 
-Console commands can accept arguments from the user.  Arguments can be required, optional, and/or arrays.  You specify the type by bitwise OR-ing the different arguments types.  Array arguments allow a variable number of arguments to be passed in, like "php aphiria foo arg1 arg2 arg3 ...".  The only catch is that array arguments must be the last argument defined for the command.
+Console commands can accept arguments from the user.  Arguments can be required, optional, and/or arrays.  You specify the type by bitwise OR-ing the different arguments types.  Array arguments allow a variable number of arguments to be passed in, like `php aphiria foo arg1 arg2 arg3 ...`.  The only catch is that array arguments must be the last argument defined for the command.
 
 Let's take a look at an example argument:
 
@@ -178,10 +178,10 @@ $argument = new Argument('foo', $type, 'The foo argument');
 
 <h3 id="options">Options</h3>
 
-You might want different behavior in your command depending on whether or not an option is set.  This is possible using `Aphiria\Console\Input\Option`.  Options have two formats:
+You might want different behavior in your command depending on whether or not an option is set.  This is possible using `Option`.  Options have two formats:
 
-1. Short, eg "-h"
-2. Long, eg "--help"
+1. [Short](#short-names), eg "-h"
+2. [Long](#long-names), eg "--help"
 
 <h4 id="short-names">Short Names</h4>
 
@@ -202,12 +202,33 @@ use Aphiria\Console\Input\Option;
 use Aphiria\Console\Input\OptionTypes;
 
 $type = OptionTypes::IS_ARRAY | OptionTypes::REQUIRED_VALUE;
-$option = new Option('foo', 'f', $types, 'The foo option');
+$option = new Option('foo', 'f', $type, 'The foo option');
 ```
+
+<h3 id="output">Output</h3>
+
+Outputs allow you to write messages to an end user.  The different outputs include:
+
+1. `Aphiria\Console\Output\ConsoleOutput`
+   * Writes output to the console, and is the default output
+2. `Aphiria\Console\Output\SilentOutput`
+   * Used when we don't want any messages to be written
+
+Each output offers a few methods:
+
+1. `readLine()`
+   * Reads a line of input
+2. `write()`
+   * Writes a message to the existing line
+3. `writeln()`
+   * Writes a message to a new line
+4. `clear()`
+   * Clears the current screen
+   * Only works in `ConsoleOutput`
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
-It's possible to call a command from another command by injecting `ICommandBus`:
+It's possible to call a command from another command by injecting `ICommandBus` into your command handler:
 
 ```php
 use Aphiria\Console\Commands\ICommandBus;
@@ -219,14 +240,14 @@ final class FooCommandHandler implements ICommandHandler
 {
     public function __construct(private ICommandBus $commandBus) {}
 
-    public function handle(Input $input,IOutput $output)
+    public function handle(Input $input, IOutput $output)
     {
         $this->commandBus->handle('foo arg1 --option1=value', $output);
     }
 }
 ```
 
-If you want to call the other command but not write its output, use the `Aphiria\Console\Output\SilentOutput` output.
+If you want to call the other command but not write its output, use the `SilentOutput` output.
 
 > **Note:** If a command is being called by a lot of other commands, it might be best to refactor its actions into a separate class.  This way, it can be used by multiple commands without the extra overhead of calling console commands through PHP code.
 
@@ -290,11 +311,11 @@ $annotationCommandRegistrant->registerCommands($commands);
 
 <h2 id="prompts">Prompts</h2>
 
-Prompts are great for asking users for input beyond what is accepted by arguments.  For example, you might want to confirm with a user before doing an administrative task, or you might ask her to select from a list of possible choices.  Prompts accept `Aphiria\Console\Output\Prompts\Question` objects.
+Prompts are great for asking users for input beyond what is accepted by arguments.  For example, you might want to confirm with a user before doing an administrative task, or you might ask her to select from a list of possible choices.
 
 <h3 id="confirmation">Confirmation</h3>
 
-To ask a user to confirm an action with a simple "y" or "yes", use an `Aphiria\Console\Output\Prompts\Confirmation`:
+To ask a user to confirm an action with a simple "y" or "yes", use a confirmation prompt.
 
 ```php
 use Aphiria\Console\Output\Prompts\Confirmation;
@@ -307,7 +328,7 @@ $prompt->ask(new Confirmation('Are you sure you want to continue?'), $output);
 
 <h3 id="multiple-choice">Multiple Choice</h3>
 
-Multiple choice questions are great for listing choices that might otherwise be difficult for a user to remember.  An `Aphiria\Console\Output\Prompts\MultipleChoice` accepts question text and a list of choices:
+Multiple choice questions are great for listing choices that might otherwise be difficult for a user to remember.
 
 ```php
 use Aphiria\Console\Output\Prompts\MultipleChoice;
@@ -338,36 +359,13 @@ $question = new Question('Password', null, true);
 $prompt->ask($question, $output);
 ```
 
-<h2 id="output">Output</h2>
-
-Outputs allow you to write messages to an end user.  The different outputs include:
-
-1. `Aphiria\Console\Output\ConsoleOutput`
-   * Used to write messages to the console
-   * The output used by default
-2. `Aphiria\Console\Output\SilentOutput`
-   * Used when we don't want any messages to be written
-   * Useful for when one command calls another
-
-Each output offers a few methods:
-
-1. `readLine()`
-   * Reads a line of input
-2. `write()`
-   * Writes a message to the existing line
-3. `writeln()`
-   * Writes a message to a new line
-4. `clear()`
-   * Clears the current screen
-   * Only works in `ConsoleOutput`
-
 <h2 id="formatters">Formatters</h2>
 
-Formatters are great for nicely-formatting output to the console.
+Formatting your output helps make it more readable.  Aphiria provides a few common formatters out of the box.
 
 <h3 id="padding">Padding</h3>
 
-The `Aphiria\Console\Output\Formatters\PaddingFormatter` formatter allows you to create column-like output.  It accepts an array of column values.  The second parameter is a callback that will format each row's contents.  Let's look at an example:
+The `PaddingFormatter` formatter allows you to create column-like output.  It accepts an array of column values.  The second parameter is a callback that will format each row's contents.  Let's look at an example:
 
 ```php
 use Aphiria\Console\Output\Formatters\PaddingFormatter;
@@ -403,7 +401,7 @@ $paddingFormatter->setPaddingString(' ');
 
 <h3 id="tables">Tables</h3>
 
-ASCII tables are a great way to show tabular data in a console.  To create a table, use `Aphiria\Console\Output\Formatters\TableFormatter`:
+ASCII tables are a great way to show tabular data in a console.  To create a table, use `TableFormatter`:
 
 ```php
 use Aphiria\Console\Output\Formatters\TableFormatter;
@@ -446,10 +444,10 @@ This will return:
 There are a few useful functions for customizing the look of tables:
 
 ```php
-// Set the cell padding string
+// Set the string to use to pad cells (defaults to a space)
 $table->setCellPaddingString(' ');
 
-// Set the end-of-line character
+// Set the end-of-line character (defaults to LF)
 $table->setEolChar("\n");
 
 // Set the horizontal border character
@@ -458,7 +456,7 @@ $table->setHorizontalBorderChar('-');
 // Set the vertical border character
 $table->setVerticalBorderChar('|');
 
-// Set the intersection character
+// Set the border intersection character
 $table->setIntersectionChar('+');
 
 // Set whether or not to pad after strings
@@ -467,7 +465,7 @@ $table->setPadAfter(true);
     
 <h3 id="progress-bars">Progress Bars</h3>
 
-Progress bars a great way to visually indicate to a user the progress of a long-running task, like this one:
+Progress bars help visually indicate to a user the progress of a long-running task, like this one:
 
 ```
 [=================50%--------------------] 50/100
@@ -481,7 +479,7 @@ use Aphiria\Console\Output\Formatters\{ProgressBar, ProgressBarFormatter};
 
 // Assume our output is already created
 $formatter = new ProgressBarFormatter($output);
-// Set the maximum number of "steps" to 100
+// Set the maximum number of "steps" in the task to 100
 $progressBar = new ProgressBar(100, $formatter);
 ```
 
@@ -507,7 +505,7 @@ To explicitly complete the progress bar, call
 $progressBar->complete();
 ```
 
-Each time progress is made, the formatter will be updated, and will draw a new bar.
+Each time progress is made, the formatter will be update.
 
 <h4 id="customizing-progress-bars">Customizing Progress Bars</h4>
 
@@ -555,6 +553,7 @@ Aphiria supports HTML-like style elements to perform basic output formatting lik
 <h3 id="built-in-elements">Built-In Elements</h3>
 
 The following elements come built-into Aphiria:
+
 * &lt;success&gt;&lt;/success&gt;
 * &lt;info&gt;&lt;/info&gt;
 * &lt;question&gt;&lt;/question&gt;
@@ -566,7 +565,7 @@ The following elements come built-into Aphiria:
 
 <h3 id="custom-elements">Custom Elements</h3>
 
-You can create your own style elements.  Elements are registered to `Aphiria\Console\Output\Compilers\Elements\ElementRegistry`.
+You can create your own style elements.  Elements are registered to `ElementRegistry`.
 
 ```php
 use Aphiria\Console\Output\Compilers\Elements\{Colors, Element, ElementRegistry, Style, TextStyles};
