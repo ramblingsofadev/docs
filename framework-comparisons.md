@@ -48,7 +48,7 @@ Before we get into library comparisons, let's compare the frameworks at a high l
 
 <h4 id="aphiria-general-pros">Pros</h4>
 
-* Very decoupled design makes it simple to pick-and-choose the libraries you want to use
+* Expressive syntax for building REST APIs
 * Unopinionated, ie it doesn't prescribe _how_ to do something - it places that completely in the developers' hands (akin to an Android phone)
 * Favors code-based configuration over magic string-based configuration
 * Can easily convert to-and-from PSRs
@@ -175,7 +175,7 @@ Controllers are the actions that are executed when a user hits a URI.  They typi
 
 <h4 id="laravel-controllers-cons">Cons</h4>
 
-* Only supports negotiating Eloquent models automatically
+* Only supports negotiating Eloquent models automatically, and does not support all standard means of content negotiation
 
 <h2 id="http-library">HTTP Library</h2>
 
