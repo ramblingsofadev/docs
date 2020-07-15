@@ -40,7 +40,7 @@ use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     // Gives us a fluent way to configure Aphiria components
     use AphiriaComponents;
@@ -72,7 +72,7 @@ To register a module, you can use the `AphiriaComponents` trait:
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class App
+final class App
 {
     use AphiriaComponents;
 
@@ -100,7 +100,7 @@ use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -125,7 +125,7 @@ use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -153,7 +153,7 @@ use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Middleware\MiddlewareBinding;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -181,7 +181,7 @@ use Aphiria\Application\IModule;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -218,7 +218,7 @@ use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\EmailConstraint;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -251,7 +251,7 @@ use Aphiria\Net\Http\IRequest;
 use Aphiria\Net\Http\IResponseFactory;
 use Psr\Log\LogLevel;
 
-class UserModule implements IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
@@ -310,7 +310,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
-class SymfonyRouterBinder extends Binder
+final class SymfonyRouterBinder extends Binder
 {
     public function bind(IContainer $container): void
     {
@@ -334,7 +334,7 @@ use Aphiria\Net\Http\Handlers\IRequestHandler;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class SymfonyRouterComponent implements IComponent
+final class SymfonyRouterComponent implements IComponent
 {
     private array $routes = [];
 
@@ -372,7 +372,7 @@ use Aphiria\Application\IModule;
 use Aphiria\DependencyInjection\IContainer;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class App implements IModule
+final class App implements IModule
 {
     use AphiriaComponents;
 
@@ -393,7 +393,7 @@ use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Symfony\Component\Routing\Route;
 
-class MyModule implements IModule
+final class MyModule implements IModule
 {
     public function build(IApplicationBuilder $appBuilder): void
     {
@@ -494,7 +494,7 @@ use Aphiria\Application\Configuration\IConfigurationFileReader;
 use Aphiria\Application\Configuration\InvalidConfigurationFileException;
 use Symfony\Component\Yaml\Yaml;
 
-class YamlConfigurationFileReader implements IConfigurationFileReader
+final class YamlConfigurationFileReader implements IConfigurationFileReader
 {
     public function readConfiguration(string $path, string $pathDelimiter = '.'): IConfiguration
     {

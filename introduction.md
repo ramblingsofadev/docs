@@ -42,7 +42,7 @@ In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to
 To use these endpoints, we'll need to include a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller, and we need to define our routes.  You can centrally configure all of these parts of your user domain in a [module](configuration.md#modules).
 
 ```php
-class UserModule implement IModule
+final class UserModule implement IModule
 {
     use AphiriaComponents;
 

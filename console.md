@@ -99,7 +99,7 @@ $greetingCommand = new Command(
 );
 
 // Defined in a separate file
-class GreetingCommandHandler implements ICommandHandler
+final class GreetingCommandHandler implements ICommandHandler
 {
     public function handle(Input $input, IOutput $output)
     {
@@ -611,7 +611,7 @@ use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-class App implements IModule
+final class App implements IModule
 {
     use AphiriaComponents;
 

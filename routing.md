@@ -309,7 +309,7 @@ use Aphiria\Routing\Annotations\{Middleware, Put};
 use App\Users\Api\Authorization;
 use App\Users\User;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     /**
      * @Put("users/:id")

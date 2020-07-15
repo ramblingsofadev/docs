@@ -35,7 +35,7 @@ Sending a request is very simple:
 ```php
 use App\Tests\IntegrationTestCase;
 
-class BookQueryTest extends IntegrationTestCase
+final class BookQueryTest extends IntegrationTestCase
 {
     public function testQueryYieldsCorrectResult(): void
     {
