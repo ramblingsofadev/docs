@@ -47,7 +47,7 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
   * [The ability to add custom matching constraints on route variables](#route-variable-constraints)
   * [The ability to match on header values](#versioned-api-example), which makes things like versioning your routes a cinch
 * It is fast
-  * <a href="https://github.com/aphiria/aphiria/blob/master/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
+  * <a href="https://github.com/aphiria/aphiria/blob/0.x/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
 * It supports [annotations](#route-annotations) for defining your routes
