@@ -332,7 +332,7 @@ Next, let's define a component to let us add routes.
 use Aphiria\Api\Application;
 use Aphiria\Application\IComponent;
 use Aphiria\DependencyInjection\IContainer;
-use Aphiria\Net\Http\Handlers\IRequestHandler;
+use Aphiria\Net\Http\IRequestHandler;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 

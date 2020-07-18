@@ -23,8 +23,7 @@ The middleware library provides developers a way of defining route middleware fo
 Middleware have a simple signature:
 
 ```php
-use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IRequest, IResponse};
+use Aphiria\Net\Http\{IRequest, IRequestHandler, IResponse};
 
 interface IMiddleware
 {
@@ -45,8 +44,7 @@ To manipulate the request before it gets to the controller, make changes to it b
 
 ```php
 use Aphiria\Middleware\IMiddleware;
-use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IRequest, IResponse};
+use Aphiria\Net\Http\{IRequest, IRequestHandler, IResponse};
 
 final class RequestManipulator implements IMiddleware
 {
@@ -66,8 +64,7 @@ To manipulate the response after the controller has done its work, do the follow
 
 ```php
 use Aphiria\Middleware\IMiddleware;
-use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{IRequest, IResponse};
+use Aphiria\Net\Http\{IRequest, IRequestHandler, IResponse};
 
 final class ResponseManipulator implements IMiddleware
 {
@@ -89,8 +86,7 @@ Occasionally, you'll find yourself wanting to pass primitive values to middlewar
 
 ```php
 use Aphiria\Middleware\AttributeMiddleware;
-use Aphiria\Net\Http\Handlers\IRequestHandler;
-use Aphiria\Net\Http\{HttpException, IRequest, IResponse};
+use Aphiria\Net\Http\{IRequest, IRequestHandler, IResponse};
 
 final class RoleMiddleware extends AttributeMiddleware
 {
