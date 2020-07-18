@@ -36,6 +36,7 @@ Let's look at an example of a module:
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
+use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
@@ -54,7 +55,7 @@ final class UserModule implements IModule
             })
             ->withCommands($appBuilder, function (CommandRegistry $commands) {
                 $commands->registerCommand(
-                    new GenerateUserReportCommand(),
+                    new Command('report:generate'),
                     GenerateUserReportCommandHandler::class
                 );
             });
@@ -178,6 +179,7 @@ You can register [console commands](console.md#creating-commands), and enable co
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
+use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaComponents;
 
@@ -190,7 +192,7 @@ final class UserModule implements IModule
         // Add console commands
         $this->withCommands($appBuilder, function (CommandRegistry $commands) {
             $commands->registerCommand(
-                new GenerateUserReportCommand(),
+                new Command('report:generate'),
                 GenerateUserReportCommandHandler::class
             );
         });
