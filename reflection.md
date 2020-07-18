@@ -77,7 +77,7 @@ Or recursively:
 $types = $typeFinder->findAllTypes('PATH_TO_SCAN', true);
 ```
 
-<h3 id="finding-sub-types">Finding Sub Types</h3>
+<h3 id="finding-sub-types">Finding Sub-Types</h3>
 
 You can grab all sub-types of a parent type:
 
