@@ -46,7 +46,7 @@ $classes = $typeFinder->findAllClasses('PATH_TO_SCAN', true);
 By default, abstract classes are not returned in the results, but you may include them:
 
 ```php
-$classes = $typeFinder->findAllClasses('PATH_TO_SCAN', false, true);
+$classes = $typeFinder->findAllClasses('PATH_TO_SCAN', includeAbstractClasses: true);
 ```
 
 <h3 id="finding-interfaces">Finding Interfaces</h3>

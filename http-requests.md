@@ -160,7 +160,7 @@ $request = (new NegotiatedRequestBuilder())->withMethod('POST')
     ->build();
 ```
 
-> **Note:** By default, negotiated request bodies will be serialized to JSON, but you can specify a different default content type, eg `new NegotiatedRequestBuilder(null, 'text/xml')`.
+> **Note:** By default, negotiated request bodies will be serialized to JSON, but you can specify a different default content type, eg `new NegotiatedRequestBuilder(defaultContentType: 'text/xml')`.
 
 <h2 id="headers">Headers</h2>
 
@@ -332,11 +332,7 @@ use Aphiria\Net\Http\RequestTargetTypes;
 $request = new Request(
     'GET',
     new Uri('https://example.com/foo?bar'),
-    null,
-    null,
-    null,
-    '1.1',
-    RequestTargetTypes::AUTHORITY_FORM
+    requestTargetType: RequestTargetTypes::AUTHORITY_FORM
 );
 ```
 

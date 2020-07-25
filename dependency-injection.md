@@ -58,7 +58,7 @@ $container->bindFactory(IUserService::class, fn () => new UserService(), true);
 $container->bindClass(IUserService::class, UserService::class);
 
 // Whenever you need IUserService, use auto-wiring to return the same instance of UserService
-$container->bindClass(IUserService::class, UserService::class, [], true);
+$container->bindClass(IUserService::class, UserService::class, resolveAsSingleton: true);
 ```
 
 > **Note:** The factory in `bindFactory()` **must** be parameterless.

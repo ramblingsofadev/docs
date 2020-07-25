@@ -118,7 +118,7 @@ use Aphiria\ContentNegotiation\NegotiatedResponseFactory;
 
 $responseFactory = new NegotiatedResponseFactory($contentNegotiator);
 // Assume $user is a POPO User object
-$response = $responseFactory->createResponse($request, 200, null, $user);
+$response = $responseFactory->createResponse($request, 200, rawBody: $user);
 ```
 
 Our response will look something like the following:

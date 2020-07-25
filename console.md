@@ -356,7 +356,7 @@ If the `$choices` array is associative, then the keys will map to values rather 
 For security reasons, such as when entering a password, you might want to hide a user's input as they're typing it.  To do so, just mark a question as hidden:
 
 ```php
-$question = new Question('Password', null, true);
+$question = new Question('Password', isHidden: true);
 $prompt->ask($question, $output);
 ```
 
