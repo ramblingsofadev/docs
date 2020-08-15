@@ -104,8 +104,8 @@ final class RoleMiddleware extends AttributeMiddleware
             return new Response(401);
         }
     
-        // Attributes are available via $this->attributes
-        if (!$this->authService->accessTokenHasRole($accessToken, $this->attributes['role'])) {
+        // Attributes are available via $this->getAttribute()
+        if (!$this->authService->accessTokenHasRole($accessToken, $this->getAttribute('role'))) {
             return new Response(403);
         }
 
