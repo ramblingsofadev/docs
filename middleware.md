@@ -40,7 +40,7 @@ interface IMiddleware
 
 <h3 id="manipulating-the-request">Manipulating the Request</h3>
 
-To manipulate the request before it gets to the controller, make changes to it before calling `$next($request)`:
+To manipulate the request before it gets to the controller, make changes to it before calling `$next->handle($request)`:
 
 ```php
 use Aphiria\Middleware\IMiddleware;
