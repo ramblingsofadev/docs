@@ -40,7 +40,7 @@ interface IMiddleware
 
 <h3 id="manipulating-the-request">Manipulating the Request</h3>
 
-To manipulate the request before it gets to the controller, make changes to it before calling `$next($request)`:
+To manipulate the request before it gets to the controller, make changes to it before calling `$next->handle($request)`:
 
 ```php
 use Aphiria\Middleware\IMiddleware;
@@ -104,8 +104,8 @@ final class RoleMiddleware extends AttributeMiddleware
             return new Response(401);
         }
     
-        // Attributes are available via $this->attributes
-        if (!$this->authService->accessTokenHasRole($accessToken, $this->attributes['role'])) {
+        // Attributes are available via $this->getAttribute()
+        if (!$this->authService->accessTokenHasRole($accessToken, $this->getAttribute('role'))) {
             return new Response(403);
         }
 

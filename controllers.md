@@ -66,6 +66,7 @@ The following helper methods come bundled with `Controller`:
 
 Method | Status Code
 ------ | ------
+`accepted()` | 202
 `badRequest()` | 400
 `conflict()` | 409
 `created()` | 201
