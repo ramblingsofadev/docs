@@ -7,8 +7,8 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Global Exception Handler](#global-exception-handler)
-2. [API Exception Renderer](#api-exception-renderer)
-   1. [Exception Responses](#exception-responses)
+2. [Problem Details Exception Renderer](#problem-details-exception-renderer)
+   1. [Custom Problem Details Mappings](#custom-problem-details-mappings)
 3. [Console Exception Renderer](#console-exception-renderer)
    1. [Output Writers](#output-writers)
 3. [Logging](#logging)
@@ -26,63 +26,57 @@ Let's look at an example:
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ProblemDetailsExceptionRenderer;
 
-$exceptionRenderer = new ApiExceptionRenderer();
+$exceptionRenderer = new ProblemDetailsExceptionRenderer();
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 // This is important - it's what registers the handler as the default handler in PHP
 $globalExceptionHandler->registerWithPhp();
 ```
 
-That's it.  Now, whenever an unhandled error or exception is thrown, the global exception handler will catch it, [log it](#logging), and [render it](#api-exception-renderer).  We'll go into more details on how to customize it below.
+That's it.  Now, whenever an unhandled error or exception is thrown, the global exception handler will catch it, [log it](#logging), and [render it](#problem-details-exception-renderer).  We'll go into more details on how to customize it below.
 
-<h2 id="api-exception-renderer">API Exception Renderer</h2>
+<h2 id="problem-details-exception-renderer">Problem Details Exception Renderer</h2>
 
-`ApiExceptionRenderer` is provided out of the box to simplify rendering API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
+`ProblemDetailsExceptionRenderer` is provided out of the box to simplify rendering problem details API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
   
-1. If an [exception response factory](#exception-responses) exists for the thrown exception, it's used to create a response
-2. Otherwise, if the renderer is configured to use <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a>, it will create a 500 response with a problem details body
-3. Otherwise, if the renderer does not use problem details, an empty 500 response is returned
+1. If a [custom mapping](#custom-problem-details-mappings) exists for the thrown exception, it's used to create a problem details response
+2. If no mapping exists, a default 500 problem details response will be returned
 
-By default, problem details are enabled.  To disable them, pass in `false` in the constructor:
+By default, the <a href="https://tools.ietf.org/html/rfc7807#section-3.1" target="_blank">type</a> field is populated with a link to the <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank">HTTP status code</a> contained in the problem details.  You can override this behavior by extending `ProblemDetailsExceptionRenderer` and implementing your own `getTypeFromException()`.  Similarly, the exception message is used as the title of the problem details.  If you'd like to customize that, implement your own `ProblemDetailsExceptionRenderer::getTitleFromException()`.
 
-```php
-use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
-
-$exceptionRenderer = new ApiExceptionRenderer(false);
-```
-
-<h3 id="exception-responses">Exception Responses</h3>
+<h3 id="custom-problem-details-mappings">Custom Problem Details Mappings</h3>
 
 You might not want all exceptions to result in a 500.  For example, if you have a `UserNotFoundException`, you might want to map that to a 404.  Here's how:
 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
-use Aphiria\Framework\Api\Exceptions\ApiExceptionRenderer;
+use Aphiria\Framework\Api\Exceptions\ProblemDetailsExceptionRenderer;
 use Aphiria\Net\Http\HttpStatusCodes;
-use Aphiria\Net\Http\IRequest;
-use Aphiria\Net\Http\IResponseFactory;
 
-$exceptionRenderer = new ApiExceptionRenderer();
-$exceptionRenderer->registerResponseFactory(
-    UserNotFoundException::class,
-    function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
-        return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
-    }
-);
-
-// You can also register many exceptions-to-response factories:
-$exceptionRenderer->registerManyResponseFactories([
-    UserNotFoundException::class => 
-        function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
-            return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
-        },
-    // ...
-]);
-
+$exceptionRenderer = new ProblemDetailsExceptionRenderer();
+$exceptionRenderer->mapExceptionToProblemDetails(UserNotFoundException::class, status: HttpStatusCodes::HTTP_NOT_FOUND);
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 $globalExceptionHandler->registerWithPhp();
 ```
+
+You can also specify other properties in the problem details:
+
+```php
+$exceptionRenderer->mapExceptionToProblemDetails(
+    OverdrawnException::class,
+    'https://example.com/errors/overdrawn', // Type
+    'This account is overdrawn', // Title
+    fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
+    HttpStatusCodes::HTTP_BAD_REQUEST, // Status
+    fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
+    fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
+);
+```
+
+> **Note:** All parameters that accept closures with the thrown exception can also take hard-coded values.
+
+When a `ProblemDetails` instance is serialized in a response, all of its extensions are serialized as top-level properties - not as key-value pairs under an `extensions` property.
 
 <h2 id="console-exception-renderer">Console Exception Renderer</h2>
 

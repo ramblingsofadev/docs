@@ -240,7 +240,7 @@ final class UserModule implements IModule
 
 <h3 id="component-exception-handler">Exception Handler</h3>
 
-Exceptions may be mapped to [custom HTTP responses](exception-handling.md#exception-responses) and [PSR-3 log levels](exception-handling.md#exception-log-levels).
+Exceptions may be mapped to [custom problem details](exception-handling.md#custom-problem-details-mappings) and [PSR-3 log levels](exception-handling.md#exception-log-levels).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -259,13 +259,23 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        // Add a custom HTTP response for an exception
+        // Add a custom problem details status code for an exception
         $this->withHttpExceptionResponseFactory(
             $appBuilder,
             UserNotFoundException::class,
-            function (UserNotFoundException $ex, IRequest $request, IResponseFactory $responseFactory) {
-                return $responseFactory->createResponse($request, HttpStatusCodes::HTTP_NOT_FOUND);
-            }
+            status: HttpStatusCodes::HTTP_NOT_FOUND
+        );
+
+        // Add a completely custom problem details mapping for an exception
+        $this->withProblemDetails(
+            $appBuilder,
+            OverdrawnException::class,
+            'https://example.com/errors/overdrawn', // Type
+            'This account is overdrawn', // Title
+            fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
+            HttpStatusCodes::HTTP_BAD_REQUEST, // Status
+            fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
+            fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
         );
 
         // Add a custom console output writer for an exception
