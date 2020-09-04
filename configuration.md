@@ -260,7 +260,7 @@ final class UserModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         // Add a custom problem details status code for an exception
-        $this->withHttpExceptionResponseFactory(
+        $this->withProblemDetails(
             $appBuilder,
             UserNotFoundException::class,
             status: HttpStatusCodes::HTTP_NOT_FOUND
