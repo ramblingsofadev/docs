@@ -43,7 +43,7 @@ That's it.  Now, whenever an unhandled error or exception is thrown, the global 
 1. If a [custom mapping](#custom-problem-details-mappings) exists for the thrown exception, it's used to create a problem details response
 2. If no mapping exists, a default 500 problem details response will be returned
 
-By default, the <a href="https://tools.ietf.org/html/rfc7807#section-3.1" target="_blank">type</a> field is populated with a link to the <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank">HTTP status code</a> contained in the problem details.  You can override this behavior by extending `ProblemDetailsExceptionRenderer` and implementing your own `getTypeFromException()`.  Similarly, the exception message is used as the title of the problem details.  If you'd like to customize that, implement your own `ProblemDetailsExceptionRenderer::getTitleFromException()`.
+By default, when the <a href="https://tools.ietf.org/html/rfc7807#section-3.1" target="_blank">type</a> field is `null`, it is automatically populated with a link to the <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank">HTTP status code</a> contained in the problem details.  You can override this behavior by extending `ProblemDetailsExceptionRenderer` and implementing your own `getTypeFromException()`.  Similarly, the exception message is used as the title of the problem details.  If you'd like to customize that, implement your own `ProblemDetailsExceptionRenderer::getTitleFromException()`.
 
 <h3 id="custom-problem-details-mappings">Custom Problem Details Mappings</h3>
 
