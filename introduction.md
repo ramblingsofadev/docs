@@ -78,7 +78,7 @@ Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  I
 * Lack of support for [automatic content negotiation](content-negotiation.md)
 * Lack of simple, [code-based application configuration](configuration.md#application-builders)
 * No [code-based model validators](validation.md)
-* No baked-in, optional support for [route](routing.md#route-annotations), [command](console.md#command-annotations), or [validator](validation.md#validation-annotations) annotations
+* No baked-in, optional support for [route](routing.md#route-attributes), [command](console.md#command-attributes), or [validator](validation.md#validation-attributes) attributes
 * Generally too much magic going on behind the scenes
 * All-in adoption of some less popular PSRs
 

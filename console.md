@@ -17,9 +17,9 @@
    4. [Output](#output)
    5. [Registering Commands](#registering-commands)
    6. [Calling From Code](#calling-from-code)
-4. [Command Annotations](#command-annotations)
-    1. [Example](#command-annotation-example)
-    4. [Scanning For Annotations](#scanning-for-annotations)
+4. [Command Attributes](#command-attributes)
+    1. [Example](#command-attribute-example)
+    4. [Scanning For Attributes](#scanning-for-attributes)
 5. [Prompts](#prompts)
    1. [Confirmation](#confirmation)
    2. [Multiple Choice](#multiple-choice)
@@ -66,7 +66,7 @@ Now, you're set to start [running commands](#running-commands).
 
 <h3 id="why-is-this-library-included">Why Is This Library Included?</h3>
 
-At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [annotation support](#command-annotations) and a great [fluent syntax](configuration.md#component-console-commands) for configuring commands.
+At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [attribute support](#command-attributes) and a great [fluent syntax](configuration.md#component-console-commands) for configuring commands.
 
 <h2 id="running-commands">Running Commands</h2>
 
@@ -94,7 +94,7 @@ use Aphiria\Console\Output\IOutput;
 $greetingCommand = new Command(
     'greet',
     [new Argument('name', ArgumentTypes::REQUIRED, 'The name to greet')],
-    [new Option('yell', 'y', OptionTypes::OPTIONAL_VALUE, 'Yell the greeting?', 'yes')],
+    [new Option('yell', OptionTypes::OPTIONAL_VALUE, 'y', 'Yell the greeting?', 'yes')],
     'Greets a person'
 );
 
@@ -170,7 +170,7 @@ use Aphiria\Console\Input\Option;
 use Aphiria\Console\Input\OptionTypes;
 
 $type = OptionTypes::IS_ARRAY | OptionTypes::REQUIRED_VALUE;
-$option = new Option('foo', 'f', $type, 'The foo option');
+$option = new Option('foo', $type, 'f', 'The foo option');
 ```
 
 <h3 id="output">Output</h3>
@@ -252,23 +252,26 @@ If you want to call the other command but not write its output, use the `SilentO
 
 > **Note:** If a command is being called by a lot of other commands, it might be best to refactor its actions into a separate class.  This way, it can be used by multiple commands without the extra overhead of calling console commands through PHP code.
 
-<h2 id="command-annotations">Command Annotations</h2>
+<h2 id="command-attributes">Command Attributes</h2>
 
-Sometimes, it's convenient to define your command alongside your command handler so you don't have to jump back and forth remembering what arguments or options your command takes.  Aphiria offers the option to do so via annotations.
+Sometimes, it's convenient to define your command alongside your command handler so you don't have to jump back and forth remembering what arguments or options your command takes.  Aphiria offers the option to do so via attributes.
 
-<h3 id="command-annotation-example">Command Annotation Example</h3>
+<h3 id="command-attribute-example">Command Attribute Example</h3>
 
 Let's look at an example that duplicates the [greeting example from above](#registering-commands):
 
 ```php
-/**
- * @Command(
- *     "greet", 
- *     arguments={@Argument("name", type=ArgumentTypes::REQUIRED, description="The name to greet")},
- *     options={@Option("yell", shortName="y", type=OptionTypes::OPTIONAL_VALUE, description="Yell the greeting?", defaultValue="yes")},
- *     description="Greets a person"
- * )
- */
+use Aphiria\Console\Commands\Attributes\Argument;
+use Aphiria\Console\Commands\Attributes\Command;
+use Aphiria\Console\Commands\Attributes\Option;
+use Aphiria\Console\Input\ArgumentTypes;
+use Aphiria\Console\Input\OptionTypes;
+
+ #[
+    Command('greet', 'Greets a person'),
+    Argument('name', ArgumentTypes::REQUIRED, 'The name to greet'),
+    Option('yell', OptionTypes::OPTIONAL_VALUE, 'y', 'Yell the greeting', 'yes')
+ ]
 final class GreetingCommandHandler implements ICommandHandler
 {
     public function handle(Input $input, IOutput $output)
@@ -278,9 +281,9 @@ final class GreetingCommandHandler implements ICommandHandler
 }
 ```
 
-<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+<h3 id="scanning-for-attributes">Scanning For Attributes</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
+Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -293,21 +296,21 @@ final class App implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withCommandAnnotations($appBuilder);
+        $this->withCommandAttributes($appBuilder);
     }
 }
 ```
 
-Otherwise, you can manually configure your app to scan for annotations:
+Otherwise, you can manually configure your app to scan for attributes:
 
 ```php
-use Aphiria\Console\Commands\Annotations\AnnotationCommandRegistrant;
+use Aphiria\Console\Commands\Attributes\AttributeCommandRegistrant;
 use Aphiria\Console\Commands\CommandRegistry;
 
 // Assume we already have $container set up
 $commands = new CommandRegistry();
-$annotationCommandRegistrant = new AnnotationCommandRegistrant(['PATH_TO_SCAN'], $container);
-$annotationCommandRegistrant->registerCommands($commands);
+$attributeCommandRegistrant = new AttributeCommandRegistrant(['PATH_TO_SCAN'], $container);
+$attributeCommandRegistrant->registerCommands($commands);
 ````
 
 <h2 id="prompts">Prompts</h2>

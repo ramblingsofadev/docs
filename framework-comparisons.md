@@ -97,7 +97,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 <h4 id="aphiria-routing-pros">Pros</h4>
 
 * Fluent syntax makes defining routes very simple
-* Supports defining routes via annotations
+* Supports defining routes via attributes
 * Supports custom constraints, which make it possible to do things like versioned endpoints
 * Trie-based solution makes it one of the fastest routing libraries out there
 * Not tied to any HTTP or middleware library
@@ -111,7 +111,7 @@ Routing is how you map a URI to an action, frequently a controller method.
 
 <h4 id="symfony-routing-pros">Pros</h4>
 
-* Supports defining routes via annotations
+* Supports defining routes via attributes
 * Currently the fastest PHP routing library out there (barely edges out Aphiria)
 * Supports host and path matching
 * Supports URL generation
@@ -274,7 +274,7 @@ A console library permits a user to enter a command via a console application an
 * Trivial to get up and running on its own
 * Provides support for output formatting, eg padding/table/progress bar formatting
 * Support for password masking
-* Support for annotation-based commands
+* Support for attribute-based commands
 
 <h4 id="aphiria-console-cons">Cons</h4>
 
@@ -291,7 +291,7 @@ A console library permits a user to enter a command via a console application an
 
 <h4 id="symfony-console-cons">Cons</h4>
 
-* No built-in support for command annotations
+* No built-in support for command attributes
 
 <h3 id="laravel-console">Laravel</h3>
 
@@ -302,4 +302,4 @@ A console library permits a user to enter a command via a console application an
 
 <h4 id="laravel-console-cons">Cons</h4>
 
-* No built-in support for command annotations
+* No built-in support for command attributes

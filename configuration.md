@@ -118,7 +118,7 @@ final class UserModule implements IModule
 
 <h3 id="component-routes">Routes</h3>
 
-You can register [routes](routing.md) for your module, and you can enable route annotations.
+You can register [routes](routing.md) for your module, and you can enable route attributes.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -138,8 +138,8 @@ final class UserModule implements IModule
                 ->mapsToMethod(UserController::class, 'getUserById');
         });
 
-        // Enable route annotations
-        $this->withRouteAnnotations($appBuilder);
+        // Enable route attributes
+        $this->withRouteAttributes($appBuilder);
     }
 }
 ```
@@ -174,7 +174,7 @@ final class UserModule implements IModule
 
 <h3 id="component-console-commands">Console Commands</h3>
 
-You can register [console commands](console.md#creating-commands), and enable command annotations from your modules.
+You can register [console commands](console.md#creating-commands), and enable command attributes from your modules.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -197,8 +197,8 @@ final class UserModule implements IModule
             );
         });
 
-        // Enable command annotations
-        $this->withCommandAnnotations($appBuilder);
+        // Enable command attributes
+        $this->withCommandAttributes($appBuilder);
 
         // Register built-in framework commands
         $this->withFrameworkCommands($appBuilder);
@@ -211,7 +211,7 @@ final class UserModule implements IModule
 
 <h3 id="component-validator">Validator</h3>
 
-You can also configure [constraints](validation.md#constraints) for your models and enable [validator annotations](validation.md#validation-annotations).
+You can also configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#validation-attributes).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -232,8 +232,8 @@ final class UserModule implements IModule
                 ->hasPropertyConstraints('email', new EmailConstraint());
         });
 
-        // Enable validator annotations
-        $this->withValidatorAnnotations($appBuilder);
+        // Enable validator attributes
+        $this->withValidatorAttributes($appBuilder);
     }
 }
 ```
@@ -263,7 +263,7 @@ final class UserModule implements IModule
         $this->withProblemDetails(
             $appBuilder,
             UserNotFoundException::class,
-            status: HttpStatusCodes::HTTP_NOT_FOUND
+            status: HttpStatusCodes::NOT_FOUND
         );
 
         // Add a completely custom problem details mapping for an exception
@@ -273,7 +273,7 @@ final class UserModule implements IModule
             'https://example.com/errors/overdrawn', // Type
             'This account is overdrawn', // Title
             fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
-            HttpStatusCodes::HTTP_BAD_REQUEST, // Status
+            HttpStatusCodes::BAD_REQUEST, // Status
             fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
             fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
         );

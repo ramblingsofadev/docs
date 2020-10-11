@@ -55,7 +55,7 @@ use Aphiria\Framework\Api\Exceptions\ProblemDetailsExceptionRenderer;
 use Aphiria\Net\Http\HttpStatusCodes;
 
 $exceptionRenderer = new ProblemDetailsExceptionRenderer();
-$exceptionRenderer->mapExceptionToProblemDetails(UserNotFoundException::class, status: HttpStatusCodes::HTTP_NOT_FOUND);
+$exceptionRenderer->mapExceptionToProblemDetails(UserNotFoundException::class, status: HttpStatusCodes::NOT_FOUND);
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 $globalExceptionHandler->registerWithPhp();
 ```
@@ -68,7 +68,7 @@ $exceptionRenderer->mapExceptionToProblemDetails(
     'https://example.com/errors/overdrawn', // Type
     'This account is overdrawn', // Title
     fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
-    HttpStatusCodes::HTTP_BAD_REQUEST, // Status
+    HttpStatusCodes::BAD_REQUEST, // Status
     fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
     fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
 );

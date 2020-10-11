@@ -18,9 +18,9 @@
 4. [Error Messages](#error-messages)
    1. [Error Message Templates](#error-message-templates)
    2. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
-5. [Validation Annotations](#validation-annotations)
-   1. [Built-In Annotations](#built-in-annotations)
-   2. [Using Annotations](#using-annotations)
+5. [Validation Attributes](#validation-attributes)
+   1. [Built-In Attributes](#built-in-attributes)
+   2. [Using Attributes](#using-attributes)
 6. [Validating Request Bodies](#validating-request-bodies)
 
 </div>
@@ -339,19 +339,19 @@ Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMes
 
 If you do require i18n and are using the <a href="http://userguide.icu-project.org/formatparse/messages" target="_blank">ICU format</a>, `IcuErrorMessageInterpolator` is probably the better choice.
 
-<h2 id="validation-annotations">Validation Annotations</h2>
+<h2 id="validation-attributes">Validation Attributes</h2>
 
-Aphiria offers the option to use annotations to map object properties and methods to constraints.  The benefit to doing this is that it keeps the validation rules close (literally) to your models.  Let's recreate the example in the [introduction](#introduction).
+Aphiria offers the option to use attributes to map object properties and methods to constraints.  The benefit to doing this is that it keeps the validation rules close (literally) to your models.  Let's recreate the example in the [introduction](#introduction).
 
 ```php
-use Aphiria\Validation\Constraints\Annotations\{Email, Required};
+use Aphiria\Validation\Constraints\Attributes\{Email, Required};
 
 final class User
 {
     public int $id;
-    /** @Email */
+    #[Email]
     public string $email;
-    /** @Required */
+    #[Required]
     public string $name;
 
     public function __construct(int $id, string $email, string $name)
@@ -363,11 +363,11 @@ final class User
 }
 ```
 
-Once you [configure your application to use annotations](#using-annotations), you can validate your objects [just like](#validating-objects) you do when not using annotations.
+Once you [configure your application to use attributes](#using-attributes), you can validate your objects [just like](#validating-objects) you do when not using attributes.
 
-<h3 id="built-in-annotations">Built-In Annotations</h3>
+<h3 id="built-in-attributes">Built-In Attributes</h3>
 
-The following annotations come with Aphiria:
+The following attributes come with Aphiria:
 
 * `Alpha`
 * `Alphanumeric`
@@ -386,9 +386,9 @@ The following annotations come with Aphiria:
 * `Regex`
 * `Required`
 
-<h3 id="using-annotations">Using Annotations</h3>
+<h3 id="using-attributes">Using Attributes</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
+Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -401,22 +401,22 @@ final class App implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withValidatorAnnotations($appBuilder);
+        $this->withValidatorAttributes($appBuilder);
     }
 }
 ```
 
-Otherwise, you can manually scan for annotations:
+Otherwise, you can manually scan for attributes:
 
 ```php
-use Aphiria\Validation\Constraints\Annotations\AnnotationObjectConstraintsRegistrant;
+use Aphiria\Validation\Constraints\Attributes\AttributeObjectConstraintsRegistrant;
 use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
 use Aphiria\Validation\Constraints\ObjectConstraintsRegistrantCollection;
 use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
 use Aphiria\Validation\Validator;
 
 
-// It's best to cache the results of scanning for annotations in production
+// It's best to cache the results of scanning for attributes in production
 if (\getenv('APP_ENV') === 'production') {  
     $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
 } else {
@@ -425,7 +425,7 @@ if (\getenv('APP_ENV') === 'production') {
 
 $objectConstraints = new ObjectConstraintsRegistry();
 $objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection($constraintCache);
-$objectConstraintsRegistrants->add(new AnnotationObjectConstraintsRegistrant(['PATH_TO_SCAN']));
+$objectConstraintsRegistrants->add(new AttributeObjectConstraintsRegistrant(['PATH_TO_SCAN']));
 $objectConstraintsRegistrants->registerConstraints($objectConstraints);
 
 $validator = new Validator($objectConstraints);

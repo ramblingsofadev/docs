@@ -126,6 +126,10 @@ $userService = $container->resolve(UserService::class);
 
 The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and either check to see if it has a binding or attempt to auto-wire an instance of it if possible.
 
+> **Note:** A parameter with `mixed` type cannot be auto-wired as anything other than a primitive value.
+
+> **Note:** The container will attempt to auto-wire union types, eg `string|Closure`, using the left-most type first, and only on failure will the container attempt to use the next left-most type.
+
 <h2 id="binders">Binders</h2>
 
 A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain via the `bind()` method.

@@ -22,7 +22,7 @@
 
 <h2 id="requirements">Requirements</h2>
 
-* PHP &ge; 7.4.0
+* PHP &ge; 8.0.0
 
 To work around PHP's inconsistencies with where it reads request data from (sometimes superglobals, sometimes `php://input`), Aphiria requires the following setting in either a <a href="http://php.net/manual/en/configuration.file.per-user.php" target="_blank">_.user.ini_</a> or your _php.ini_:
 

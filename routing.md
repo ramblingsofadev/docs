@@ -16,11 +16,11 @@
 3. [Binding Middleware](#binding-middleware)
    1. [Middleware Attributes](#middleware-attributes)
 4. [Grouping Routes](#grouping-routes)
-5. [Route Annotations](#route-annotations)
-  1. [Example](#route-annotation-example)
-  2. [Route Groups](#route-annotation-groups)
-  3. [Middleware](#route-annotation-middleware)
-  4. [Scanning For Annotations](#scanning-for-annotations)
+5. [Route Attributes](#route-attributes)
+  1. [Example](#route-attribute-example)
+  2. [Route Groups](#route-attribute-groups)
+  3. [Middleware](#route-attribute-middleware)
+  4. [Scanning For Attributes](#scanning-for-attributes)
 6. [Route Constraints](#route-constraints)
    1. [Example - Versioned API](#versioned-api-example)
    2. [Getting Headers in PHP](#getting-php-headers)
@@ -50,9 +50,9 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
   * <a href="https://github.com/aphiria/aphiria/blob/0.x/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
 * Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
-* It supports [annotations](#route-annotations) for defining your routes
+* It supports [attributes](#route-attributes) for defining your routes
 * It supports [creating URIs from routes](#creating-route-uris)
-* It is built to support the latest PHP 7.4 features
+* It is built to support the latest PHP 8.0 features
 
 Let's look at a fully-functional example:
 
@@ -292,29 +292,27 @@ $routes->group(
 
 It is possible to nest route groups.
 
-<h2 id="route-annotations">Route Annotations</h2>
+<h2 id="route-attributes">Route Attributes</h2>
 
-Up until this point, we've shown you how to manually map routes to controllers, but there is another way - annotations.  Although annotations are not built into PHP, it is possible to include them in PHPDoc comments.  Aphiria provides the optional functionality to define your routes via PHPDoc annotations if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
+Up until this point, we've shown you how to manually map routes to controllers, but there is another way - attributes.  Aphiria provides the optional functionality to define your routes via attributes if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
-> **Note:** Some IDEs <a href="https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html#ide-support" target="_blank">have plugins</a> that enable intellisense for PHPDoc annotations.
-
-<h3 id="route-annotation-example">Example</h3>
+<h3 id="route-attribute-example">Example</h3>
 
 Let's actually define a route:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IResponse;
-use Aphiria\Routing\Annotations\{Middleware, Put};
+use Aphiria\Routing\Attributes\{Middleware, Put};
 use App\Users\Api\Authorization;
 use App\Users\User;
 
 final class UserController extends Controller
 {
-    /**
-     * @Put("users/:id")
-     * @Middleware(Authorization::class, attributes={"role"="admin"})
-     */
+     #[
+        Put('users/:id'),
+        Middleware(Authorization::class, attributes: ['role' => 'admin'])
+     ]
     public function updateUser(User $user): IResponse
     {
         // ...
@@ -322,47 +320,44 @@ final class UserController extends Controller
 }
 ```
 
-> **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `@Controller` annotation.
+> **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `#[Controller]` attribute.
 
-The following HTTP methods have route annotations: `@Any` (any HTTP method), `@Delete`, `@Get`, `@Head`, `@Options`, `@Patch`, `@Post`, `@Put`, and `@Trace`.  Each annotation takes in the same parameters:
+The following HTTP methods have route attributes: `#[Any]` (any HTTP method), `#[Delete]`, `#[Get]`, `#[Head]`, `#[Options]`, `#[Patch]`, `#[Post]`, `#[Put]`, and `#[Trace]`.  Each attribute takes in the same parameters:
 
 ```php
-use Aphiria\Routing\Annotations\Get;
-use Aphiria\Routing\Annotations\RouteConstraint;
+use Aphiria\Routing\Attributes\Get;
+use Aphiria\Routing\Attributes\RouteConstraint;
 
-/**
- * @Get(
- *     "courses/:courseId",
- *     host="api.example.com",
- *     name="getCourse",
- *     isHttpsOnly=true,
- *     constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
- *     attributes={"role":"admin"}
- * )
- */
+#[
+    Get(
+        'courses/:courseId',
+        host: 'api.example.com',
+        name: 'getCourse',
+        isHttpsOnly: true,
+        attributes: ['role' => 'admin']
+    ),
+    RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
+]
 ```
 
-<h3 id="route-annotation-groups">Route Groups</h3>
+<h3 id="route-attribute-groups">Route Groups</h3>
 
-Just like with our [route builders](#grouping-routes), we can also group routes with annotations:
+Just like with our [route builders](#grouping-routes), we can also group routes with attributes:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IResponse;
-use Aphiria\Routing\Annotations\RouteGroup;
-use Aphiria\Routing\Annotations\{Middleware, Put};
+use Aphiria\Routing\Attribute\{Middleware, Put, RouteGroup};
 use App\Users\Api\Authorization;
 use App\Users\User;
 
-/**
- * @RouteGroup("users")
- */
+#[RouteGroup(path: 'users')]
 class UserController extends Controller
 {
-    /**
-     * @Put(":id")
-     * @Middleware(Authorization::class)
-     */
+     #[
+        Put(':id'),
+        Middleware(Authorization::class)
+     ]
     public function createUser(User $user): IResponse
     {
         // ...
@@ -370,41 +365,36 @@ class UserController extends Controller
 }
 ```
 
-When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.  You can add the following properties to route group annotations:
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.  You can add the following properties to route group attributes:
 
 ```php
-use Aphiria\Routing\Annotations\RouteConstraint;
-use Aphiria\Routing\Annotations\RouteGroup;
+use Aphiria\Routing\Attributes\RouteConstraint;
+use Aphiria\Routing\Attributes\RouteGroup;
 
-/**
- * @RouteGroup(
- *     "users",
- *     host="api.example.com",
- *     isHttpsOnly=true,
- *     constraints={@RouteConstraint(MyConstraint::class, constructorParams={"param1"})},
- *     attributes={"role":"admin"}
- * )
- */
+#[
+    RouteGroup(
+        path: 'users',
+        host: 'api.example.com',
+        isHttpsOnly: true,
+        attributes: ['role' => 'admin']
+    ),
+    RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
+]
 ```
   
-<h3 id="route-annotation-middleware">Middleware</h3>
+<h3 id="route-attribute-middleware">Middleware</h3>
 
 Middleware are added separately:
 
 ```php
-use Aphiria\Routing\Annotations\Middleware;
+use Aphiria\Routing\Attributes\Middleware;
 
-/**
- * @Middleware(
- *     Authorization::class,
- *     attributes={"role":"admin"}
- * )
- */
+#[Middleware(Authorization::class, attributes: ['role' => 'admin'])]
 ```
 
-<h3 id="scanning-for-annotations">Scanning For Annotations</h3>
+<h3 id="scanning-for-attributes">Scanning For Attributes</h3>
 
-Before you can use annotations, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
+Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -417,22 +407,22 @@ final class App implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withRouteAnnotations($appBuilder);
+        $this->withRouteAttributes($appBuilder);
     }
 }
 ```
 
-Otherwise, you can manually configure the router to scan for annotations:
+Otherwise, you can manually configure the router to scan for attributes:
 
 ```php
-use Aphiria\Routing\Annotations\AnnotationRouteRegistrant;
+use Aphiria\Routing\Attributes\AttributeRouteRegistrant;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\RouteCollection;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
 $routes = new RouteCollection();
-$routeAnnotationRegistrant = new AnnotationRouteRegistrant(['PATH_TO_SCAN']);
-$routeAnnotationRegistrant->registerRoutes($routes);
+$routeAttributeRegistrant = new AttributeRouteRegistrant(['PATH_TO_SCAN']);
+$routeAttributeRegistrant->registerRoutes($routes);
 $routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
 
 // Find a matching route
