@@ -23,6 +23,7 @@ final class UserController extends Controller
 {
     public function __construct(private IUserService $users) {}
 
+    #[Post('/users')]
     public function createUser(Credentials $creds): IResponse
     {
         $user = $this->users->createUser($creds->email, $creds->password);
@@ -30,6 +31,7 @@ final class UserController extends Controller
         return $this->created("/users/{$user->id}", $user);
     }
 
+    #[Get('/users/:id')]
     public function getUser(int $id): User
     {
         return $this->users->getUserById($id);
@@ -39,7 +41,7 @@ final class UserController extends Controller
 
 In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
-To use these endpoints, we'll need to include a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller, and we need to define our routes.  You can centrally configure all of these parts of your user domain in a [module](configuration.md#modules).
+To use these endpoints, we'll need to include a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  You can use a [module](configuration.md#modules) to accomplish this.
 
 ```php
 final class UserModule implement IModule
@@ -48,14 +50,7 @@ final class UserModule implement IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withBinders($appBuilder, fn () => [new UserServiceBinder])
-            ->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
-                $routes->post('/users')
-                    ->mapsToMethod(UserController::class, 'createUser');
-            
-                $routes->get('/users/:id')
-                    ->mapsToMethod(UserController::class, 'getUser');
-            });
+        $this->withBinders($appBuilder, fn () => [new UserServiceBinder]);
     }
 }
 ```
