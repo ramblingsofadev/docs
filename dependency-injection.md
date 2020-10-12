@@ -12,7 +12,6 @@
 4. [Auto-Wiring](#auto-wiring)
 5. [Binders](#binders)
    1. [Lazy Dispatching](#lazy-dispatching)
-   2. [Using Application Builders](#using-application-builders)
 
 </div>
 
@@ -148,7 +147,7 @@ final class UserBinder extends Binder
 }
 ```
 
-Prior to handling a request, you can dispatch all your binders:
+If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, you can register `UserBinder` to your app with an [application builder](configuration.md#component-binders).  Otherwise, if you're using the DI library on its own, you will need to manually dispatch your binders:
 
 ```php
 $binders = [new UserBinder()];
@@ -184,7 +183,3 @@ $binderDispatcher->dispatch([new UserBinder()], $container);
 That's it.  The first time we dispatch the binders, the binder metadata will be collected and cached for future requests.  Also, whenever a binder resolves an interface bound in another binder, that other binder will be automatically dispatched, too.
 
 > **Note:** It's recommended that you only use caching for production environments.  Otherwise, changes you make to your binders might not be reflected.
-
-<h3 id="using-application-builders">Using Application Builders</h3>
-
-The application builder library provides helper methods to simplify building your application, including registering your binders.  Refer to [its documentation](configuration.md#component-binders) to learn more about it.

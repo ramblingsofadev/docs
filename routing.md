@@ -49,10 +49,8 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
 * It is fast
   * <a href="https://github.com/aphiria/aphiria/blob/0.x/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
   * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
-* Its [fluent syntax](#route-builders) keeps you from having to memorize how to set up config arrays
-* It supports [attributes](#route-attributes) for defining your routes
+* It supports defining routes through both [attributes](#route-attributes) and a [fluent syntax](#route-builders)
 * It supports [creating URIs from routes](#creating-route-uris)
-* It is built to support the latest PHP 8.0 features
 
 Let's look at a fully-functional example:
 

@@ -38,7 +38,7 @@ That's it.  Now, whenever an unhandled error or exception is thrown, the global 
 
 <h2 id="problem-details-exception-renderer">Problem Details Exception Renderer</h2>
 
-`ProblemDetailsExceptionRenderer` is provided out of the box to simplify rendering problem details API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
+`ProblemDetailsExceptionRenderer` is provided out of the box to simplify rendering <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> API responses for Aphiria applications.  This renderer tries to create a response using the following steps:
   
 1. If a [custom mapping](#custom-problem-details-mappings) exists for the thrown exception, it's used to create a problem details response
 2. If no mapping exists, a default 500 problem details response will be returned
@@ -65,12 +65,12 @@ You can also specify other properties in the problem details:
 ```php
 $exceptionRenderer->mapExceptionToProblemDetails(
     OverdrawnException::class,
-    'https://example.com/errors/overdrawn', // Type
-    'This account is overdrawn', // Title
-    fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
-    HttpStatusCodes::BAD_REQUEST, // Status
-    fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
-    fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
+    type: 'https://example.com/errors/overdrawn',
+    title: 'This account is overdrawn',
+    detail: fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}",
+    status: HttpStatusCodes::BAD_REQUEST,
+    instance: fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}",
+    extensions: fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount]
 );
 ```
 

@@ -118,7 +118,7 @@ final class UserModule implements IModule
 
 <h3 id="component-routes">Routes</h3>
 
-You can register [routes](routing.md) for your module, and you can enable route attributes.
+You can manually register [routes](routing.md) for your module, and you can enable route attributes.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -132,7 +132,7 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        // Add some routes
+        // Manually add some routes
         $this->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
             $routes->get('users/:id')
                 ->mapsToMethod(UserController::class, 'getUserById');
@@ -174,7 +174,7 @@ final class UserModule implements IModule
 
 <h3 id="component-console-commands">Console Commands</h3>
 
-You can register [console commands](console.md#creating-commands), and enable command attributes from your modules.
+You can manually register [console commands](console.md#creating-commands), and enable command attributes from your modules.
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -189,7 +189,7 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        // Add console commands
+        // Manually add console commands
         $this->withCommands($appBuilder, function (CommandRegistry $commands) {
             $commands->registerCommand(
                 new Command('report:generate'),
@@ -211,7 +211,7 @@ final class UserModule implements IModule
 
 <h3 id="component-validator">Validator</h3>
 
-You can also configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#validation-attributes).
+You can also manually configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#validation-attributes).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -226,7 +226,7 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        // Add constraints to a class
+        // Manually add constraints to a class
         $this->withObjectConstraints($appBuilder, function (ObjectConstraintsRegistryBuilder $objectConstraintsBuilder) {
             $objectConstraintsBuilder->class(User::class)
                 ->hasPropertyConstraints('email', new EmailConstraint());
@@ -270,12 +270,12 @@ final class UserModule implements IModule
         $this->withProblemDetails(
             $appBuilder,
             OverdrawnException::class,
-            'https://example.com/errors/overdrawn', // Type
-            'This account is overdrawn', // Title
-            fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}", // Detail
-            HttpStatusCodes::BAD_REQUEST, // Status
-            fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}", // Instance
-            fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount] // Extensions
+            type: 'https://example.com/errors/overdrawn',
+            title: 'This account is overdrawn',
+            detail: fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}",
+            status: HttpStatusCodes::BAD_REQUEST,
+            instance: fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}",
+            extensions: fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount]
         );
 
         // Add a custom console output writer for an exception
