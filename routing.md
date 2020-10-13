@@ -202,7 +202,7 @@ use App\Users\User;
 final class UserController extends Controller
 {
     #[
-        Put('users/:id'),
+        Put('users/:userId'),
         Middleware(Authorization::class, attributes: ['role' => 'admin'])
     ]
     public function updateUser(User $user): IResponse
@@ -232,7 +232,7 @@ Each attribute takes in the same parameters:
 use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
 #[Get(
-    'courses/:courseId',
+    path: 'courses/:courseId',
     host: 'api.example.com',
     name: 'getCourse',
     isHttpsOnly: true,
@@ -645,7 +645,7 @@ Our route will now enforce a serial number with minimum length 6.
 
 <h2 id="creating-route-uris">Creating Route URIs</h2>
 
-You might find yourself wanting to create a link to a particular route within your app.  Let's say you have a route named `GetUserById` with a URI template of `/users/:id`.  We can generate a link to get a particular user:
+You might find yourself wanting to create a link to a particular route within your app.  Let's say you have a route named `GetUserById` with a URI template of `/users/:userId`.  We can generate a link to get a particular user:
 
 ```php
 use Aphiria\Routing\UriTemplates\AstRouteUriFactory;
@@ -657,7 +657,7 @@ $routeUriFactory = new AstRouteUriFactory($routes);
 $uriForUser123 = $routeUriFactory->createRouteUri('GetUserById', ['id' => 123]);
 ```
 
-Generated URIs will be a relative path unless the URI template specified a host.  Let's look at an example for one that does include a host: `:environment.example.com/users/:id`.
+Generated URIs will be a relative path unless the URI template specified a host.  Let's look at an example for one that does include a host: `:environment.example.com/users/:userId`.
 
 ```php
 // Will create "https://dev.example.com/users/123"
