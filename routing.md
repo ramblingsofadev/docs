@@ -186,7 +186,7 @@ $result = $routeMatcher->matchRoute(
 
 <h2 id="route-attributes">Route Attributes</h2>
 
-Up until this point, we've shown you how to manually map routes to controllers, but there is another way - attributes.  Aphiria provides the optional functionality to define your routes via attributes if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
+Aphiria provides the optional functionality to define your routes via attributes if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
 <h3 id="route-attributes-example">Example</h3>
 
@@ -201,10 +201,10 @@ use App\Users\User;
 
 final class UserController extends Controller
 {
-     #[
+    #[
         Put('users/:id'),
         Middleware(Authorization::class, attributes: ['role' => 'admin'])
-     ]
+    ]
     public function updateUser(User $user): IResponse
     {
         // ...
@@ -231,16 +231,13 @@ Each attribute takes in the same parameters:
 ```php
 use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
-#[
-    Get(
-        'courses/:courseId',
-        host: 'api.example.com',
-        name: 'getCourse',
-        isHttpsOnly: true,
-        attributes: ['role' => 'admin']
-    ),
-    RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
-]
+#[Get(
+    'courses/:courseId',
+    host: 'api.example.com',
+    name: 'getCourse',
+    isHttpsOnly: true,
+    attributes: ['role' => 'admin']
+)]
 ```
 
 <h3 id="route-attributes-groups">Route Groups</h3>
@@ -248,38 +245,51 @@ use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IResponse;
-use Aphiria\Routing\Attributes\{Middleware, Put, RouteGroup};
+use Aphiria\Routing\Attributes\{Get, Middleware, RouteConstraint, RouteGroup};
 use App\Users\Api\Authorization;
 use App\Users\User;
 
-#[RouteGroup(path: 'users')]
-class UserController extends Controller
+#[
+    RouteGroup(
+        path: 'courses/:courseId',
+        host: 'api.example.com',
+        isHttpsOnly: true,
+        attributes: ['role' => 'admin']
+    ),
+    RouteConstraint(MyConstraint::class),
+    Middleware(Authentication::class)
+]
+class CourseController extends Controller
 {
-    #[
-        Put(':id'),
-        Middleware(Authorization::class)
-    ]
-    public function createUser(User $user): IResponse
+    #[Get('')]
+    public function getCourseById(int $courseId): Course
+    {
+        // ...
+    }
+    
+    #[Get('professors')]
+    public function getCourseProfessors(): array
     {
         // ...
     }
 }
 ```
 
-When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.  You can add the following properties to route group attributes:
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `courses/:courseId` and another with path `courses/:courseId/professors`.  You can add the following properties to route group attributes:
 
 ```php
 use Aphiria\Routing\Attributes\{RouteConstraint, RouteGroup};
 
-#[
-    RouteGroup(
-        path: 'users',
-        host: 'api.example.com',
-        isHttpsOnly: true,
-        attributes: ['role' => 'admin']
-    ),
-    RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
-]
+#[RouteGroup(
+    path: 'users',
+    host: 'api.example.com',
+    isHttpsOnly: true,
+    attributes: ['role' => 'admin']
+)]
+class UserController extends Controller
+{
+    // ...
+}
 ```
   
 <h3 id="route-attributes-middleware">Middleware</h3>
@@ -291,6 +301,30 @@ use Aphiria\Routing\Attributes\Middleware;
 
 #[Middleware(Authorization::class, attributes: ['role' => 'admin'])]
 ```
+
+You can also add middleware to a controller class to indicate that it applies to all routes in that controller.
+
+<h3 id="route-attributes-constraints">Route Constraints</h3>
+
+You can specify the name of the route constraint class and any primitive constructor parameter values:
+
+```php
+use Aphiria\Routing\Attributes\{Get, RouteConstraint};
+
+class UserController extends Controller
+{
+    #[
+        Get('users/:userId'),
+        RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
+    ]
+    public function getUserById(int $userId): User
+    {
+        // ...
+    }
+}
+```
+
+Similar to [middleware](#route-attributes-middleware), you can add route constraints to a controller class to apply it to all routes in that controller.
 
 <h3 id="scanning-for-attributes">Scanning For Attributes</h3>
 
@@ -375,8 +409,8 @@ use Aphiria\Routing\Middleware\MiddlewareBinding;
 
 $routes->group(
     new RouteGroupOptions(
-        pathTemplate: 'courses/:courseId',
-        hostTemplate: 'api.example.com',
+        path: 'courses/:courseId',
+        host: 'api.example.com',
         isHttpsOnly: true,
         constraints: [new MyConstraint()],
         middlewareBindings: [new MiddlewareBinding(Authentication::class)],
