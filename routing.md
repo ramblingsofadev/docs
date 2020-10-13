@@ -9,29 +9,32 @@
 1. [Basics](#basics)
    1. [Route Variables](#route-variables)
    2. [Optional Route Parts](#optional-route-parts)
-   3. [Route Builders](#route-builders)
-   4. [Using Aphiria's Net Library](#using-aphirias-net-library)
+   3. [Route Groups](#route-groups)
+   4. [Middleware](#middleware)
+   5. [Route Constraints](#route-constraints)
+   6. [Using Aphiria's Net Library](#using-aphirias-net-library)
+2. [Route Attributes](#route-attributes)
+   1. [Example](#route-attributes-example)
+   2. [Route Groups](#route-attributes-groups)
+   3. [Middleware](#route-attributes-middleware)
+   4. [Route Constraints](#route-attributes-constraints)
+   5. [Scanning For Attributes](#scanning-for-attributes)
+3. [Route Builders](#route-builders)
+   1. [Route Actions](#route-builders-actions)
+   2. [Route Groups](#route-builders-groups)
+   3. [Middleware](#route-builders-middleware)
+   4. [Route Constraints](#route-builders-constraints)
    5. [Using Aphiria's Application Builder Library](#using-aphirias-application-builder-library)
-2. [Route Actions](#route-actions)
-3. [Binding Middleware](#binding-middleware)
-   1. [Middleware Attributes](#middleware-attributes)
-4. [Grouping Routes](#grouping-routes)
-5. [Route Attributes](#route-attributes)
-  1. [Example](#route-attribute-example)
-  2. [Route Groups](#route-attribute-groups)
-  3. [Middleware](#route-attribute-middleware)
-  4. [Scanning For Attributes](#scanning-for-attributes)
-6. [Route Constraints](#route-constraints)
-   1. [Example - Versioned API](#versioned-api-example)
-   2. [Getting Headers in PHP](#getting-php-headers)
-7. [Route Variable Constraints](#route-variable-constraints)
+4. [Versioned API Example](#versioned-api-example)
+   1. [Getting Headers in PHP](#getting-php-headers)
+5. [Route Variable Constraints](#route-variable-constraints)
    1. [Built-In Constraints](#built-in-constraints)
    2. [Making Your Own Custom Constraints](#making-your-own-custom-constraints)
-8. [Creating Route URIs](#creating-route-uris)
-9. [Caching](#caching)
+6. [Creating Route URIs](#creating-route-uris)
+7. [Caching](#caching)
    1. [Route Caching](#route-caching)
    2. [Trie Caching](#trie-caching)
-10. [Matching Algorithm](#matching-algorithm)
+8. [Matching Algorithm](#matching-algorithm)
 
 </div>
 
@@ -43,7 +46,7 @@ Routing is the process of mapping HTTP requests to actions.  There are so many r
 
 * It isn't coupled to _any_ library/framework
 * It supports things that other route matching libraries do not support, like:
-  * [Binding framework-agnostic middleware to routes](#binding-middleware)
+  * [Binding framework-agnostic middleware to routes](#middleware)
   * [The ability to add custom matching constraints on route variables](#route-variable-constraints)
   * [The ability to match on header values](#versioned-api-example), which makes things like versioning your routes a cinch
 * It is fast
@@ -98,7 +101,7 @@ To get the [route variables](#route-variables), call:
 $result->routeVariables; // ["bookId" => "123"]
 ```
 
-To get the [middleware bindings](#binding-middleware), call:
+To get the [middleware bindings](#middleware), call:
 
 ```php
 $result->route->middlewareBindings;
@@ -138,29 +141,30 @@ archives/:year[/:month[/:day]]
 
 This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
 
-<h3 id="route-builders">Route Builders</h3>
+<h3 id="route-groups">Route Groups</h3>
 
-Route builders give you a fluent syntax for mapping your routes to controller methods.  They also let you [bind any middleware](#binding-middleware) classes and properties to the route.  The following methods are available to create routes:
-  
- ```php
-$routes->delete('/foo');
-$routes->get('/foo');
-$routes->options('/foo');
-$routes->patch('/foo');
-$routes->post('/foo');
-$routes->put('/foo');
+Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  Route groups can even be nested.  Learn more how to add them as [attributes](#route-attributes-groups) or [route builders](#route-builders-groups).
+
+<h3 id="middleware">Middleware</h3>
+
+Middleware are a great way to modify both the request and the response on an endpoint.  Aphiria lets you define middleware on your endpoints without binding you to any particular library/framework's middleware implementations.  Learn how to add them as [attributes](#route-attributes-middleware) or [route buidlers](#route-builders-middleware).
+
+To grab the middleware on a matched route, call:
+
+```php
+foreach ($result->middlewareBindings as $middlewareBinding) {
+    $middlewareBinding->className; // "Authorization"
+    $middlewareBinding->attributes; // ["role" => "admin"]
+}
 ```
 
-Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
+<h4 id="middleware-attributes">Middleware Attributes</h4>
 
-* `string $pathTemplate`
-  * The path for this route ([read about syntax](#route-variables))
-* `string|null $hostTemplate` (optional)
-  * The optional host template for this route  ([read about syntax](#route-variables))
-* `bool $isHttpsOnly` (optional)
-  * Whether or not this route is HTTPS-only
-  
- You can also call `RouteCollectionBuilder::route()` and pass in the HTTP method(s) you'd like to map to.
+Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Learn more about how to specify middleware attributes as [attributes](#route-attributes-middleware) or [route builders](#route-builders-middleware).
+
+<h3 id="route-constraints">Route Constraints</h3>
+
+Sometimes, you might find it useful to add some custom logic for matching routes.  This could involve enforcing anything from only allowing certain HTTP methods for a route (eg `HttpMethodRouteConstraint`) or only allowing HTTPS requests to a particular endpoint.  Learn more how to add them as [attributes](#route-attributes-constraints) or [route builders](#route-builders-constraints).
 
 <h3 id="using-aphirias-net-library">Using Aphiria's Net Library</h3>
 
@@ -180,121 +184,11 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h3 id="using-aphirias-application-builder-library">Using Aphiria's Application Builder Library</h3>
-
-Learn more about how [Aphiria's application builder library](configuration.md#component-routes) can simplify registering your routes.
-
-<h2 id="route-actions">Route Actions</h2>
-
-A route action contains the controller method to call when a route is matched.
-
-```php
-$routes->get('users/:userId')
-    ->mapsToMethod(UserController::class, 'getUserById');
-```
-
-<h2 id="binding-middleware">Binding Middleware</h2>
-
-Middleware are a great way to modify both the request and the response on an endpoint.  Aphiria lets you define middleware on your endpoints without binding you to any particular library/framework's middleware implementations.
-
-To bind a single middleware class to your route, call:
-
-```php
-$routes->get('foo')
-    ->mapsToMethod(MyController::class, 'myMethod')
-    ->withMiddleware(FooMiddleware::class);
-```
-
-To bind many middleware classes, call:
-
-```php
-$routes->get('foo')
-    ->mapsToMethod(MyController::class, 'myMethod')
-    ->withManyMiddleware([
-        FooMiddleware::class,
-        BarMiddleware::class
-    ]);
-```
-
-Under the hood, these class names get converted to instances of `MiddlewareBinding`.  
-
-<h3 id="middleware-attributes">Middleware Attributes</h3>
-
-Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Here's how you can do it:
-
-```php
-$routes->get('foo')
-    ->mapsToMethod(MyController::class, 'myMethod')
-    ->withMiddleware(Authorization::class, ['role' => 'admin']);
-
-// Or
-
-$routes->get('foo')
-    ->mapsToMethod(MyController::class, 'myMethod')
-    ->withManyMiddleware([
-        new MiddlewareBinding(Authorization::class, ['role' => 'admin']),
-        // Other middleware...
-    ]);
-```
-
-Here's how you can grab the middleware on a matched route:
-
-```php
-foreach ($result->middlewareBindings as $middlewareBinding) {
-    $middlewareBinding->className; // "Authorization"
-    $middlewareBinding->attributes; // ["role" => "admin"]
-}
-```
-
-<h2 id="grouping-routes">Grouping Routes</h2>
-
-Often times, a lot of your routes will share similar properties, such as hosts and paths to match on, or middleware.  You can group these routes together using `RouteCollectionBuilder::group()` and specifying the options to apply to all routes within the group:
-
-```php
-use Aphiria\Routing\Builders\{RouteCollectionBuilder, RouteGroupOptions};
-
-$routes->group(
-    new RouteGroupOptions('courses/:courseId', 'example.com'),
-    function (RouteCollectionBuilder $routes) {
-        // This route's path will use the group's path
-        $routes->get('')
-            ->mapsToMethod(CourseController::class, 'getCourseById');
-
-        $routes->get('/professors')
-            ->mapsToMethod(CourseController::class, 'getCourseProfessors');
-    }
-);
-```
-
-This creates two routes with a host suffix of _example.com_ and a route prefix of _courses/:courseId_ (`example.com/courses/:courseId` and `example.com/courses/:courseId/professors`).  You can set several settings in group options:
-
-```php
-use Aphiria\Middleware\MiddlewareBinding;
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
-use Aphiria\Routing\Builders\RouteGroupOptions;
-
-$routes->group(
-    new RouteGroupOptions(
-        'courses/:courseId', // The path template
-        'api.example.com', // The nullable host template
-        true, // Whether or not all routes are HTTPS-only
-        [new MyConstraint()], // List of constraints
-        ['role' => 'admin'], // The constraint attributes
-        [new MiddlewareBinding(Authentication::class)] // The middleware
-    ),
-    function (RouteCollectionBuilder $routes) {
-        // ...
-    }
-)
-```
-
-It is possible to nest route groups.
-
 <h2 id="route-attributes">Route Attributes</h2>
 
 Up until this point, we've shown you how to manually map routes to controllers, but there is another way - attributes.  Aphiria provides the optional functionality to define your routes via attributes if you so choose.  A benefit to defining your routes this way is that it keeps the definition of your routes close (literally) to your controller methods, reducing the need to jump around your code base.
 
-<h3 id="route-attribute-example">Example</h3>
+<h3 id="route-attributes-example">Example</h3>
 
 Let's actually define a route:
 
@@ -320,11 +214,22 @@ final class UserController extends Controller
 
 > **Note:** Controllers must either extend `Aphiria\Api\Controllers\Controller` or use the `#[Controller]` attribute.
 
-The following HTTP methods have route attributes: `#[Any]` (any HTTP method), `#[Delete]`, `#[Get]`, `#[Head]`, `#[Options]`, `#[Patch]`, `#[Post]`, `#[Put]`, and `#[Trace]`.  Each attribute takes in the same parameters:
+The following HTTP methods have route attributes:
+
+* `#[Any]` (any HTTP method)
+* `#[Delete]`
+* `#[Get]`
+* `#[Head]`
+* `#[Options]`
+* `#[Patch]`
+* `#[Post]`
+* `#[Put]`
+* `#[Trace]`
+
+Each attribute takes in the same parameters:
 
 ```php
-use Aphiria\Routing\Attributes\Get;
-use Aphiria\Routing\Attributes\RouteConstraint;
+use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
 #[
     Get(
@@ -338,24 +243,22 @@ use Aphiria\Routing\Attributes\RouteConstraint;
 ]
 ```
 
-<h3 id="route-attribute-groups">Route Groups</h3>
-
-Just like with our [route builders](#grouping-routes), we can also group routes with attributes:
+<h3 id="route-attributes-groups">Route Groups</h3>
 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Net\Http\IResponse;
-use Aphiria\Routing\Attribute\{Middleware, Put, RouteGroup};
+use Aphiria\Routing\Attributes\{Middleware, Put, RouteGroup};
 use App\Users\Api\Authorization;
 use App\Users\User;
 
 #[RouteGroup(path: 'users')]
 class UserController extends Controller
 {
-     #[
+    #[
         Put(':id'),
         Middleware(Authorization::class)
-     ]
+    ]
     public function createUser(User $user): IResponse
     {
         // ...
@@ -366,8 +269,7 @@ class UserController extends Controller
 When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `users/:id`.  You can add the following properties to route group attributes:
 
 ```php
-use Aphiria\Routing\Attributes\RouteConstraint;
-use Aphiria\Routing\Attributes\RouteGroup;
+use Aphiria\Routing\Attributes\{RouteConstraint, RouteGroup};
 
 #[
     RouteGroup(
@@ -380,7 +282,7 @@ use Aphiria\Routing\Attributes\RouteGroup;
 ]
 ```
   
-<h3 id="route-attribute-middleware">Middleware</h3>
+<h3 id="route-attributes-middleware">Middleware</h3>
 
 Middleware are added separately:
 
@@ -431,29 +333,158 @@ $result = $routeMatcher->matchRoute(
 );
 ```
 
-<h2 id="route-constraints">Route Constraints</h2>
+<h2 id="route-builders">Route Builders</h2>
 
-Sometimes, you might find it useful to add some custom logic for matching routes.  This could involve enforcing anything from only allowing certain HTTP methods for a route (eg `HttpMethodRouteConstraint`) or only allowing HTTPS requests to a particular endpoint.  Let's go into some concrete examples...
+Route builders are an alternative to [attributes](#route-attributes) that give you a fluent syntax for mapping your routes to controller methods.  They also let you [bind any middleware](#route-builders-middleware) classes and properties to the route.  The following methods are available to create routes:
 
-<h3 id="versioned-api-example">Example - Versioned API</h3>
+ ```php
+$routes->delete('/foo');
+$routes->get('/foo');
+$routes->options('/foo');
+$routes->patch('/foo');
+$routes->post('/foo');
+$routes->put('/foo');
+```
+
+Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
+
+* `string $pathTemplate`
+    * The path for this route ([read about syntax](#route-variables))
+* `string|null $hostTemplate` (optional)
+    * The optional host template for this route  ([read about syntax](#route-variables))
+* `bool $isHttpsOnly` (optional)
+    * Whether or not this route is HTTPS-only
+
+You can also call `RouteCollectionBuilder::route()` and pass in the HTTP method(s) you'd like to map to.
+
+<h3 id="route-builders-action">Route Actions</h3>
+
+A route action contains the controller method to call when a route is matched.
+
+```php
+$routes->get('users/:userId')
+    ->mapsToMethod(UserController::class, 'getUserById');
+```
+
+<h3 id="route-builders-groups">Route Groups</h3>
+
+```php
+use Aphiria\Routing\Builders\RouteCollectionBuilder;
+use Aphiria\Routing\Builders\RouteGroupOptions;
+use Aphiria\Routing\Middleware\MiddlewareBinding;
+
+$routes->group(
+    new RouteGroupOptions(
+        pathTemplate: 'courses/:courseId',
+        hostTemplate: 'api.example.com',
+        isHttpsOnly: true,
+        constraints: [new MyConstraint()],
+        middlewareBindings: [new MiddlewareBinding(Authentication::class)],
+        attributes: ['role' => 'admin']
+    ),
+    function (RouteCollectionBuilder $routes) {
+        // This route's path will be 'courses/:courseId'
+        $routes->get('')
+            ->mapsToMethod(CourseController::class, 'getCourseById');
+
+        // This route's path will be 'courses/:courseId/professors'
+        $routes->get('/professors')
+            ->mapsToMethod(CourseController::class, 'getCourseProfessors');
+    }
+)
+```
+
+<h3 id="route-builders-middleware">Middleware</h3>
+
+To bind a single middleware class to your route, call:
+
+```php
+$routes->get('foo')
+    ->mapsToMethod(MyController::class, 'myMethod')
+    ->withMiddleware(FooMiddleware::class);
+```
+
+To bind many middleware classes, call:
+
+```php
+$routes->get('foo')
+    ->mapsToMethod(MyController::class, 'myMethod')
+    ->withManyMiddleware([
+        FooMiddleware::class,
+        BarMiddleware::class
+    ]);
+```
+
+Under the hood, these class names get converted to instances of `MiddlewareBinding`.
+
+You can also add [attributes to your middleware](#middleware-attributes):
+
+```php
+$routes->get('foo')
+    ->mapsToMethod(MyController::class, 'myMethod')
+    ->withMiddleware(Authorization::class, ['role' => 'admin']);
+
+// Or
+
+$routes->get('foo')
+    ->mapsToMethod(MyController::class, 'myMethod')
+    ->withManyMiddleware([
+        new MiddlewareBinding(Authorization::class, ['role' => 'admin']),
+        // Other middleware...
+    ]);
+```
+
+<h3 id="route-builders-constraints">Route Constraints</h3>
+
+To add a single route constraint to a route, call:
+
+```php
+$routes->get('posts')
+    ->mapsToMethod(PostController::class, 'getAllPosts')
+    ->withConstraint(new FooConstraint());
+```
+
+To add many route constraints, call:
+
+```php
+$routes->get('posts')
+    ->mapsToMethod(PostController::class, 'getAllPosts')
+    ->withManyConstraints([new FooConstraint(), new BarConstraint()]);
+```
+
+<h3 id="using-aphirias-application-builder-library">Using Aphiria's Application Builder Library</h3>
+
+Learn more about how [Aphiria's application builder library](configuration.md#component-routes) can simplify registering your routes.
+
+<h2 id="versioned-api-example">Versioned API Example</h2>
 
 Let's say your app sends an API version header, and you want to match an endpoint that supports that version.  You could do this by using a route "attribute" and a route constraint.  Let's create some routes that have the same path, but support different versions of the API:
 
 ```php
-// This route will require an API-VERSION value of 'v1.0'
-$routes->get('comments')
-    ->mapsToMethod(CommentController::class, 'getAllComments1_0')
-    ->withAttribute('API-VERSION', 'v1.0')
-    ->withConstraint(new ApiVersionConstraint());
+use Aphiria\Routing\Attributes\Get;
+use Aphiria\Routing\Attributes\RouteConstraint;
 
-// This route will require an API-VERSION value of 'v2.0'
-$routes->get('comments')
-    ->mapsToMethod(CommentController::class, 'getAllComments2_0')
-    ->withAttribute('API-VERSION', 'v2.0')
-    ->withConstraint(new ApiVersionConstraint());
+class CommentController extends Controller
+{
+    #[
+        Get('comments', attributes: ['API-VERSION' => 'v1.0']),
+        RouteConstraint(ApiVersionConstraint::class)
+    ]
+    public function getAllComments1_0(): array
+    {
+        // This route will require an API-VERSION value of 'v1.0'
+    }
+    
+    #[
+        Get('comments', attributes: ['API-VERSION' => 'v2.0']),
+        RouteConstraint(ApiVersionConstraint::class)
+    ]
+    public function getAllComments2_0(): array
+    {
+        // This route will require an API-VERSION value of 'v2.0'
+    }
+}
 ```
-
-> **Note:** If you plan on adding many attributes or constraints to your routes, use `RouteBuilder::withManyAttributes()` and `RouteBuilder::withManyConstraints()`, respectively.
 
 Now, let's add a route constraint to match the "API-VERSION" header to the attribute on our route:
 
@@ -465,7 +496,7 @@ final class ApiVersionConstraint implements IRouteConstraint
 {
     public function passes(
         MatchedRouteCandidate $matchedRouteCandidate,
-        string $method,
+        string $httpMethod,
         string $host,
         string $path,
         array $headers
@@ -476,7 +507,7 @@ final class ApiVersionConstraint implements IRouteConstraint
             return false;
         }
 
-        return in_array($attributes['API-VERSION'], $headers['API-VERSION'], true);
+        return \in_array($attributes['API-VERSION'], $headers['API-VERSION'], true);
     }
 }
 ```
@@ -529,7 +560,7 @@ use Aphiria\Routing\UriTemplates\Constraints\IRouteVariableConstraint;
 
 final class MinLengthConstraint implements IRouteVariableConstraint
 {
-    public function __construct(int $minLength) {}
+    public function __construct(private int $minLength) {}
 
     public static function getSlug(): string
     {
@@ -538,7 +569,7 @@ final class MinLengthConstraint implements IRouteVariableConstraint
 
     public function passes($value): bool
     {
-        return mb_strlen($value) >= $this->minLength;
+        return \mb_strlen($value) >= $this->minLength;
     }
 }
 ```
