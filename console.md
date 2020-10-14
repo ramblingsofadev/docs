@@ -15,7 +15,7 @@
    2. [Arguments](#arguments)
    3. [Options](#options)
    4. [Output](#output)
-   5. [Registering Commands](#registering-commands)
+   5. [Manually Registering Commands](#manually-registering-commands)
    6. [Calling From Code](#calling-from-code)
 4. [Command Attributes](#command-attributes)
     1. [Example](#command-attribute-example)
@@ -87,18 +87,17 @@ In Aphiria, a command defines the name, [arguments](#arguments), and [options](#
 Let's take a look at an example:
 
 ```php
-use Aphiria\Console\Commands\{Command, ICommandHandler};
-use Aphiria\Console\Input\{Argument, ArgumentTypes, Input, Option, OptionTypes};
+
+use Aphiria\Console\Commands\Attributes\{Argument, Command, Option};
+use Aphiria\Console\Commands\ICommandHandler;
+use Aphiria\Console\Input\{ArgumentTypes, Input, OptionTypes};
 use Aphiria\Console\Output\IOutput;
 
-$greetingCommand = new Command(
-    'greet',
-    [new Argument('name', ArgumentTypes::REQUIRED, 'The name to greet')],
-    [new Option('yell', OptionTypes::OPTIONAL_VALUE, 'y', 'Yell the greeting?', 'yes')],
-    'Greets a person'
-);
-
-// Defined in a separate file
+#[
+    Command('greet', description: 'Greets a person'),
+    Argument('name', type: ArgumentTypes::REQUIRED, description: 'The name to greet'),
+    Option('yell', type: OptionTypes::OPTIONAL_VALUE, shortName: 'y', description: 'Yell the greeting?', defaultValue: 'yes')
+]
 final class GreetingCommandHandler implements ICommandHandler
 {
     public function handle(Input $input, IOutput $output)
@@ -194,18 +193,20 @@ Each output offers a few methods:
    * Clears the current screen
    * Only works in `ConsoleOutput`
 
-<h3 id="registering-commands">Registering Commands</h3>
+<h3 id="manually-registering-commands">Manually Registering Commands</h3>
 
-Before you can use the example command, you must register it so that the application knows about it.
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, this is already handled for you, and you can skip this section.  Otherwise, you'll have to register commands so that your application knows about them.  If you're using attributes, read [this section](#scanning-for-attributes) to learn how to manually register attribute commands.  If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to manually register your commands to your app.
 
-> **Note:** If you're using the application builder library, refer to [its documentation](configuration.md#component-console-commands) to learn how to register your commands to your app.
+Let's manually register a command to the application:
 
 ```php
 use Aphiria\Console\Application;
+use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\DependencyInjection\Container;
 
 $commands = new CommandRegistry();
+$greetingCommand = new Command('greet', arguments: [/* ... */], options: [/* ... */]);
 $commands->registerCommand($greetingCommand, GreetingCommandHandler::class);
 
 // Actually run the application
@@ -232,11 +233,13 @@ HELLO, DAVE
 It's possible to call a command from another command by injecting `ICommandBus` into your command handler:
 
 ```php
+use Aphiria\Console\Commands\Attributes\Command;
 use Aphiria\Console\Commands\ICommandBus;
 use Aphiria\Console\Commands\ICommandHandler;
 use Aphiria\Console\Input\Input;
 use Aphiria\Console\Output\IOutput;
 
+#[Command('foo')]
 final class FooCommandHandler implements ICommandHandler
 {
     public function __construct(private ICommandBus $commandBus) {}
@@ -254,18 +257,15 @@ If you want to call the other command but not write its output, use the `SilentO
 
 <h2 id="command-attributes">Command Attributes</h2>
 
-Sometimes, it's convenient to define your command alongside your command handler so you don't have to jump back and forth remembering what arguments or options your command takes.  Aphiria offers the option to do so via attributes.
+It's convenient to define your command alongside your command handler so you don't have to jump back and forth remembering what arguments or options your command takes.  Aphiria offers the option to do so via attributes.
 
 <h3 id="command-attribute-example">Command Attribute Example</h3>
 
 Let's look at an example that duplicates the [greeting example from above](#registering-commands):
 
 ```php
-use Aphiria\Console\Commands\Attributes\Argument;
-use Aphiria\Console\Commands\Attributes\Command;
-use Aphiria\Console\Commands\Attributes\Option;
-use Aphiria\Console\Input\ArgumentTypes;
-use Aphiria\Console\Input\OptionTypes;
+use Aphiria\Console\Commands\Attributes\{Argument, Command, Option};
+use Aphiria\Console\Input\{ArgumentTypes, OptionTypes};
 
  #[
     Command('greet', 'Greets a person'),

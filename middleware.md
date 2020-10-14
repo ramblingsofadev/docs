@@ -117,9 +117,19 @@ final class RoleMiddleware extends AttributeMiddleware
 To actually specify `role`, pass it into your route configuration:
 
 ```php
-$routes->get('foo')
-    ->mapsToMethod(MyController::class, 'myMethod')
-    ->withMiddleware(RoleMiddleware::class, ['role' => 'admin']);
+use Aphiria\Routing\Attributes\{Delete, Middleware};
+
+final class UserController extends Controller
+{
+    #[
+        Delete('users/:userId'), 
+        Middleware(RoleMiddleware::class, attributes: ['role' => 'admin'])
+    ]
+    public function deleteUser(int $userId): void
+    {
+        // ...
+    }
+}
 ```
 
 <h2 id="executing-middleware">Executing Middleware</h2>

@@ -68,13 +68,13 @@ $this->get('http://localhost/books/123');
 You can pass in headers in your calls:
 
 ```php
-$this->delete('/users/123', ['Authorization' => 'Basic Zm9vOmJhcg==']);
+$this->delete('/users/123', headers: ['Authorization' => 'Basic Zm9vOmJhcg==']);
 ```
 
 All methods except `get()` also support passing in a body:
 
 ```php
-$this->post('/users', [], new User(1, 'foo@bar.com'));
+$this->post('/users', body: new User(1, 'foo@bar.com'));
 ```
 
 If you pass in an instance of `IBody`, that will be used as the request body.  Otherwise, [content negotiation](content-negotiation.md) will be applied to the value you pass in.

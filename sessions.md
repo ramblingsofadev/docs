@@ -121,11 +121,11 @@ namespace App\Authentication\Api\Controllers;
 
 use Aphiria\Sessions\ISession;
 
-final class UserController extends Controller
+final class AuthController extends Controller
 {
-    // The session will be automatically injected into the controller by the router
     public function __construct(private ISession $session) {}
 
+    #[Post('login')]
     public function logIn(LoginDto $loginDto): IResponse
     {
         // Do the login...

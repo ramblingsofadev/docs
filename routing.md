@@ -20,11 +20,9 @@
    4. [Route Constraints](#route-attributes-constraints)
    5. [Scanning For Attributes](#scanning-for-attributes)
 3. [Route Builders](#route-builders)
-   1. [Route Actions](#route-builders-actions)
-   2. [Route Groups](#route-builders-groups)
-   3. [Middleware](#route-builders-middleware)
-   4. [Route Constraints](#route-builders-constraints)
-   5. [Using Aphiria's Application Builder Library](#using-aphirias-application-builder-library)
+   1. [Route Groups](#route-builders-groups)
+   2. [Middleware](#route-builders-middleware)
+   3. [Route Constraints](#route-builders-constraints)
 4. [Versioned API Example](#versioned-api-example)
    1. [Getting Headers in PHP](#getting-php-headers)
 5. [Route Variable Constraints](#route-variable-constraints)
@@ -107,7 +105,7 @@ To get the [middleware bindings](#middleware), call:
 $result->route->middlewareBindings;
 ```
 
-If `$result->methodIsAllowed` is `false`, you can return a 405 response with a list of allowed methods:
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a> and `$result->methodIsAllowed`, a 405 response will automatically be returned with a list of allowed methods.  If you're not, you can manually do the same thing:
 
 ```php
 header('Allow', implode(', ', $result->allowedMethods));
@@ -229,7 +227,7 @@ The following HTTP methods have route attributes:
 Each attribute takes in the same parameters:
 
 ```php
-use Aphiria\Routing\Attributes\{Get, RouteConstraint};
+use Aphiria\Routing\Attributes\Get;
 
 #[Get(
     path: 'courses/:courseId',
@@ -241,6 +239,8 @@ use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 ```
 
 <h3 id="route-attributes-groups">Route Groups</h3>
+
+You can apply route groups, constraints, and middleware to all endpoints in a controller:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
@@ -259,7 +259,7 @@ use App\Users\User;
     RouteConstraint(MyConstraint::class),
     Middleware(Authentication::class)
 ]
-class CourseController extends Controller
+final class CourseController extends Controller
 {
     #[Get('')]
     public function getCourseById(int $courseId): Course
@@ -275,26 +275,11 @@ class CourseController extends Controller
 }
 ```
 
-When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `courses/:courseId` and another with path `courses/:courseId/professors`.  You can add the following properties to route group attributes:
-
-```php
-use Aphiria\Routing\Attributes\{RouteConstraint, RouteGroup};
-
-#[RouteGroup(
-    path: 'users',
-    host: 'api.example.com',
-    isHttpsOnly: true,
-    attributes: ['role' => 'admin']
-)]
-class UserController extends Controller
-{
-    // ...
-}
-```
+When our routes get compiled, the route group path will be prefixed to the path of any route within the controller.  In the above example, this would create a route with path `courses/:courseId` and another with path `courses/:courseId/professors`.
   
 <h3 id="route-attributes-middleware">Middleware</h3>
 
-Middleware are added separately:
+Middleware are a separate attribute:
 
 ```php
 use Aphiria\Routing\Attributes\Middleware;
@@ -311,7 +296,7 @@ You can specify the name of the route constraint class and any primitive constru
 ```php
 use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     #[
         Get('users/:userId'),
@@ -380,25 +365,22 @@ $routes->post('/foo');
 $routes->put('/foo');
 ```
 
-Each method returns an instance of `RouteBuilder`, and accepts the following parameters:
+Each method accepts the following parameters:
 
-* `string $pathTemplate`
-    * The path for this route ([read about syntax](#route-variables))
-* `string|null $hostTemplate` (optional)
-    * The optional host template for this route  ([read about syntax](#route-variables))
-* `bool $isHttpsOnly` (optional)
-    * Whether or not this route is HTTPS-only
+```php
+$routes->get(path: '/user', host: 'api.example.com', isHttpsOnly: true)
+    ->mapsToMethod(UserController::class, 'getUserById');
+```
+
+They all return an instance of `RouteBuilder`, which lets you specify things like controller methods, [middleware](#route-builders-middleware), and [constraints](#route-builders-constraints).
 
 You can also call `RouteCollectionBuilder::route()` and pass in the HTTP method(s) you'd like to map to.
 
-<h3 id="route-builders-action">Route Actions</h3>
-
-A route action contains the controller method to call when a route is matched.
-
 ```php
-$routes->get('users/:userId')
-    ->mapsToMethod(UserController::class, 'getUserById');
+$routes->route(['GET'], path: '/user', host: 'api.example.com', isHttpsOnly: true);
 ```
+
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the best place to define your routes is in modules using [application builders](configuration.md#component-routes).
 
 <h3 id="route-builders-groups">Route Groups</h3>
 
@@ -486,10 +468,6 @@ $routes->get('posts')
     ->withManyConstraints([new FooConstraint(), new BarConstraint()]);
 ```
 
-<h3 id="using-aphirias-application-builder-library">Using Aphiria's Application Builder Library</h3>
-
-Learn more about how [Aphiria's application builder library](configuration.md#component-routes) can simplify registering your routes.
-
 <h2 id="versioned-api-example">Versioned API Example</h2>
 
 Let's say your app sends an API version header, and you want to match an endpoint that supports that version.  You could do this by using a route "attribute" and a route constraint.  Let's create some routes that have the same path, but support different versions of the API:
@@ -498,7 +476,7 @@ Let's say your app sends an API version header, and you want to match an endpoin
 use Aphiria\Routing\Attributes\Get;
 use Aphiria\Routing\Attributes\RouteConstraint;
 
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     #[
         Get('comments', attributes: ['API-VERSION' => 'v1.0']),

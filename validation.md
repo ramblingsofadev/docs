@@ -7,6 +7,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Introduction](#introduction)
+   1. [Creating A Validator](#creating-a-validator)
 2. [Validating Data](#validating-data)
    1. [Validating Objects](#validating-objects)
    2. [Validating Properties](#validating-properties)
@@ -19,8 +20,6 @@
    1. [Error Message Templates](#error-message-templates)
    2. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
 5. [Validation Attributes](#validation-attributes)
-   1. [Built-In Attributes](#built-in-attributes)
-   2. [Using Attributes](#using-attributes)
 6. [Validating Request Bodies](#validating-request-bodies)
 
 </div>
@@ -32,23 +31,78 @@
 Validating your data, especially input, is critical for ensuring that your application runs smoothly.  Let's take a look at how you can do this with your POPOs in Aphiria.  Assume we have the following model in your application:
 
 ```php
+use Aphiria\Validation\Constraints\Attributes\{Email, Required};
+
 final class User
 {
-    public function __construct(
-        public int $id, 
-        public string $email, 
-        public string $name
-    ) {}
+    public int $id;
+    #[Email]
+    public string $email;
+    #[Required]
+    public string $name;
 }
 ```
 
-Let's set up some constraints.
+Once you've [set up your validator](#creating-a-validator), validating a `User` instance is as simple as:
+
+```php
+$user = new User(123, 'dave@example.com', 'Dave');
+$validator->validateObject($user);
+```
+
+If the object was not valid, a `ValidationException` will be thrown.  That's it - validation, made simple.
+
+<h3 id="creating-a-validator">Creating A Validator</h3>
+
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the validator will already be [bound](dependency-injection.md#binders) to the DI container.  You can enable attributes in `App`:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Aphiria\Framework\Application\AphiriaComponents;
+
+final class App implements IModule
+{
+    use AphiriaComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withValidatorAttributes($appBuilder);
+    }
+}
+```
+
+Otherwise, you can manually scan for attributes:
+
+```php
+use Aphiria\Validation\Constraints\Attributes\AttributeObjectConstraintsRegistrant;
+use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
+use Aphiria\Validation\Constraints\ObjectConstraintsRegistrantCollection;
+use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
+use Aphiria\Validation\Validator;
+
+// It's best to cache the results of scanning for attributes in production
+if (\getenv('APP_ENV') === 'production') {  
+    $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
+} else {
+    $constraintCache = null;
+}
+
+$objectConstraints = new ObjectConstraintsRegistry();
+$objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection($constraintCache);
+$objectConstraintsRegistrants->add(new AttributeObjectConstraintsRegistrant(['PATH_TO_SCAN']));
+$objectConstraintsRegistrants->registerConstraints($objectConstraints);
+
+$validator = new Validator($objectConstraints);
+```
+
+If you prefer to not use attributes, you can use a fluent syntax to manually register constraints instead:
 
 ```php
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
-use Aphiria\Validation\Constraints\{EmailConstraint, RequiredConstraint};
+use Aphiria\Validation\Constraints\EmailConstraint;
+use Aphiria\Validation\Constraints\RequiredConstraint;
 use Aphiria\Validation\Validator;
-use App\Users\User;
 
 // Set up our validator
 $constraintsBuilder = new ObjectConstraintsRegistryBuilder();
@@ -56,13 +110,9 @@ $constraintsBuilder->class(User::class)
     ->hasPropertyConstraints('email', new EmailConstraint())
     ->hasPropertyConstraints('name', new RequiredConstraint());
 $validator = new Validator($constraintsBuilder->build());
-
-// Let's validate
-$user = new User(123, 'dave@example.com', 'Dave');
-$validator->validateObject($user);
 ```
 
-If the object was not valid, a `ValidationException` will be thrown.  That's it - validation, made simple.
+> **Note:** The best place to [manually register constraints](configuration.md#component-validator) on your classes is in a [module](configuration.md#modules).
 
 <h2 id="validating-data">Validating Data</h2>
 
@@ -163,24 +213,24 @@ A constraint is something that a value must pass to be considered valid.  For ex
 
 Aphiria comes with some useful constraints built-in:
 
-Name | Description
------- | ------
-`AlphaConstraint` | The value must only contain alphabet characters
-`AlphanumericConstraint` | The value must only contain alphanumeric characters
-`BetweenConstraint` | The value must fall in between two values (takes in whether or not the min and max are inclusive)
-`CallbackConstraint` | The value must satisfy a callback that returns a boolean
-`DateConstraint` | The value must match a date-time format
-`EachConstraint` | The value must satisfy a list of constraints (takes in a list of `IConstraint`)
-`EqualsConstraint` | The value must equal a value
-`InConstraint` | The value must be in a list of acceptable values
-`IntegerConstraint` | The value must be an integer
-`IPAddressConstraint` | The value must be an IP address
-`MaxConstraint` | The value cannot exceed a max value (takes in whether or not the max is inclusive)
-`MinConstraint` | The value cannot go below a min value (takes in whether or not the min is inclusive)
-`NotInConstraint` | The value must not be in a list of values
-`NumericConstraint` | The value must be numeric
-`RegexConstraint` | The value must satisfy a regular expression
-`RequiredConstraint` | The value must not be null
+Name | Attribute | Description
+------ | ------ | ------
+`AlphaConstraint` | `Alpha` | The value must only contain alphabet characters
+`AlphanumericConstraint` | `Alphanumeric` | The value must only contain alphanumeric characters
+`BetweenConstraint` | `Between` | The value must fall in between two values (takes in whether or not the min and max are inclusive)
+`CallbackConstraint` | N/A | The value must satisfy a callback that returns a boolean
+`DateConstraint` | `Date` | The value must match a date-time format
+`EachConstraint` | `Each` | The value must satisfy a list of constraints (takes in a list of `IConstraint`)
+`EqualsConstraint` | `Equals` | The value must equal a value
+`InConstraint` | `In` | The value must be in a list of acceptable values
+`IntegerConstraint` | `Integer` | The value must be an integer
+`IPAddressConstraint` | `IPAddress` | The value must be an IP address
+`MaxConstraint` | `Max` | The value cannot exceed a max value (takes in whether or not the max is inclusive)
+`MinConstraint` | `Min` | The value cannot go below a min value (takes in whether or not the min is inclusive)
+`NotInConstraint` | `NotIn` | The value must not be in a list of values
+`NumericConstraint` | `Numeric` | The value must be numeric
+`RegexConstraint` | `Regex` | The value must satisfy a regular expression
+`RequiredConstraint` | `Required` | The value must not be null
 
 <h3 id="custom-constraints">Custom Constraints</h3>
 
@@ -205,7 +255,7 @@ final class MaxLengthConstraint implements IConstraint
 
     public function passes($value): bool
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             throw new \InvalidArgumentException('Value must be string');
         }
 
@@ -214,11 +264,35 @@ final class MaxLengthConstraint implements IConstraint
 }
 ```
 
+Let's set up an attribute for this constraint.
+
+```php
+use Aphiria\Validation\Constraints\Attributes\ConstraintAttribute;
+
+final class MaxLength extends ConstraintAttribute
+{
+    public function __construct(public int $maxLength, string $errorMessageId = null)
+    {
+        parent::__construct($errorMessageId);
+    }
+    
+    public function createConstraintFromAttribute(): MaxLengthConstraint
+    {
+        return new MaxLengthConstraint($this->maxLength);
+    }
+}
+```
+
 You can now use this constraint just like any other built-in constraint:
 
 ```php
-$constraintsBuilder->class(BlogPost::class)
-    ->hasPropertyConstraints('title', new MaxLengthConstraint(32));
+class BlogPost
+{
+    #[MaxLength(32)]
+    public string $title;
+    #[MaxLength(1000)]
+    public string $content;
+}
 ```
 
 <h2 id="error-messages">Error Messages</h2>
@@ -322,15 +396,18 @@ $errorMessageInterpolator = new IcuFormatErrorMessageInterpolator($errorMessageT
 $validator = new Validator($objectConstraints, $errorMessageInterpolator);
 ```
 
-You can override the default error message ID of a constraint by passing one in via the constructor:
+You can override the default error message ID of a constraint:
 
 ```php
-use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
-use Aphiria\Validation\Constraints\EmailConstraint;
+use Aphiria\Validation\Constraints\Attributes\Required;
 
-$constraintsBuilder = new ObjectConstraintsRegistryBuilder();
-$constraintsBuilder->class(User::class)
-    ->hasPropertyConstraints('email', new EmailConstraint('email-invalid'));
+final class BlogPost
+{
+    #[Required('title-invalid')]
+    public string $title;
+    #[Required('content-invalid')]
+    public string $content;
+}
 ```
 
 <h3 id="built-in-error-message-interpolators">Built-In Error Message Interpolators</h3>
@@ -341,7 +418,7 @@ If you do require i18n and are using the <a href="http://userguide.icu-project.o
 
 <h2 id="validation-attributes">Validation Attributes</h2>
 
-Aphiria offers the option to use attributes to map object properties and methods to constraints.  The benefit to doing this is that it keeps the validation rules close (literally) to your models.  Let's recreate the example in the [introduction](#introduction).
+Aphiria offers the option to use attributes to map object properties and methods to constraints.  The benefit to doing this is that it keeps the validation rules close (literally) to your models.  Once you [configure your application to use attributes](#using-attributes), you can validate your objects [just like](#validating-objects) you do when not using attributes.
 
 ```php
 use Aphiria\Validation\Constraints\Attributes\{Email, Required};
@@ -353,82 +430,7 @@ final class User
     public string $email;
     #[Required]
     public string $name;
-
-    public function __construct(int $id, string $email, string $name)
-    {
-        $this->id = $id;
-        $this->email = $email;
-        $this->name = $name;
-    }
 }
-```
-
-Once you [configure your application to use attributes](#using-attributes), you can validate your objects [just like](#validating-objects) you do when not using attributes.
-
-<h3 id="built-in-attributes">Built-In Attributes</h3>
-
-The following attributes come with Aphiria:
-
-* `Alpha`
-* `Alphanumeric`
-* `Between`
-* `Date`
-* `Each`
-* `Email`
-* `Equals`
-* `In`
-* `Integer`
-* `IPAddress`
-* `Max`
-* `Min`
-* `NotIn`
-* `Numeric`
-* `Regex`
-* `Required`
-
-<h3 id="using-attributes">Using Attributes</h3>
-
-Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
-
-```php
-use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
-
-final class App implements IModule
-{
-    use AphiriaComponents;
-
-    public function build(IApplicationBuilder $appBuilder): void
-    {
-        $this->withValidatorAttributes($appBuilder);
-    }
-}
-```
-
-Otherwise, you can manually scan for attributes:
-
-```php
-use Aphiria\Validation\Constraints\Attributes\AttributeObjectConstraintsRegistrant;
-use Aphiria\Validation\Constraints\Caching\FileObjectConstraintsRegistryCache;
-use Aphiria\Validation\Constraints\ObjectConstraintsRegistrantCollection;
-use Aphiria\Validation\Constraints\ObjectConstraintsRegistry;
-use Aphiria\Validation\Validator;
-
-
-// It's best to cache the results of scanning for attributes in production
-if (\getenv('APP_ENV') === 'production') {  
-    $constraintCache = new FileObjectConstraintsRegistryCache('/tmp/constraints.txt');
-} else {
-    $constraintCache = null;
-}
-
-$objectConstraints = new ObjectConstraintsRegistry();
-$objectConstraintsRegistrants = new ObjectConstraintsRegistrantCollection($constraintCache);
-$objectConstraintsRegistrants->add(new AttributeObjectConstraintsRegistrant(['PATH_TO_SCAN']));
-$objectConstraintsRegistrants->registerConstraints($objectConstraints);
-
-$validator = new Validator($objectConstraints);
 ```
 
 <h2 id="validating-request-bodies">Validating Request Bodies</h2>

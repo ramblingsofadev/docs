@@ -22,10 +22,11 @@
 
 <h2 id="basics">Basics</h2>
 
-A controller contains the methods that are invoked when a [request comes through](routing.md).  Your controllers must extend `Controller`.  Let's say you needed an endpoint to get a user.  Simple:
+A controller contains the methods that are invoked when your app [handles a request](routing.md).  Your controllers must extend `Controller`.  Let's say you needed an endpoint to get a user.  Simple:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
+use Aphiria\Routing\Attributes\Get;
 use App\Users\IUserService;
 use App\Users\User;
 
@@ -33,9 +34,10 @@ final class UserController extends Controller
 {
     public function __construct(private IUserService $users) {}
 
-    public function getUser(int $id): User
+    #[Get('users/:userId')]
+    public function getUser(int $userId): User
     {
-        return $this->users->getUserById($id);
+        return $this->users->getUserById($userId);
     }
 }
 ```
@@ -47,11 +49,12 @@ You can also be a bit more explicit and return a response yourself.  For example
 ```php
 final class UserController extends Controller
 {
-    // ...
+    public function __construct(private IUserService $users) {}
     
-    public function getUser(int $id): IResponse
+    #[Get('users/:userId')]
+    public function getUser(int $userId): IResponse
     {
-        $user = $this->users->getUserById($id);
+        $user = $this->users->getUserById($userId);
 
         return $this->ok($user);
     }
@@ -92,9 +95,10 @@ final class UserController extends Controller
 {
     // ...
     
-    public function getUser(int $id): IResponse
+    #[Get('users/:userId')]
+    public function getUser(int $userId): IResponse
     {
-        $user = $this->users->getUserById($id);
+        $user = $this->users->getUserById($userId);
         $headers = new Headers();
         $headers->add('Cache-Control', 'no-cache');
         
@@ -116,6 +120,7 @@ final class UserController extends Controller
 {
     // ...
     
+    #[Post('users')]
     public function createUser(UserDto $userDto): IResponse
     {
         $user = $this->users->createUser($userDto->email, $userDto->password);
@@ -136,7 +141,8 @@ final class UserController extends Controller
 {
     // ...
     
-    // Assume path and query string is "users?includeDeletedUsers=1"
+    // Assume the query string is "?includeDeletedUsers=1"
+    #[Get('users')]
     public function getAllUsers(bool $includeDeletedUsers): array
     {
         return $this->users->getAllUsers($includeDeletedUsers);
@@ -155,6 +161,7 @@ final class UserController extends Controller
 {
     // ...
 
+    #[Post('users')]
     public function createManyUsers(): IResponse
     {
         $users = $this->readRequestBodyAs(User::class . '[]');
@@ -178,6 +185,7 @@ final class UserController extends Controller
 {
     public function __construct(private IRequestBodyValidator $validator) {}
 
+    #[Post('users')]
     public function createManyUsers(): IResponse
     {
         $users = $this->readRequestBodyAs(User::class . '[]');
@@ -195,6 +203,7 @@ Your controllers might need to do more advanced reading of request data, such as
 ```php
 final class JsonPrettifierController extends Controller
 {
+    #[Post('prettyjson')]
     public function prettifyJson(): IResponse
     {
         if (!$this->requestParser->isJson($this->request)) {
@@ -221,6 +230,7 @@ final class LoginController extends Controller
 {
     // ...
 
+    #[Post('login')]
     public function logIn(LoginDto $login): IResponse
     {
         $authResults = null;
