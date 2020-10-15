@@ -211,7 +211,7 @@ final class UserModule implements IModule
 
 <h3 id="component-validator">Validator</h3>
 
-You can also manually configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#validation-attributes).
+You can also manually configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#creating-a-validator).
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;

@@ -19,8 +19,7 @@
 4. [Error Messages](#error-messages)
    1. [Error Message Templates](#error-message-templates)
    2. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
-5. [Validation Attributes](#validation-attributes)
-6. [Validating Request Bodies](#validating-request-bodies)
+5. [Validating Request Bodies](#validating-request-bodies)
 
 </div>
 
@@ -234,7 +233,7 @@ Name | Attribute | Description
 
 <h3 id="custom-constraints">Custom Constraints</h3>
 
-Creating a custom constraint is simple - just implement `IConstraint`.
+Let's say you want a custom constraint that enforces the max length of a string.  Easy - just implement `IConstraint`.
 
 ```php
 use Aphiria\Validation\Constraints\IConstraint;
@@ -350,7 +349,7 @@ Aphiria allows you to configure how your error message IDs map to error message 
 Let's look at an example of option 2.  Let's say that your templates are stored in a PHP file and are separated by locale, eg:
 
 ```php
-// These messages messages are in the ICU format
+// These messages are in the ICU format
 return [
     'en' => [
         'tooLong' => 'Value can not exceed {maxLength, plural, one {# character}, other {# characters}}'
@@ -415,23 +414,6 @@ final class BlogPost
 Aphiria comes with a couple error message interpolators.  `StringReplaceErrorMessageInterpolator` simply replaces `{placeholder}` in the constraints' error message templates with the constraints' placeholders.  It is the default interpolator, and is most suitable for applications that do not require i18n.
 
 If you do require i18n and are using the <a href="http://userguide.icu-project.org/formatparse/messages" target="_blank">ICU format</a>, `IcuErrorMessageInterpolator` is probably the better choice.
-
-<h2 id="validation-attributes">Validation Attributes</h2>
-
-Aphiria offers the option to use attributes to map object properties and methods to constraints.  The benefit to doing this is that it keeps the validation rules close (literally) to your models.  Once you [configure your application to use attributes](#using-attributes), you can validate your objects [just like](#validating-objects) you do when not using attributes.
-
-```php
-use Aphiria\Validation\Constraints\Attributes\{Email, Required};
-
-final class User
-{
-    public int $id;
-    #[Email]
-    public string $email;
-    #[Required]
-    public string $name;
-}
-```
 
 <h2 id="validating-request-bodies">Validating Request Bodies</h2>
 
