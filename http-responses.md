@@ -95,14 +95,14 @@ use Aphiria\Net\Http\Headers\Cookie;
 (new ResponseFormatter)->setCookie(
     $response,
     new Cookie(
-        'token', // The name
-        'abc123', // The value
-        3600, // The max age of the cookie in seconds (defaults to null)
-        '/', // The path (defaults to null)
-        'example.com', // The domain (defaults to null)
-        true, // Whether or not the cookie is HTTPS-only (defaults to false)
-        true, // Whether or not the cookie is not readable by client scripts (defaults to true)
-        Cookie::SAME_SITE_LAX // The same-site setting (defaults to lax)
+        name: 'token',
+        value: 'abc123',
+        maxAge: 3600,
+        path: '/',
+        domain: 'example.com',
+        isSecure: true, // Defaults to true
+        isHttpOnly: true, // Defaults to true
+        sameSite: Cookie::SAME_SITE_LAX // Defaults to lax
     )
 );
 ```
