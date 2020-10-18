@@ -59,7 +59,7 @@ Let's look at a fully-functional example:
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
-use App\Books\Api\{BookController, Authorization};
+use App\Books\Api\{Authorization, BookController};
 
 // Register the routes
 $routes = new RouteCollectionBuilder();
@@ -152,13 +152,13 @@ To grab the middleware on a matched route, call:
 ```php
 foreach ($result->middlewareBindings as $middlewareBinding) {
     $middlewareBinding->className; // "Authorization"
-    $middlewareBinding->attributes; // ["role" => "admin"]
+    $middlewareBinding->parameters; // ["role" => "admin"]
 }
 ```
 
-<h4 id="middleware-attributes">Middleware Attributes</h4>
+<h4 id="middleware-parameters">Middleware Parameters</h4>
 
-Some frameworks, such as Aphiria and Laravel, let you bind attributes to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Learn more about how to specify middleware attributes as [attributes](#route-attributes-middleware) or [route builders](#route-builders-middleware).
+Some frameworks, such as Aphiria and Laravel, let you bind parameters to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Learn more about how to specify middleware parameters as [attributes](#route-attributes-middleware) or [route builders](#route-builders-middleware).
 
 <h3 id="route-constraints">Route Constraints</h3>
 
@@ -201,7 +201,7 @@ final class UserController extends Controller
 {
     #[
         Put('users/:userId'),
-        Middleware(Authorization::class, attributes: ['role' => 'admin'])
+        Middleware(Authorization::class, parameters: ['role' => 'admin'])
     ]
     public function updateUser(User $user): IResponse
     {
@@ -234,7 +234,7 @@ use Aphiria\Routing\Attributes\Get;
     host: 'api.example.com',
     name: 'getCourse',
     isHttpsOnly: true,
-    attributes: ['role' => 'admin']
+    parameters: ['role' => 'admin']
 )]
 ```
 
@@ -254,7 +254,7 @@ use App\Users\User;
         path: 'courses/:courseId',
         host: 'api.example.com',
         isHttpsOnly: true,
-        attributes: ['role' => 'admin']
+        parameters: ['role' => 'admin']
     ),
     RouteConstraint(MyConstraint::class),
     Middleware(Authentication::class)
@@ -284,7 +284,7 @@ Middleware are a separate attribute:
 ```php
 use Aphiria\Routing\Attributes\Middleware;
 
-#[Middleware(Authorization::class, attributes: ['role' => 'admin'])]
+#[Middleware(Authorization::class, parameters: ['role' => 'admin'])]
 ```
 
 You can also add middleware to a controller class to indicate that it applies to all routes in that controller.
@@ -396,7 +396,7 @@ $routes->group(
         isHttpsOnly: true,
         constraints: [new MyConstraint()],
         middlewareBindings: [new MiddlewareBinding(Authentication::class)],
-        attributes: ['role' => 'admin']
+        parameters: ['role' => 'admin']
     ),
     function (RouteCollectionBuilder $routes) {
         // This route's path will be 'courses/:courseId'
@@ -433,7 +433,7 @@ $routes->get('foo')
 
 Under the hood, these class names get converted to instances of `MiddlewareBinding`.
 
-You can also add [attributes to your middleware](#middleware-attributes):
+You can also add [parameters to your middleware](#middleware-parameters):
 
 ```php
 $routes->get('foo')
@@ -470,16 +470,15 @@ $routes->get('posts')
 
 <h2 id="versioned-api-example">Versioned API Example</h2>
 
-Let's say your app sends an API version header, and you want to match an endpoint that supports that version.  You could do this by using a route "attribute" and a route constraint.  Let's create some routes that have the same path, but support different versions of the API:
+Let's say your app sends an API version header, and you want to match an endpoint that supports that version.  You could do this by using a route "parameter" and a route constraint.  Let's create some routes that have the same path, but support different versions of the API:
 
 ```php
-use Aphiria\Routing\Attributes\Get;
-use Aphiria\Routing\Attributes\RouteConstraint;
+use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
 final class CommentController extends Controller
 {
     #[
-        Get('comments', attributes: ['API-VERSION' => 'v1.0']),
+        Get('comments', parameters: ['API-VERSION' => 'v1.0']),
         RouteConstraint(ApiVersionConstraint::class)
     ]
     public function getAllComments1_0(): array
@@ -488,7 +487,7 @@ final class CommentController extends Controller
     }
     
     #[
-        Get('comments', attributes: ['API-VERSION' => 'v2.0']),
+        Get('comments', parameters: ['API-VERSION' => 'v2.0']),
         RouteConstraint(ApiVersionConstraint::class)
     ]
     public function getAllComments2_0(): array
@@ -498,7 +497,7 @@ final class CommentController extends Controller
 }
 ```
 
-Now, let's add a route constraint to match the "API-VERSION" header to the attribute on our route:
+Now, let's add a route constraint to match the "API-VERSION" header to the parameter on our route:
 
 ```php
 use Aphiria\Routing\Matchers\Constraints\IRouteConstraint;
@@ -513,13 +512,13 @@ final class ApiVersionConstraint implements IRouteConstraint
         string $path,
         array $headers
     ): bool {
-        $attributes = $matchedRouteCandidate->route->attributes;
+        $parameters = $matchedRouteCandidate->route->parameters;
 
-        if (!isset($attributes['API-VERSION'])) {
+        if (!isset($parameters['API-VERSION'])) {
             return false;
         }
 
-        return \in_array($attributes['API-VERSION'], $headers['API-VERSION'], true);
+        return \in_array($parameters['API-VERSION'], $headers['API-VERSION'], true);
     }
 }
 ```

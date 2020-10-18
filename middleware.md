@@ -9,7 +9,7 @@
 1. [Basics](#basics)
    1. [Manipulating the Request](#manipulating-the-request)
    2. [Manipulating the Response](#manipulating-the-response)
-   3. [Middleware Attributes](#middleware-attributes)
+   3. [Middleware Parameters](#middleware-parameters)
 2. [Executing Middleware](#executing-middleware)
 
 </div>
@@ -80,15 +80,15 @@ final class ResponseManipulator implements IMiddleware
 }
 ```
 
-<h3 id="middleware-attributes">Middleware Attributes</h3>
+<h3 id="middleware-parameters">Middleware Parameters</h3>
 
-Occasionally, you'll find yourself wanting to pass primitive values to middleware to indicate something such as a required role to execute an action.  In these cases, your middleware should extend `AttributeMiddleware`:
+Occasionally, you'll find yourself wanting to pass primitive values to middleware to indicate something such as a required role to execute an action.  In these cases, your middleware should extend `ParameterizedMiddleware`:
 
 ```php
-use Aphiria\Middleware\AttributeMiddleware;
+use Aphiria\Middleware\ParameterizedMiddleware;
 use Aphiria\Net\Http\{IRequest, IRequestHandler, IResponse};
 
-final class RoleMiddleware extends AttributeMiddleware
+final class RoleMiddleware extends ParameterizedMiddleware
 {
     // Inject any dependencies your middleware needs
     public function __construct(private IAuthService $authService) {}
@@ -104,8 +104,8 @@ final class RoleMiddleware extends AttributeMiddleware
             return new Response(401);
         }
     
-        // Attributes are available via $this->getAttribute()
-        if (!$this->authService->accessTokenHasRole($accessToken, $this->getAttribute('role'))) {
+        // Parameters are available via $this->getParameter()
+        if (!$this->authService->accessTokenHasRole($accessToken, $this->getParameter('role'))) {
             return new Response(403);
         }
 
@@ -123,7 +123,7 @@ final class UserController extends Controller
 {
     #[
         Delete('users/:userId'), 
-        Middleware(RoleMiddleware::class, attributes: ['role' => 'admin'])
+        Middleware(RoleMiddleware::class, parameters: ['role' => 'admin'])
     ]
     public function deleteUser(int $userId): void
     {
