@@ -300,7 +300,7 @@ final class UserController extends Controller
 {
     #[
         Get('users/:userId'),
-        RouteConstraint(MyConstraint::class, constructorParams: ['param1'])
+        RouteConstraint(MyConstraint::class, constructorParameters: ['param1'])
     ]
     public function getUserById(int $userId): User
     {
