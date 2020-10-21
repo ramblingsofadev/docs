@@ -12,7 +12,6 @@
    3. [Route Groups](#route-groups)
    4. [Middleware](#middleware)
    5. [Route Constraints](#route-constraints)
-   6. [Using Aphiria's Net Library](#using-aphirias-net-library)
 2. [Route Attributes](#route-attributes)
    1. [Example](#route-attributes-example)
    2. [Route Groups](#route-attributes-groups)
@@ -32,7 +31,8 @@
 7. [Caching](#caching)
    1. [Route Caching](#route-caching)
    2. [Trie Caching](#trie-caching)
-8. [Matching Algorithm](#matching-algorithm)
+8. [Using Aphiria's Net Library](#using-aphirias-net-library)
+9. [Matching Algorithm](#matching-algorithm)
 
 </div>
 
@@ -40,20 +40,9 @@
 
 <h2 id="basics">Basics</h2>
 
-Routing is the process of mapping HTTP requests to actions.  There are so many routing libraries out there.  Why use this one?  Well, there are a few reasons:
+Routing is the process of mapping HTTP requests to actions.  You can check out what makes Aphiria's routing library different [here](framework-comparisons.md#aphiria-routing).
 
-* It isn't coupled to _any_ library/framework
-* It supports things that other route matching libraries do not support, like:
-  * [Binding framework-agnostic middleware to routes](#middleware)
-  * [The ability to add custom matching constraints on route variables](#route-variable-constraints)
-  * [The ability to match on header values](#versioned-api-example), which makes things like versioning your routes a cinch
-* It is fast
-  * <a href="https://github.com/aphiria/aphiria/blob/0.x/src/Router/bin/benchmarks.php" target="_blank">With 400 routes, it takes ~0.0025ms to match any route (~200% faster than FastRoute)</a>
-  * The speed is due to the unique [trie-based matching algorithm](#matching-algorithm)
-* It supports defining routes through both [attributes](#route-attributes) and a [fluent syntax](#route-builders)
-* It supports [creating URIs from routes](#creating-route-uris)
-
-Let's look at a fully-functional example:
+Let's look at a fully-functional example (or view its [attribute-based alternative](#route-attributes-example)):
 
 ```php
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
@@ -64,7 +53,7 @@ use App\Books\Api\{Authorization, BookController};
 // Register the routes
 $routes = new RouteCollectionBuilder();
 $routes->get('/books/:bookId')
-    ->mapsToMethod(BookController::class, 'getBooksById')
+    ->mapsToMethod(BookController::class, 'getBookById')
     ->withMiddleware(Authorization::class);
 
 // Set up the route matcher
@@ -102,7 +91,10 @@ $result->routeVariables; // ["bookId" => "123"]
 To get the [middleware bindings](#middleware), call:
 
 ```php
-$result->route->middlewareBindings;
+foreach ($result->route->middlewareBindings as $middlewareBinding) {
+    $middlewareBinding->className; // "Authorization"
+    $middlewareBinding->parameters; // ["role" => "admin"]
+}
 ```
 
 If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a> and `$result->methodIsAllowed`, a 405 response will automatically be returned with a list of allowed methods.  If you're not, you can manually do the same thing:
@@ -119,14 +111,11 @@ Aphiria provides a simple syntax for your URIs.  To capture variables in your ro
 users/:userId/profile
 ```
 
-If you'd like to use [constraints](#route-variable-constraints), then put them in parentheses after the variable:
-```php
-:varName(constraint1,constraint2(param1,param2))
-```
+You can also add [constraints](#route-variable-constraints) to your variables.
 
 <h3 id="optional-route-parts">Optional Route Parts</h3>
 
-If part of your route is optional, then surround it with brackets.  For example, the following will match both _archives/2017_ and _archives/2017/7_:
+If part of your route is optional, then surround it with brackets.  For example, the following will match both `archives/2017` and `archives/2017/7`:
 ```php
 archives/:year[/:month]
 ```
@@ -137,7 +126,7 @@ Optional route parts can be nested:
 archives/:year[/:month[/:day]]
 ```
 
-This would match _archives/2017_, _archives/2017/07_, and _archives/2017/07/24_.
+This would match `archives/2017`, `archives/2017/07`, and `archives/2017/07/24`.
 
 <h3 id="route-groups">Route Groups</h3>
 
@@ -147,15 +136,6 @@ Often times, a lot of your routes will share similar properties, such as hosts a
 
 Middleware are a great way to modify both the request and the response on an endpoint.  Aphiria lets you define middleware on your endpoints without binding you to any particular library/framework's middleware implementations.  Learn how to add them as [attributes](#route-attributes-middleware) or [route buidlers](#route-builders-middleware).
 
-To grab the middleware on a matched route, call:
-
-```php
-foreach ($result->middlewareBindings as $middlewareBinding) {
-    $middlewareBinding->className; // "Authorization"
-    $middlewareBinding->parameters; // ["role" => "admin"]
-}
-```
-
 <h4 id="middleware-parameters">Middleware Parameters</h4>
 
 Some frameworks, such as Aphiria and Laravel, let you bind parameters to middleware.  For example, if you have an `Authorization` middleware, but need to bind the user role that's necessary to access that route, you might want to pass in the required user role.  Learn more about how to specify middleware parameters as [attributes](#route-attributes-middleware) or [route builders](#route-builders-middleware).
@@ -163,24 +143,6 @@ Some frameworks, such as Aphiria and Laravel, let you bind parameters to middlew
 <h3 id="route-constraints">Route Constraints</h3>
 
 Sometimes, you might find it useful to add some custom logic for matching routes.  This could involve enforcing anything from only allowing certain HTTP methods for a route (eg `HttpMethodRouteConstraint`) or only allowing HTTPS requests to a particular endpoint.  Learn more how to add them as [attributes](#route-attributes-constraints) or [route builders](#route-builders-constraints).
-
-<h3 id="using-aphirias-net-library">Using Aphiria's Net Library</h3>
-
-You can use [Aphiria's net library](http-requests.md) to route the request instead of relying on PHP's superglobals:
-
-```php
-use Aphiria\Net\Http\RequestFactory;
-
-$request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
-
-// Set up your route matcher like before...
-
-$result = $routeMatcher->matchRoute(
-    $request->getMethod(),
-    $request->getUri()->getHost(),
-    $request->getUri()->getPath()
-);
-```
 
 <h2 id="route-attributes">Route Attributes</h2>
 
@@ -192,18 +154,14 @@ Let's actually define a route:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IResponse;
-use Aphiria\Routing\Attributes\{Middleware, Put};
-use App\Users\Api\Authorization;
-use App\Users\User;
+use Aphiria\Routing\Attributes\{Get, Middleware};
+use App\Boooks\Api\Authorization;
+use App\Boooks\Book;
 
-final class UserController extends Controller
+final class BookController extends Controller
 {
-    #[
-        Put('users/:userId'),
-        Middleware(Authorization::class, parameters: ['role' => 'admin'])
-    ]
-    public function updateUser(User $user): IResponse
+    #[Get('/books/:bookId'), Middleware(Authorization::class)]
+    public function getBookById(int $bookId): Book
     {
         // ...
     }
@@ -244,10 +202,9 @@ You can apply route groups, constraints, and middleware to all endpoints in a co
 
 ```php
 use Aphiria\Api\Controllers\Controller;
-use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Attributes\{Get, Middleware, RouteConstraint, RouteGroup};
-use App\Users\Api\Authorization;
-use App\Users\User;
+use App\Courses\Api\Authorization;
+use App\Courses\Course;
 
 #[
     RouteGroup(
@@ -295,6 +252,7 @@ You can specify the name of the route constraint class and any primitive constru
 
 ```php
 use Aphiria\Routing\Attributes\{Get, RouteConstraint};
+use App\Users\User;
 
 final class UserController extends Controller
 {
@@ -523,7 +481,7 @@ final class ApiVersionConstraint implements IRouteConstraint
 }
 ```
 
-If we hit _/comments_ with an "API-VERSION" header value of "v2.0", we'd match the second route in our example.
+If we hit `/comments` with an "API-VERSION" header value of "v2.0", we'd match the second route in our example.
 
 <h3 id="getting-php-headers">Getting Headers in PHP</h3>
 
@@ -695,6 +653,24 @@ $trieCache = getenv('ENV_NAME') === 'production'
 $trieFactory = new TrieFactory($routes, $trieCache);
 
 // Finish setting up your route matcher...
+```
+
+<h2 id="using-aphirias-net-library">Using Aphiria's Net Library</h2>
+
+You can use [Aphiria's net library](http-requests.md) to route the request instead of relying on PHP's superglobals:
+
+```php
+use Aphiria\Net\Http\RequestFactory;
+
+$request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
+
+// Set up your route matcher like before...
+
+$result = $routeMatcher->matchRoute(
+    $request->getMethod(),
+    $request->getUri()->getHost(),
+    $request->getUri()->getPath()
+);
 ```
 
 <h2 id="matching-algorithm">Matching Algorithm</h2>

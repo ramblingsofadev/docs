@@ -38,7 +38,7 @@
 
 <h2 id="preface">Preface</h2>
 
-Before we get into comparing Aphiria against other frameworks, remember that each framework is just a tool.  Some tools are better suited to some problems than others.  This sort of comparison is inherently subjective, although we will do our best to keep things objective.  If you feel we've misconstrued or missed anything, please feel free to submit an issue or pull request to the documentation to improve it.
+Before we get into comparing Aphiria against other frameworks, remember that each framework is just a tool.  Some tools are better suited to some problems than others.  This sort of comparison is inherently subjective, although we will do our best to keep things objective.  If you feel we've misconstrued or missed anything, please feel free to <a href="https://github.com/aphiria/docs/blob/0.x/framework-comparisons.md" target="_blank">submit an issue or pull request to the documentation</a> to improve it.
 
 <h2 id="general">General</h2>
 
@@ -99,9 +99,11 @@ Routing is how you map a URI to an action, frequently a controller method.
 * Fluent syntax makes defining routes very simple
 * Supports defining routes via attributes
 * Supports custom constraints, which make it possible to do things like versioned endpoints
-* Trie-based solution makes it one of the fastest routing libraries out there
-* Not tied to any HTTP or middleware library
-* Supports host and path matching
+* Trie-based solution makes it one of the fastest routing libraries out there (<a href="https://github.com/aphiria/aphiria/blob/0.x/src/Router/bin/benchmarks.php" target="_blank">~200% faster than FastRoute</a>)
+* Not tied to any library or framework
+* Supports binding framework-agnostic middleware to routes
+* Supports host, path, and header matching, which simplifies creating versioned endpoints
+* Supports creating URIs from routes
 
 <h4 id="aphiria-routing-cons">Cons</h4>
 
