@@ -155,8 +155,8 @@ Let's actually define a route:
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Routing\Attributes\{Get, Middleware};
-use App\Boooks\Api\Authorization;
-use App\Boooks\Book;
+use App\Books\Api\Authorization;
+use App\Books\Book;
 
 final class BookController extends Controller
 {
