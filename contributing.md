@@ -6,14 +6,17 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Bugs](#bugs)
+1. [Basics](#basics)
+2. [Bugs](#bugs)
    1. [Reporting a Bug](#reporting-bug)
    2. [Fixing a Bug](#fixing-bug)
-2. [Features](#features)
-3. [Security Vulnerabilities](#security-vulnerabilities)
-4. [Coding Style](#coding-style)
-   1. [PHPDoc](#phpdoc)
-5. [Naming Conventions](#naming-conventions)
+3. [Features](#features)
+4. [Security Vulnerabilities](#security-vulnerabilities)
+5. [Coding Style](#coding-style)
+   1. [PHP-CS-Fixer](#php-cs-fixer)
+   2. [Psalm](#psalm)
+   3. [PHPDoc](#phpdoc)
+6. [Naming Conventions](#naming-conventions)
    1. [Variables](#variables)
    2. [Functions/Methods](#functions-methods)
    3. [Constants](#constants)
@@ -27,9 +30,20 @@
 
 </nav>
 
+<h1 id="basics">Basics</h1>
+
+First, thank you for taking the time to contribute to Aphiria!  We use GitHub pull requests for all code contributions.  To get started on a [bug fix](#bugs) or [feature](#features), fork <a href="https://github.com/aphiria/aphiria" target="_blank">Aphiria</a>, and create a branch off of `0.x`.  Be sure to run `composer test` locally before opening the pull request to run the unit tests, [static analyzer](#psalm), and [linter](#php-cs-fixer).  Once your bug fix/feature is complete, open a pull request against `0.x`.
+
+All pull requests **must**:
+
+* Have 100% code coverage per PHPUnit and Xdebug 3
+* Abide by our [naming conventions](#naming-conventions)
+* Have no [static analysis](#psalm) errors
+* Have no [linter](#php-cs-fixer) errors
+
 <h2 id="bugs">Bugs</h2>
 
-Before you attempt to write a bug fix, first read the documentation to see if you're perhaps using Aphiria incorrectly.
+Before you attempt to write a bug fix, first read the documentation to see if you're perhaps using Aphiria incorrectly.  If you find a hole in our documentation, feel free to open a <a href="https://github.com/aphiria/docs" target="_blank">pull request</a> to fix it.
 
 <h3 id="reporting-bug">Reporting a Bug</h3>
 
@@ -37,11 +51,11 @@ To report a bug with either the <a href="https://github.com/aphiria/aphiria/issu
 
 <h3 id="fixing-bug">Fixing a Bug</h3>
 
-To fix a bug, create a pull request with the fix and relevant PHPUnit tests that provide 100% code coverage.
+To fix a bug, create a pull request with the fix and relevant PHPUnit tests that provide 100% code coverage.  Before opening a pull request, run `composer test` to run unit tests, the [linter](#php-cs-fixer), and [the static analyzer](#psalm).
 
 <h2 id="features">Features</h2>
 
-We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, please open an issue first to discuss it prior to opening a pull request.  All new features **must** provide unit tests with 100% code coverage.
+We always appreciate when you want to add a new feature to Aphiria.  For minor, backwards-compatible features, create a pull request.  Do not submit pull requests to individual libraries' repositories.  For major, possibly backwards-incompatible features, please open an issue first to discuss it prior to opening a pull request.
 
 Aphiria strives to not create any unnecessary library dependencies.  This even includes having dependencies on other Aphiria libraries whenever possible.  If your change will introduce a new dependency to a library, create an issue and ask about it before implementing it.
 
@@ -51,9 +65,15 @@ Aphiria takes security seriously.  If you find a security vulnerability, please 
 
 <h2 id="coding-style">Coding Style</h2>
 
-Aphiria follows <a href="http://www.php-fig.org/psr/psr-1/" title="PSR-1 spec" target="_blank">PSR-1</a>, <a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2 spec" target="_blank">PSR-2</a>, and  <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  It uses PHP CS Fixer to enforce code style (available by running `composer run-script lint-fix` from the terminal).
+Aphiria follows <a href="http://www.php-fig.org/psr/psr-1/" title="PSR-1 spec" target="_blank">PSR-1</a>, <a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2 spec" target="_blank">PSR-2</a>, and  <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
 
-All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
+<h3 id="php-cs-fixer">PHP-CS-Fixer</h3>
+
+All code is run through <a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" target="_blank">PHP-CS-Fixer</a>, a powerful linter.  Pull requests that do not pass the linter will automatically be prevented from being merged.  You can run the linter locally via `composer phpcs-test` to check for errors, and `composer phpcs-fix` to fix any errors.
+
+<h3 id="psalm">Psalm</h3>
+
+Aphiria uses the terrific static analysis tool <a href="https://psalm.dev" target="_blank">Psalm</a>.  It can detect things like unused code, inefficient code, and incorrect types.  We use the highest level of error reporting.  You can run Psalm locally via `composer psalm`.  Occasionally, Psalm might highlight false positives, which can be suppressed with `/** @psalm-suppress {issue handler name} {brief description of why you're suppressing it} */` immediately before the problematic line.  You can also suppress false positives in _psalm.xml.dist_ to suppress them at the directory- and file-levels.  Be sure to include an XML comment (eg `<!-- {brief description of why you're suppressing it} -->`) if you're suppressing errors in _psalm.xml.dist_.  Use error suppression sparingly - try to fix any legitimate issues that Psalm finds.
 
 <h3 id="phpdoc">PHPDoc</h3>
 
@@ -62,13 +82,10 @@ Use PHPDoc to document **all** class properties, methods, and functions.  Constr
 ```php
 final class Book
 {
-    /** @var string The title of the book */
-    private string $title;
-    
     /**
      * @param string $title The title of the book
      */
-    public function __construct(string $title)
+    public function __construct(private string $title)
     {
         $this->setTitle($title);
     }
@@ -147,6 +164,8 @@ All class names:
 * Must be Pascal case, eg `ListCompiler`
   * For class name acronyms &le; 2 characters long, capitalize each character, eg `IO`
   * Class filenames should simply be the class name with *.php* appended, eg *ListCompiler.php*
+    
+Whenever possible, <a href="https://wiki.php.net/rfc/constructor_promotion" target="_blank">constructor property promotion</a> should be used for properties that have no custom logic in the constructor.
   
 Class properties should appear before any methods.  The following is the preferred ordering of class properties and methods:
 
