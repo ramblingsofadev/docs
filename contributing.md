@@ -13,8 +13,8 @@
 3. [Features](#features)
 4. [Security Vulnerabilities](#security-vulnerabilities)
 5. [Coding Style](#coding-style)
-   1. [PHP-CS-Fixer](#php-cs-fixer)
-   2. [Psalm](#psalm)
+   1. [Linter](#linter)
+   2. [Static Analysis](#static-analysis)
    3. [PHPDoc](#phpdoc)
 6. [Naming Conventions](#naming-conventions)
    1. [Variables](#variables)
@@ -32,14 +32,14 @@
 
 <h1 id="basics">Basics</h1>
 
-First, thank you for taking the time to contribute to Aphiria!  We use GitHub pull requests for all code contributions.  To get started on a [bug fix](#bugs) or [feature](#features), fork <a href="https://github.com/aphiria/aphiria" target="_blank">Aphiria</a>, and create a branch off of `0.x`.  Be sure to run `composer test` locally before opening the pull request to run the unit tests, [static analyzer](#psalm), and [linter](#php-cs-fixer).  Once your bug fix/feature is complete, open a pull request against `0.x`.
+First, thank you for taking the time to contribute to Aphiria!  We use GitHub pull requests for all code contributions.  To get started on a [bug fix](#bugs) or [feature](#features), fork <a href="https://github.com/aphiria/aphiria" target="_blank">Aphiria</a>, and create a branch off of `0.x`.  Be sure to run `composer test` locally before opening the pull request to run the unit tests, [static analyzer](#static-analysis), and [linter](#linter).  Once your bug fix/feature is complete, open a pull request against `0.x`.
 
 All pull requests **must**:
 
 * Have 100% code coverage per PHPUnit and Xdebug 3
 * Abide by our [naming conventions](#naming-conventions)
-* Have no [static analysis](#psalm) errors
-* Have no [linter](#php-cs-fixer) errors
+* Have no [static analysis](#static-analysis) errors
+* Have no [linter](#linter) errors
 
 <h2 id="bugs">Bugs</h2>
 
@@ -51,7 +51,7 @@ To report a bug with either the <a href="https://github.com/aphiria/aphiria/issu
 
 <h3 id="fixing-bug">Fixing a Bug</h3>
 
-To fix a bug, create a pull request with the fix and relevant PHPUnit tests that provide 100% code coverage.  Before opening a pull request, run `composer test` to run unit tests, the [linter](#php-cs-fixer), and [the static analyzer](#psalm).
+To fix a bug, create a pull request with the fix and relevant PHPUnit tests that provide 100% code coverage.  Before opening a pull request, run `composer test` to run unit tests, the [linter](#linter), and [the static analyzer](#static-analysis).
 
 <h2 id="features">Features</h2>
 
@@ -67,11 +67,11 @@ Aphiria takes security seriously.  If you find a security vulnerability, please 
 
 Aphiria follows <a href="http://www.php-fig.org/psr/psr-1/" title="PSR-1 spec" target="_blank">PSR-1</a>, <a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2 spec" target="_blank">PSR-2</a>, and  <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
 
-<h3 id="php-cs-fixer">PHP-CS-Fixer</h3>
+<h3 id="linter">Linter</h3>
 
 All code is run through <a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" target="_blank">PHP-CS-Fixer</a>, a powerful linter.  Pull requests that do not pass the linter will automatically be prevented from being merged.  You can run the linter locally via `composer phpcs-test` to check for errors, and `composer phpcs-fix` to fix any errors.
 
-<h3 id="psalm">Psalm</h3>
+<h3 id="static-analysis">Static Analysis</h3>
 
 Aphiria uses the terrific static analysis tool <a href="https://psalm.dev" target="_blank">Psalm</a>.  It can detect things like unused code, inefficient code, and incorrect types.  We use the highest level of error reporting.  You can run Psalm locally via `composer psalm`.  Occasionally, Psalm might highlight false positives, which can be suppressed with `/** @psalm-suppress {issue handler name} {brief description of why you're suppressing it} */` immediately before the problematic line.  You can also suppress false positives in _psalm.xml.dist_ to suppress them at the directory- and file-levels.  Be sure to include an XML comment (eg `<!-- {brief description of why you're suppressing it} -->`) if you're suppressing errors in _psalm.xml.dist_.  Use error suppression sparingly - try to fix any legitimate issues that Psalm finds.
 
