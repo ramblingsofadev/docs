@@ -73,7 +73,29 @@ All code is run through <a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer" t
 
 <h3 id="static-analysis">Static Analysis</h3>
 
-Aphiria uses the terrific static analysis tool <a href="https://psalm.dev" target="_blank">Psalm</a>.  It can detect things like unused code, inefficient code, and incorrect types.  We use the highest level of error reporting.  You can run Psalm locally via `composer psalm`.  Occasionally, Psalm might highlight false positives, which can be suppressed with `/** @psalm-suppress {issue handler name} {brief description of why you're suppressing it} */` immediately before the problematic line.  You can also suppress false positives in _psalm.xml.dist_ to suppress them at the directory- and file-levels.  Be sure to include an XML comment (eg `<!-- {brief description of why you're suppressing it} -->`) if you're suppressing errors in _psalm.xml.dist_.  Use error suppression sparingly - try to fix any legitimate issues that Psalm finds.
+Aphiria uses the terrific static analysis tool <a href="https://psalm.dev" target="_blank">Psalm</a>.  It can detect things like unused code, inefficient code, and incorrect types.  We use the highest level of error reporting.  You can run Psalm locally via `composer psalm`.
+
+Occasionally, Psalm might highlight false positives, which can be suppressed with:
+
+```php
+/** @psalm-suppress {issue handler name} {brief description of why you're suppressing it} */
+// Problematic code here...
+``` 
+
+You can also suppress false positives in _psalm.xml.dist_ at the directory- and file-levels.  Be sure to include an XML comment explaining why the errors should be suppressed:
+
+```xml
+<issueHandlers>
+    <MixedAssignment>
+        <errorLevel type="suppress">
+            <!-- We don't care about mixed assignments in tests -->
+            <directory name="src/**/tests" />
+        </errorLevel>
+    </MixedAssignment>
+</issueHandlers>
+```
+
+Use error suppression sparingly - try to fix any legitimate issues that Psalm finds.
 
 <h3 id="phpdoc">PHPDoc</h3>
 
