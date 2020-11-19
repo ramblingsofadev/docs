@@ -53,7 +53,9 @@ If the object was not valid, a `ValidationException` will be thrown.  That's it 
 
 <h3 id="creating-a-validator">Creating A Validator</h3>
 
-If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the validator will already be [bound](dependency-injection.md#binders) to the DI container.  You can enable attributes in `App`:
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, an instance of `IValidator` will already be [bound](dependency-injection.md#binders) to the DI container, which you can [inject](dependency-injection.md).
+
+You can enable attributes in `App`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
@@ -252,7 +254,7 @@ final class MaxLengthConstraint implements IConstraint
         return ['maxLength' => $this->maxLength];
     }
 
-    public function passes($value): bool
+    public function passes(mixed $value): bool
     {
         if (!\is_string($value)) {
             throw new \InvalidArgumentException('Value must be string');
@@ -368,7 +370,6 @@ use Aphiria\Validation\ErrorMessages\IErrorMessageTemplateRegistry;
 final class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTemplateRegistry
 {
     private array $errorMessages;
-    private string $defaultLocale;
 
     public function __construct(string $path, private string $defaultLocale)
     {
@@ -377,7 +378,8 @@ final class ResourceFileErrorMessageTemplateRegistry implements IErrorMessageTem
 
     public function getErrorMessageTemplate(string $errorMessageId, string $locale = null): string
     {
-        return $this->errorMessages[$locale][$errorMessageId] ?? $this->errorMessages[$this->defaultLocale][$errorMessageId];
+        return $this->errorMessages[$locale][$errorMessageId] 
+            ?? $this->errorMessages[$this->defaultLocale][$errorMessageId];
     }
 }
 ```
