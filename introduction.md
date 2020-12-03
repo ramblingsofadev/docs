@@ -41,16 +41,16 @@ final class UserController extends Controller
 
 In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
-To use these endpoints, we'll need to include a [binder](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  You can use a [module](configuration.md#modules) to accomplish this.
+To use these endpoints, we'll need to [configure our app](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  You can use a [module](configuration.md#modules) to accomplish this.
 
 ```php
-final class UserModule implement IModule
+final class UserModule implements IModule
 {
     use AphiriaComponents;
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withBinders($appBuilder, fn () => [new UserServiceBinder]);
+        $this->withBinders($appBuilder, new UserServiceBinder());
     }
 }
 ```
