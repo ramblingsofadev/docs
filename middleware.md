@@ -18,7 +18,7 @@
 
 <h2 id="basics">Basics</h2>
 
-The middleware library provides developers a way of defining route middleware for their applications.  Middleware are simply layers of request processing before and after a controller action is invoked.  This is extremely useful for actions like authorization, logging, and request/response decoration.
+The middleware library provides developers a way of defining route middleware for their applications.  Middleware are simply layers of request and response processing before and after a controller action is invoked.  This is extremely useful for actions like authorization, logging, and request/response decoration.
 
 Middleware have a simple signature:
 
@@ -114,7 +114,7 @@ final class RoleMiddleware extends ParameterizedMiddleware
 }
 ```
 
-To actually specify `role`, pass it into your route configuration:
+To actually specify `role`, pass it into your [route configuration](routing.md#route-attributes-middleware):
 
 ```php
 use Aphiria\Routing\Attributes\{Delete, Middleware};
@@ -134,7 +134,7 @@ final class UserController extends Controller
 
 <h2 id="executing-middleware">Executing Middleware</h2>
 
-If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, middleware will be executed automatically for you.  You can define both [global middleware](configuration.md#component-middleware) and [route middleware](routing.md#middleware).
+If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, middleware will be executed automatically for you.  You can also define both [global middleware](configuration.md#component-middleware) and [route middleware](routing.md#middleware).
 
 If you're not using the skeleton app, you'll have to set up a pipeline to execute your middleware for you.  Typically, middleware are wrapped in request handlers (eg `MiddlewareRequestHandler`) and executed in a pipeline.  You can create this pipeline using `MiddlewarePipelineFactory`:
 

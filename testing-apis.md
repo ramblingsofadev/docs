@@ -46,7 +46,7 @@ final class BookQueryTest extends IntegrationTestCase
 }
 ```
 
-Use the following methods to send requests and get [responses](http-responses.md):
+Use the following methods to send [requests](http-requests.md) and get [responses](http-responses.md):
 
 * `delete()`
 * `get()`

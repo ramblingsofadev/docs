@@ -249,7 +249,7 @@ final class MaxLengthConstraint implements IConstraint
         return 'Length cannot exceed {maxLength}';
     }
 
-    public function getErrorMessagePlaceholders($value): array
+    public function getErrorMessagePlaceholders(mixed $value): array
     {
         return ['maxLength' => $this->maxLength];
     }
@@ -419,4 +419,4 @@ If you do require i18n and are using the <a href="http://userguide.icu-project.o
 
 <h2 id="validating-request-bodies">Validating Request Bodies</h2>
 
-It's possible to use the validation library along with <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> to validate deserialized request bodies.  Read the [controller documentation](controllers.md#validating-request-bodies) for more details.
+It's possible to use the validation library to validate deserialized request bodies.  Read the [controller documentation](controllers.md#validating-request-bodies) for more details.

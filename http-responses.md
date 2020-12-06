@@ -20,10 +20,10 @@
 
 <h2 id="basics">Basics</h2>
 
-Responses are HTTP messages that are sent by servers back to the client.  They contain data like a status code, headers, and body.
+Responses are HTTP messages that are sent by servers back to the client.  They contain data like the status code, headers, and body.
 
 ```php
-use Aphiria\Net\Http\Headers
+use Aphiria\Net\Http\Headers;
 use Aphiria\Net\Http\Response;
 use Aphiria\Net\Http\StringBody;
 
@@ -100,7 +100,7 @@ use Aphiria\Net\Http\Headers\Cookie;
         maxAge: 3600,
         path: '/',
         domain: 'example.com',
-        isSecure: true, // Defaults to true
+        isSecure: true, // Defaults to false
         isHttpOnly: true, // Defaults to true
         sameSite: Cookie::SAME_SITE_LAX // Defaults to lax
     )

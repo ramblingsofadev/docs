@@ -30,7 +30,7 @@ use Aphiria\Framework\Api\Exceptions\ProblemDetailsExceptionRenderer;
 
 $exceptionRenderer = new ProblemDetailsExceptionRenderer();
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
-// This is important - it's what registers the handler as the default handler in PHP
+// This registers the handler as the default handler in PHP
 $globalExceptionHandler->registerWithPhp();
 ```
 

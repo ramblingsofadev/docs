@@ -32,7 +32,7 @@ For reasons we'll discuss in the [next section](#why-doesnt-aphiria-adopt-all-th
 A lot of major frameworks, eg Symfony and Laravel, have also decided not to adopt some PSRs.  For example, PSR-7 has been pretty widely criticized for the following reasons:
 
 * Requests and responses are immutable, which was seen as a poor application of immutability
-  - It's all to easy to forget to get the new instance from any `with*()` methods, leading to bugs
+  - It's all too easy to forget to get the new instance from any `with*()` methods, leading to bugs
   - Inconsistencies in some of the internals of PHP and the PSR make it impossible to achieve true immutability
 * HTTP message bodies are not inherently streams - they should be readable as streams
 * `ServerRequestInterface` too closely mirrors some PHP superglobals, for better or for worse
@@ -53,11 +53,11 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 // This third party factory can create all PSR-7 models for us
 $psr17Factory = new Psr17Factory();
 $psr7Factory = new Psr7Factory(
-    $psr17Factory, // Server request factory
-    $psr17Factory, // Response factory
-    $psr17Factory, // Stream factory
-    $psr17Factory, // Uploaded file factory
-    $psr17Factory // URI factory
+    psr7RequestFactory: $psr17Factory,
+    psr7ResponseFactory: $psr17Factory,
+    psr7StreamFactory: $psr17Factory,
+    psr7UploadedFileFactory: $psr17Factory,
+    psr7UriFactory: $psr17Factory
 );
 ```
 

@@ -36,6 +36,8 @@
 
 Requests are HTTP messages sent by clients to servers.  They contain data like the URI that was requested, the HTTP method (eg `GET`), the headers, and the body (if one was present).
 
+Let's create a request:
+
 ```php
 use Aphiria\Net\Http\Request;
 use Aphiria\Net\Http\StringBody;
@@ -58,8 +60,8 @@ $headers = $request->getHeaders();
 // Set a header
 $request->getHeaders()->add('Foo', 'bar');
 
-// Get the body
-$body = $request->getBody(); // Could be null
+// Get the body (could be null)
+$body = $request->getBody();
 
 // Set the body
 $request->setBody(new StringBody('foo'));
@@ -128,14 +130,14 @@ You can specify multiple headers in one call:
 
 ```php
 $request = (new RequestBuilder())->withManyHeaders(['Foo' => 'bar', 'Baz' => 'buzz'])
-    // ...
+    ->build();
 ```
 
 You can also set any request properties:
 
 ```php
 $request = (new RequestBuilder())->withProperty('routeVars', ['id' => 123])
-    // ...
+    ->build();
 ```
 
 If you'd like to use a different request target type besides origin form, you may:
@@ -144,7 +146,7 @@ If you'd like to use a different request target type besides origin form, you ma
 use Aphiria\Net\Http\RequestTargetTypes;
 
 $request = (new RequestBuilder())->withRequestTargetType(RequestTargetTypes::ABSOLUTE_FORM)
-    // ...
+    ->build();
 ```
 
 > **Note:**  Keep in mind that each `with*()` method will return a clone of the request builder.
@@ -164,10 +166,10 @@ $request = (new NegotiatedRequestBuilder())->withMethod('POST')
 
 <h2 id="headers">Headers</h2>
 
-Headers provide metadata about the HTTP message.  In Aphiria, they're implemented by `Aphiria\Net\Http\Headers`, which extends  [`Aphiria\Collections\HashTable`](collections.md#hash-tables).  On top of the methods provided by `HashTable`, they also provide the following methods:
+Headers provide metadata about the HTTP message.  In Aphiria, they are an extension of [`HashTable`](collections.md#hash-tables), and also provide the following methods:
 
 * `getFirst(string $name): mixed`
-* `tryGetFirst(string $name, &$value): bool`
+* `tryGetFirst(string $name, mixed &$value): bool`
 
 > **Note:** Header names that are passed into the methods in `Headers` are automatically normalized to Train-Case.  In other words, `foo_bar` will become `Foo-Bar`.
 
@@ -205,7 +207,7 @@ $body = new StringBody('foo');
 
 <h3 id="stream-bodies">Stream Bodies</h3>
 
-Sometimes, bodies might be too big to hold entirely in memory.  This is where `StreamBody` comes in handy:
+Sometimes, bodies might be too big to hold entirely in memory.  This is where `StreamBody` comes in handy.
 
 ```php
 use Aphiria\IO\Streams\Stream;
@@ -289,8 +291,9 @@ Aphiria has a helper to grab cookies from request headers as an [immutable hash 
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
+// Assume the request contained the header "Cookie: userid=123"
 $cookies = (new RequestParser)->parseCookies($request);
-$cookies->get('userid');
+echo $cookies->get('userid'); // "123"
 ```
 
 <h2 id="getting-client-ip-address">Getting Client IP Address</h2>
@@ -307,7 +310,7 @@ $clientIPAddress = (new RequestParser)->getClientIPAddress($request);
 
 <h2 id="header-parameters">Header Parameters</h2>
 
-Some header values are semicolon delimited, eg `Content-Type: text/html; charset=utf-8`.  It's sometimes convenient to grab those key-value pairs:
+Some header values are semicolon delimited, eg `Content-Type: text/html; charset=utf-8`.  Aphiria provides an easy way to grab those key-value pairs:
 
 ```php
 $contentTypeValues = $requestParser->parseParameters($request, 'Content-Type');
@@ -388,13 +391,13 @@ foreach ($multipartBody->getParts() as $multipartBodyPart) {
 To grab the actual MIME type of an HTTP body, call
 
 ```php
-(new RequestParser)->getActualMimeType($multipartBodyPart);
+$actualMimeType = (new RequestParser)->getActualMimeType($multipartBodyPart);
 ```
 
 To get the MIME type that was specified by the client, call
 
 ```php
-(new RequestParser)->getClientMimeType($multipartBodyPart);
+$clientMimeType = (new RequestParser)->getClientMimeType($multipartBodyPart);
 ```
 
 <h3 id="creating-multipart-requests">Creating Multipart Requests</h3>

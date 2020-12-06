@@ -14,7 +14,6 @@
    4. [Validating Request Bodies](#validating-request-bodies)
 3. [Parsing Request Data](#parsing-request-data)
 4. [Formatting Response Data](#formatting-response-data)
-5. [Controller Dependencies](#controller-dependencies)
 
 </div>
 
@@ -42,7 +41,7 @@ final class UserController extends Controller
 }
 ```
 
-Aphiria will grab the ID from the URI (preference is given to route variables, and then to query string variables).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses [content negotiation](content-negotiation.md) to determine the media type to serialize to (eg JSON).
+Aphiria will instantiate `UserController` via [dependency injection](dependency-injection.md) and invoke the matched route.  The `$userId` parameter will be set from the URI (preference is given to route variables, and then to query string variables).  It will also detect that a `User` object was returned by the method, and create a 200 response whose body is the serialized user object.  It uses [content negotiation](content-negotiation.md) to determine the media type to serialize to (eg JSON).  The current request is automatically set in the controller, and is accessible via `$this->request`.
 
 You can also be a bit more explicit and return a response yourself.  For example, the following controller method is functionally identical to the previous example:
 
@@ -84,8 +83,6 @@ Method | Status Code
 
 If your controller method has a `void` return type, a 204 "No Content" response will be created automatically.
 
-If you need access to the current request, use `$this->request` within your controller method.
-
 Setting headers is simple, too:
 
 ```php
@@ -93,7 +90,7 @@ use Aphiria\Net\Http\Headers;
 
 final class UserController extends Controller
 {
-    // ...
+    public function __construct(private IUserService $users) {}
     
     #[Get('users/:userId')]
     public function getUser(int $userId): IResponse
@@ -118,7 +115,7 @@ Object type hints are always assumed to be the request body, and can be automati
 ```php
 final class UserController extends Controller
 {
-    // ...
+    public function __construct(private IUserService $users) {}
     
     #[Post('users')]
     public function createUser(UserDto $userDto): IResponse
@@ -174,7 +171,7 @@ final class UserController extends Controller
 
 <h3 id="validating-request-bodies">Validating Request Bodies</h3>
 
-It's possible to combine the power of <a href="https://symfony.com/doc/current/components/serializer.html" target="_blank">Symfony's serialization component</a> with [Aphiria's validation library](validation.md) to automatically validate request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [creating a custom mapping](exception-handling.md#custom-problem-details-mappings) for an `InvalidRequestBodyException`.
+[Aphiria's validation library](validation.md) automatically validates request bodies on every request.  By default, when an invalid request body is detected, a <a href="https://tools.ietf.org/html/rfc7807" target="_blank">problem details</a> response is returned as a 400.  If you'd like to change the response body to something different, you may do so by [creating a custom mapping](exception-handling.md#custom-problem-details-mappings) for an `InvalidRequestBodyException`.
 
 If a request body cannot be automatically deserialized, as in the case of [arrays of objects in request bodies](#arrays-in-request-bodies), you must manually perform validation.
 
@@ -198,7 +195,7 @@ final class UserController extends Controller
 
 <h2 id="parsing-request-data">Parsing Request Data</h2>
 
-Your controllers might need to do more advanced reading of request data, such as reading cookies, reading multipart bodies, or determining the content type of the request.  To simplify this kind of work, an instance of `RequestParser` is set in your controller:
+Your controllers might need to do more advanced reading of [request data](http-requests.md), such as reading cookies, reading multipart bodies, or determining the content type of the request.  To simplify this kind of work, an instance of `RequestParser` is automatically set in your controller:
 
 ```php
 final class JsonPrettifierController extends Controller
@@ -223,12 +220,12 @@ final class JsonPrettifierController extends Controller
 
 <h2 id="formatting-response-data">Formatting Response Data</h2>
 
-If you need to write data back to the response, eg cookies or creating a redirect, an instance of `ResponseFormatter` is automatically available in the controller:
+If you need to write data back to the [response](http-responses.md), eg cookies or creating a redirect, an instance of `ResponseFormatter` is automatically available in the controller:
 
 ```php
 final class LoginController extends Controller
 {
-    // ...
+    public function __construct(private IAuthenticator $authenticator) {}
 
     #[Post('login')]
     public function logIn(LoginDto $login): IResponse
@@ -249,7 +246,3 @@ final class LoginController extends Controller
     }
 }
 ```
-
-<h2 id="controller-dependencies">Controller Dependencies</h2>
-
-The API library provides support for auto-wiring your controllers.  In other words, it can scan your controllers' and middleware's constructors for dependencies and instantiate them.  You can read more about the container [here](dependency-injection.md).

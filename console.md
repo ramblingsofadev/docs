@@ -66,7 +66,7 @@ Now, you're set to start [running commands](#running-commands).
 
 <h3 id="why-is-this-library-included">Why Is This Library Included?</h3>
 
-At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better DX than most, eg by providing [attribute support](#command-attributes) and a great [fluent syntax](configuration.md#component-console-commands) for configuring commands.
+At first glance, including a console library in an API framework might seem weird.  However, there are some tasks, [such as clearing framework caches](#built-in-commands), that are most easily accomplished with console commands.  We decided not to use another console library because we felt we could provide a better developer experience than most, eg by providing [attribute support](#command-attributes) and a great [fluent syntax](configuration.md#component-console-commands) for configuring commands.
 
 <h2 id="running-commands">Running Commands</h2>
 

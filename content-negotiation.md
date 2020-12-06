@@ -22,12 +22,12 @@
 Content negotiation is a process between the client and server to determine how to best process a request and serve content back to the client.  This negotiation is typically done via headers, where the client says "Here's the type of content I'd prefer (eg JSON, XML, etc)", and the server trying to accommodate the client's preferences.  For example, the process can involve negotiating the following for requests and responses per the <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec12.html" target="_blank">HTTP spec</a>:
 
 * Content type
-  * Controlled by the `Content-Type` and `Accept` headers
+  * Controlled by the `Content-Type` header for requests, and the `Accept` header for responses
   * Dictates the [media type formatter](#media-type-formatters) to use
 * Character encoding
-  * Controlled by the `Content-Type` and `Accept-Charset` headers by default
+  * Controlled by the `Content-Type` header for requests, and the `Accept-Charset` header for responses
 * Language
-  * Controlled by the `Content-Language` and `Accept-Language` headers by default
+  * Controlled by the `Content-Language` header for requests, and the `Accept-Language` header for responses
 
 Setting up your content negotiator with default settings is trivial:
 
@@ -143,12 +143,7 @@ use Aphiria\Net\Http\IRequest;
 
 final class QueryStringLanguageMatcher implements ILanguageMatcher
 {
-    private RequestParser $requestParser;
-   
-    public function __construct()
-    {
-        $this->requestParser = new RequestParser();
-    }
+    public function __construct(private RequestParser $requestParser) {}
 
     public function getBestLanguageMatch(IRequest $request): ?string
     {
@@ -162,6 +157,18 @@ final class QueryStringLanguageMatcher implements ILanguageMatcher
         return null;
     }
 }
+```
+
+Then, pass your language matcher into `ContentNegotiator`.
+
+```php
+use Aphiria\ContentNegotiation\ContentNegotiator;
+
+$languageMatcher = new QueryStringLanguageMatcher(new RequestParser());
+$contentNegotiator = new ContentNegotiator(
+    // ...
+    languageMatcher: $languageMatcher
+);
 ```
 
 <h2 id="media-type-formatters">Media Type Formatters</h2>

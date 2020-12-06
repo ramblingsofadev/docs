@@ -146,11 +146,15 @@ use Aphiria\Sessions\Middleware\Session as SessionMiddleware;
 
 // Assume our session and handler are already created...
 $sessionMiddleware = new SessionMiddleware(
-    $session,
-    $sessionHandler,
-    3600,        // Session TTL in seconds
-    'sessionid', // The name of the cookie
-    '/'          // The path the cookie is valid for
+    session: $session,
+    sessionHandler: $sessionHandler,
+    sessionTtl: 3600,
+    sessionCookieName: 'sessionid',
+    sessionCookiePath: '/', // Defaults to null
+    sessionCookieDomain: 'example.com', // Defaults to null
+    sessionCookieIsSecure: true, // Defaults to false
+    sessionCookieIsHttpOnly: true, // Defaults to true
+    gcChance: 0.01 // Defaults to 0.01
 );
 ```
 

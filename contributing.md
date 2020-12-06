@@ -242,6 +242,7 @@ Aphiria is primarily written by David Young in his spare time.  It is the labor 
 
 * <a href="https://github.com/sponsors/sebastianbergmann" target="_blank">Sebastian Bergmann (PHPUnit)</a>
 * <a href="https://github.com/sponsors/derickr" target="_blank">Derick Rethans (Xdebug)</a>
+* <a href="https://github.com/sponsors/Seldaek" target="_blank">Jordi Boggiano (Composer, Monolog, and Symfony)</a>
 * <a href="https://github.com/sponsors/fabpot" target="_blank">Fabien Potencier (Symfony)</a>
 * <a href="https://github.com/sponsors/taylorotwell" target="_blank">Taylor Otwell (Laravel)</a>
 * <a href="https://github.com/sponsors/keradus" target="_blank">Dariusz Rumiński (PHP-CS-Fixer and PHP Coveralls)</a>
