@@ -29,7 +29,7 @@
 
 <h2 id="application-builders">Application Builders</h2>
 
-Application builders provide an easy way to configure your application's components, eg adding binders, routes, global middleware, console commands, validators, and more.  [Components](#components) are pieces of your application that are shared across modules (chunks of your domain).  If you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate binders, routes, console commands, etc.  So, why not bundle all the configuration logic by module?
+Application builders provide an easy way to configure your application.  They are passed into [modules](#modules) where you can decorate them with the [components](#components) a part of your business domain needs (eg routes, binders, global middleware, console commands, validators, etc).  For example, if you are running a site where users can buy books, you might have a user module, a book module, and a shopping cart module.  Each of these modules will have separate binders, routes, console commands, etc.  So, why not bundle all the configuration logic by module?
 
 Let's look at an example of a module:
 
@@ -48,7 +48,7 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withBinders($appBuilder, [new UserBinder()])
+        $this->withBinders($appBuilder, new UserServiceBinder())
             ->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
                 $routes->get('users/:id')
                     ->mapsToMethod(UserController::class, 'getUserById');
@@ -63,17 +63,18 @@ final class UserModule implements IModule
 }
 ```
 
-Here's the best part of how Aphiria is built - all components, even Aphiria-provided components for things like binders, routes, console commands, etc, are not first-class citizens.  They're just normal components, which means it's trivial to [configure another library in place of any Aphiria libraries](#adding-custom-components) if you so choose.
+Here's the best part of how Aphiria was built - there's nothing special about Aphiria-provided components.  You can [write your own components](#adding-custom-components) to be just as powerful and easy to use as Aphiria's.
 
 <h3 id="modules">Modules</h3>
 
-To register a module, you can use the `AphiriaComponents` trait:
+Use the `AphiriaComponents` trait to register a module:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-final class App
+final class App implements IModule
 {
     use AphiriaComponents;
 
@@ -108,10 +109,10 @@ final class UserModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         // Add a binder
-        $this->withBinders($appBuilder, new UserBinder());
+        $this->withBinders($appBuilder, new UserServiceBinder());
 
         // Or use an array of binders
-        $this->withBinders($appBuilder, [new UserBinder()]);
+        $this->withBinders($appBuilder, [new UserServiceBinder()]);
     }
 }
 ```
@@ -166,7 +167,7 @@ final class UserModule implements IModule
         // Or use an array of bindings
         $this->withGlobalMiddleware($appBuilder, [new MiddlewareBinding(Cors::class)]);
 
-        // Or with a priority (lower number = higher priority)
+        // Or with a priority (lower number == higher priority)
         $this->withGlobalMiddleware($appBuilder, new MiddlewareBinding(Cors::class), 1);
     }
 }
@@ -301,7 +302,7 @@ final class UserModule implements IModule
 
 You can add your own custom components to application builders.  They typically have `with*()` methods to let you configure the component, and a `build()` method (called internally) that actually finishes building the component.
 
-> **Note:** Binders aren't dispatched until just before `build()` is called on the components.  This means you can't inject dependencies from binders into your components - they won't have been bound yet.  So, if you need any dependencies inside the `build()` method, use the DI container to resolve them.
+> **Note:** Binders aren't dispatched until just before `build()` is called on the components.  This means you can't inject dependencies from binders into your components - they won't have been bound yet.  So, if you need any dependencies inside the `build()` method, use the [DI container](dependency-injection.md) to resolve them.
 
 Let's say you prefer to use Symfony's router, and want to be able to add routes from your modules.  This requires a few simple steps:
 
@@ -358,14 +359,15 @@ final class SymfonyRouterComponent implements IComponent
             $routes->add($name, $route);
         }
 
-        // Assume we've created a request handler that uses the Symfony route matcher
+        // Tell our app to use a request handler that supports Symfony
+        // Note: You'd have to write this request handler
         $this->container->for(Application::class, function (IContainer $container) {
             $container->bindInstance(IRequestHandler::class, new SymfonyRouterRequestHandler());
         });
     }
 
     // Define a method for adding routes from modules
-    public function withRoutes(string $name, Route $route): self
+    public function withRoute(string $name, Route $route): self
     {
         $this->routes[$name] = $route;
 
@@ -408,7 +410,49 @@ final class MyModule implements IModule
     public function build(IApplicationBuilder $appBuilder): void
     {
         $appBuilder->getComponent(SymfonyRouterComponent::class)
-            ->withRoutes('GetUserById', new Route('users/{id}'));
+            ->withRoute('GetUserById', new Route('users/{id}'));
+    }
+}
+```
+
+If you'd like a more fluent syntax like the Aphiria components, just use a trait:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\DependencyInjection\Container;
+use Symfony\Component\Routing\Route;
+
+trait SymfonyComponents
+{
+    protected function withSymfonyRoute(IApplicationBuilder $appBuilder, string $name, Route $route): static
+    {
+        // Make sure the component is registered
+        if (!$appBuilder->hasComponent(SymfonyRouterComponent::class)) {
+            $appBuilder->withComponent(new SymfonyRouterComponent(Container::$globalInstance));
+        }
+        
+        $appBuilder->getComponent(SymfonyRouterComponent::class)
+            ->withRoute($name, $route);
+            
+        return $this;
+    }
+}
+```
+
+Then, use that trait inside your module:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IModule;
+use Symfony\Component\Routing\Route;
+
+final class MyModule implements IModule
+{
+    use SymfonyComponents;
+
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withSymfonyRoute($appBuilder, 'GetUserById', new Route('users/{id}'));
     }
 }
 ```
@@ -525,7 +569,7 @@ final class YamlConfigurationFileReader implements IConfigurationFileReader
   
 <h2 id="global-configuration">Global Configuration</h2>
 
-`GlobalConfiguration` is a static class that can access values from multiple configurations registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
+`GlobalConfiguration` is a static class that can access values from multiple configurations that where registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
 
 ```php
 use Aphiria\Application\Configuration\GlobalConfiguration;

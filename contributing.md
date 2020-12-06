@@ -25,6 +25,7 @@
    6. [Abstract Classes](#abstract-classes)
    7. [Interfaces](#interfaces)
    8. [Traits](#traits)
+7. [Financial Support](#financial-support)
 
 </div>
 
@@ -36,7 +37,7 @@ First, thank you for taking the time to contribute to Aphiria!  We use GitHub pu
 
 All pull requests **must**:
 
-* Have 100% code coverage per PHPUnit and Xdebug 3
+* Have 100% code coverage per <a href="https://phpunit.de/" target="_blank">PHPUnit</a> and <a href="https://xdebug.org/" target="_blank">Xdebug 3</a>
 * Abide by our [naming conventions](#naming-conventions)
 * Have no [static analysis](#static-analysis) errors
 * Have no [linter](#linter) errors
@@ -234,3 +235,13 @@ All trait names:
 
 * Must be Pascal case, eg `ListValidator`
 * Must be not use `T`, `Trait`, or any other word in the name that implies it is a trait
+
+<h2 id="financial-support">Financial Support</h2>
+
+Aphiria is primarily written by David Young in his spare time.  It is the labor of over a thousand hours of meticulously crafting its syntax, designing its architecture, and writing its code.  While Aphiria is and always will be free and open source, <a href="https://github.com/sponsors/davidbyoung" target="_blank">GitHub sponsorship</a> is always welcome.  While you're at it, consider sponsoring some others whose tools you might already be using:
+
+* <a href="https://github.com/sponsors/sebastianbergmann" target="_blank">Sebastian Bergmann (PHPUnit)</a>
+* <a href="https://github.com/sponsors/derickr" target="_blank">Derick Rethans (Xdebug)</a>
+* <a href="https://github.com/sponsors/fabpot" target="_blank">Fabien Potencier (Symfony)</a>
+* <a href="https://github.com/sponsors/taylorotwell" target="_blank">Taylor Otwell (Laravel)</a>
+* <a href="https://github.com/sponsors/keradus" target="_blank">Dariusz Rumiński (PHP-CS-Fixer and PHP Coveralls)</a>

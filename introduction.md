@@ -39,7 +39,7 @@ final class UserController extends Controller
 }
 ```
 
-In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
+In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with **zero configuration** of your plain-old PHP objects (POPOs).
 
 Let's configure our [DI container](dependency-injection.md) to inject an instance of `IUserService` into our controller via a [binder](dependency-injection.md#binders).
 
@@ -53,7 +53,7 @@ final class UserServiceBinder extends Binder
 }
 ```
 
-Next, let's use a [module](configuration.md#modules) to register the binder and map an exception that `IUserService` might throw to an HTTP response.  Modules give you a place to configure each piece of your business domain, allowing you to easily plug-and-play code into your app.
+Next, let's use a [module](configuration.md#modules) to register the binder.  We'll also configure our app to map an exception that `IUserService` might throw to an HTTP response.  Modules give you a place to configure each piece of your business domain, allowing you to easily plug-and-play code into your app.
 
 ```php
 final class UserModule implements IModule
@@ -96,7 +96,7 @@ Aphiria uses a GitHub project for keeping track of new features, bug fixes, and 
 
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 
-Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if we could find these things in a PHP framework.  We looked at frameworks, and usually found at least one major problem with them all:
+Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired us to see if we could find these things in a PHP framework.  We looked at frameworks, and usually found at least one major problem with them all:
  
 * A lot of coupling between framework libraries, making it difficult to substitute in third party libraries
 * Lack of support for [automatic content negotiation](content-negotiation.md)
