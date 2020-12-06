@@ -11,7 +11,7 @@
 3. [Targeted Bindings](#targeted-bindings)
 4. [Auto-Wiring](#auto-wiring)
 5. [Binders](#binders)
-   1. [Lazy Dispatching](#lazy-dispatching)
+   1. [Dispatching Binders](#dispatching-binders)
 
 </div>
 
@@ -22,7 +22,7 @@
 Dependency injection (DI) is the process of passing (injecting) dependencies that a class needs, typically done via the constructor.  Benefits to DI include:
 
 * Better testability - you can mock dependencies and inject them in unit tests
-* Easier to detect when a class has too many dependencies - the constructors become bloated
+* Easier to detect when a class has too many dependencies - the constructor becomes bloated with parameters
 * Cleaner abstraction in your interfaces - they don't leak the dependencies they need
 
 A common way of defining what dependencies to inject for a particular class is using a DI container.  You can tell the container "When I need to use a particular interface, use this implementation of that interface".  Here's an example:
@@ -32,8 +32,6 @@ use Aphiria\DependencyInjection\Container;
 
 $container = new Container();
 $container->bindInstance(IUserService::class, new UserService());
-
-// ...
 
 // Will return the same instance that was bound above
 $userService = $container->resolve(IUserService::class);
@@ -60,9 +58,7 @@ $container->bindClass(IUserService::class, UserService::class);
 $container->bindClass(IUserService::class, UserService::class, resolveAsSingleton: true);
 ```
 
-> **Note:** The factory in `bindFactory()` **must** be parameterless.
-
-> **Note:** If you attempt to resolve an interface, but the container does not have a binding or it cannot [auto-wire](#auto-wiring) it, a `ResolutionException` will be thrown.
+> **Note:** The factory in `bindFactory()` **must** be parameterless.  Also, if you attempt to resolve an interface, but the container does not have a binding or it cannot [auto-wire](#auto-wiring) it, a `ResolutionException` will be thrown.
 
 You can check if the container has a particular binding:
 
@@ -123,15 +119,13 @@ $container->bindInstance(IUserRepository::class, new UserRepository());
 $userService = $container->resolve(UserService::class);
 ```
 
-The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and either check to see if it has a binding or attempt to auto-wire an instance of it if possible.
+The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and check to see if it has a binding.  If it doesn't, it will attempt to auto-wire an instance of it if possible.
 
-> **Note:** A parameter with `mixed` type cannot be auto-wired as anything other than a primitive value.
-
-> **Note:** The container will attempt to auto-wire union types, eg `string|Closure`, using the left-most type first, and only on failure will the container attempt to use the next left-most type.
+> **Note:** A parameter with `mixed` type cannot be auto-wired as anything other than a primitive value.  Also, the container will attempt to auto-wire union types, eg `string|Closure`, using the left-most type first, and only on failure will the container attempt to use the next left-most type.
 
 <h2 id="binders">Binders</h2>
 
-A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain via the `bind()` method.
+A binder is a simple class that registers bindings to the container for a particular area of your domain.  For example, you might have a binder called `UserBinder` to centralize all the bindings related to your user domain.
 
 ```php
 use Aphiria\DependencyInjection\Binders\Binder;
@@ -147,7 +141,7 @@ final class UserBinder extends Binder
 }
 ```
 
-If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, you can register `UserBinder` to your app with an [application builder](configuration.md#component-binders).  Otherwise, if you're using the DI library on its own, you will need to manually dispatch your binders:
+If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, you can register `UserBinder` to your app with an [application builder](configuration.md#component-binders).  Otherwise, if you're using the DI library on its own, you will need to manually register your binders:
 
 ```php
 $binders = [new UserBinder()];
@@ -156,14 +150,16 @@ foreach ($binders as $binder) {
     $binder->bind($container);
 }
 
+// Dispatch your binders (see below)...
+
 // Your app is all set
 ```
 
-Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#lazy-dispatching) will go into more details on how to handle this more optimally.
+Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#dispatching-binders) will go into more details on how to handle this more optimally.
 
-<h3 id="lazy-dispatching">Lazy Dispatching</h3>
+<h3 id="dispatching-binders">Dispatching Binders</h3>
 
-Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then binds factories to lazily invoke `bind()` only when the binding's interface is resolved.  This is all done for you - you don't have to list out a binder's bindings to get this lazy dispatching like other frameworks have you do.
+If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, your binders will automatically be dispatched, and you can skip the rest of this section.  Otherwise, you'll have to manually dispatch your binders.  Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then binds factories to lazily invoke `bind()` only when the binding's interface is resolved.  This is all done for you - you don't have to list out a binder's bindings to get this lazy dispatching like other frameworks have you do.
 
 Let's build on the `UserBinder` from the [previous example](#binders) and set up our app to lazily dispatch it:
 
