@@ -249,8 +249,6 @@ use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
 use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Net\Http\HttpStatusCodes;
-use Aphiria\Net\Http\IRequest;
-use Aphiria\Net\Http\IResponseFactory;
 use Psr\Log\LogLevel;
 
 final class UserModule implements IModule

@@ -41,7 +41,19 @@ final class UserController extends Controller
 
 In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with zero configuration of your plain-old PHP objects (POPOs).
 
-To use these endpoints, we'll need to [configure our app](dependency-injection.md#binders) so that an instance of `IUserService` can be injected into the controller.  You can use a [module](configuration.md#modules) to accomplish this.
+Let's configure our [DI container](dependency-injection.md) to inject an instance of `IUserService` into our controller via a [binder](dependency-injection.md#binders).
+
+```php
+final class UserServiceBinder extends Binder
+{
+    public function bind(IContainer $container): void
+    {
+        $container->bindInstance(IUserService::class, new UserService());
+    }
+}
+```
+
+Next, let's use a [module](configuration.md#modules) to register the binder and map an exception that `IUserService` might throw to an HTTP response.  Modules give you a place to configure each piece of your business domain, allowing you to easily plug-and-play code into your app.
 
 ```php
 final class UserModule implements IModule
@@ -50,14 +62,31 @@ final class UserModule implements IModule
 
     public function build(IApplicationBuilder $appBuilder): void
     {
-        $this->withBinders($appBuilder, new UserServiceBinder());
+        $this->withBinders($appBuilder, new UserServiceBinder())
+            ->withProblemDetails(
+                $appBuilder,
+                UserNotFoundException::class,
+                status: HttpStatusCodes::NOT_FOUND
+            );
     }
 }
 ```
 
-Modules allow you to configure each of your business domains individually, making it trivial to plug-and-play new ones.  For example, you can specify [binders](configuration.md#component-binders), [routes](configuration.md#component-routes), [validators](configuration.md#component-validator), and other components that your domain needs.
+Finally, let's register the module with our app, which is itself a module.
 
-Hopefully, these examples demonstrate how easy it is to build an application with Aphiria.
+```php
+final class App implements IModule
+{
+    use AphiriaComponents;
+    
+    public function build(IApplicationBuilder $appBuilder): void
+    {
+        $this->withModules($appBuilder, new UserModule());
+    }
+}
+```
+
+That's all it takes to build a fully-functional API with Aphiria.
 
 <h2 id="getting-started">Getting Started</h2>
 
@@ -67,7 +96,7 @@ Aphiria uses a GitHub project for keeping track of new features, bug fixes, and 
 
 <h2 id="another-php-framework">Another PHP Framework?</h2>
 
-Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if I could find these things in a PHP framework.  I looked at frameworks, and usually found at least one major problem with them all:
+Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  Its expressive syntax, intuitive models, and simple configuration inspired me to see if we could find these things in a PHP framework.  We looked at frameworks, and usually found at least one major problem with them all:
  
 * A lot of coupling between framework libraries, making it difficult to substitute in third party libraries
 * Lack of support for [automatic content negotiation](content-negotiation.md)
@@ -77,4 +106,4 @@ Great question.  The idea for Aphiria was conceived after using ASP.NET Core.  I
 * Generally too much magic going on behind the scenes
 * All-in adoption of some less popular PSRs
 
-There is a general trend towards having separate API and front end codebases.  Full stack frameworks have their place, but I felt like this was becoming a less and less common way to write websites - most are JavaScript-powered UIs calling APIs.  So, I focused on what I know best - building REST APIs.  I spent months sketching out the ideal syntax, laboring over how to provide the best developer experience possible.  Once I had the syntax down, I worked backwards and started implementing it over the course of a few years.  It wasn't easy, but I can honestly say I am very proud of it.  I hope you enjoy it, too.
+There is a general trend towards having separate API and front end codebases.  Full stack frameworks have their place, but we felt like this was becoming a less and less common way to write websites - most are JavaScript-powered UIs calling APIs.  So, we focused on what we know best - building REST APIs.  We spent months sketching out the ideal syntax, laboring over how to provide the best developer experience possible.  Once we had the syntax down, we worked backwards and started implementing it over the course of a few years.  It wasn't easy, but we can honestly say we am very proud of it.  We hope you enjoy it, too.
