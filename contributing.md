@@ -48,7 +48,7 @@ Before you attempt to write a bug fix, first read the documentation to see if yo
 
 <h3 id="reporting-bug">Reporting a Bug</h3>
 
-To report a bug with either the <a href="https://github.com/aphiria/aphiria/issues" target="_blank">framework</a> or <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, create a new GitHub issue with a descriptive title, steps to reproduce the bug (eg a failing PHPUnit test), and information about your environment.
+To report a bug with either the <a href="https://github.com/aphiria/aphiria/issues" target="_blank">framework</a> or <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, create a new GitHub issue with a descriptive title, steps to reproduce the bug (eg a failing PHPUnit test), and information about your environment.  If you are just looking for general help, use <a href="https://github.com/aphiria/aphiria/discussions" target="_blank">GitHub Discussions</a>.
 
 <h3 id="fixing-bug">Fixing a Bug</h3>
 
