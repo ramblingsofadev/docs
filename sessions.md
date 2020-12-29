@@ -61,8 +61,8 @@ echo $session->get('someKey'); // "myValue"
 $session->set('foo', 'bar');
 $session->set('baz', 'blah');
 $data = $session->getAll();
-echo $data[0]; // "bar"
-echo $data[1]; // "blah"
+echo $data['foo']; // "bar"
+echo $data['baz']; // "blah"
 ```
 
 <h4 id="checking-if-session-has-key">Checking if a Session Has a Key</h4>
