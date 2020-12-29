@@ -33,7 +33,7 @@
 
 <h1 id="basics">Basics</h1>
 
-First, thank you for taking the time to contribute to Aphiria!  We use GitHub pull requests for all code contributions.  To get started on a [bug fix](#bugs) or [feature](#features), fork <a href="https://github.com/aphiria/aphiria" target="_blank">Aphiria</a>, and create a branch off of `0.x`.  Be sure to run `composer test` locally before opening the pull request to run the unit tests, [static analyzer](#static-analysis), and [linter](#linter).  Once your bug fix/feature is complete, open a pull request against `0.x`.
+First, thank you for taking the time to contribute to Aphiria!  We use GitHub pull requests for all code contributions.  To get started on a [bug fix](#bugs) or [feature](#features), fork <a href="https://github.com/aphiria/aphiria" target="_blank">Aphiria</a>, and create a branch off of `1.x`.  Be sure to run `composer test` locally before opening the pull request to run the unit tests, [static analyzer](#static-analysis), and [linter](#linter).  Once your bug fix/feature is complete, open a pull request against `1.x`.
 
 All pull requests **must**:
 
