@@ -8,9 +8,9 @@
 
 1. [Basics](#basics)
 2. [Bindings](#bindings)
-3. [Targeted Bindings](#targeted-bindings)
-4. [Auto-Wiring](#auto-wiring)
-5. [Binders](#binders)
+3. [Auto-Wiring](#auto-wiring)
+   1. [Targeted Bindings](#targeted-bindings)
+4. [Binders](#binders)
    1. [Dispatching Binders](#dispatching-binders)
 
 </div>
@@ -86,9 +86,22 @@ if (!$container->tryResolve(IUserService::class, $userService)) {
 // ...
 ```
 
-<h2 id="targeted-bindings">Targeted Bindings</h2>
+<h2 id="auto-wiring">Auto-Wiring</h2>
 
-If you only want to use a specific binding when resolving a type, you can use what's called a targeted binding.  Let's say that `UserService` looked like this:
+Auto-wiring is when you let the container use reflection to scan the constructor and attempt to automatically instantiate each parameter.  Let's build off the [targeted binding example](#targeted-bindings).
+
+```php
+$container->bindInstance(IUserRepository::class, new UserRepository());
+$userService = $container->resolve(UserService::class);
+```
+
+The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and check to see if it has a binding.  If it doesn't, it will attempt to auto-wire an instance of it if possible.
+
+> **Note:** A parameter with `mixed` type cannot be auto-wired as anything other than a primitive value.  Also, the container will attempt to auto-wire union types, eg `string|Closure`, using the left-most type first, and only on failure will the container attempt to use the next left-most type.
+
+<h3 id="targeted-bindings">Targeted Bindings</h3>
+
+If you want a binding to only apply when auto-wiring a specific class, use a targeted binding.  Let's say that `UserService` looked like this:
 
 ```php
 final class UserService implements IUserService
@@ -109,19 +122,6 @@ $container->for(
 ```
 
 Calling `$container->resolve(UserService::class)` will now automatically inject an instance of `UserRepository`.
-
-<h2 id="auto-wiring">Auto-Wiring</h2>
-
-Auto-wiring is when you let the container use reflection to scan the constructor and attempt to automatically instantiate each parameter.  Let's build off of the [targeted binding example](#targeted-bindings).
-
-```php
-$container->bindInstance(IUserRepository::class, new UserRepository());
-$userService = $container->resolve(UserService::class);
-```
-
-The container will scan `UserService::__construct()`, see the `IUserRepository` parameter, and check to see if it has a binding.  If it doesn't, it will attempt to auto-wire an instance of it if possible.
-
-> **Note:** A parameter with `mixed` type cannot be auto-wired as anything other than a primitive value.  Also, the container will attempt to auto-wire union types, eg `string|Closure`, using the left-most type first, and only on failure will the container attempt to use the next left-most type.
 
 <h2 id="binders">Binders</h2>
 
