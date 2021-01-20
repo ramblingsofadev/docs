@@ -66,7 +66,7 @@ Aphiria takes security seriously.  If you find a security vulnerability, please 
 
 <h2 id="coding-style">Coding Style</h2>
 
-Aphiria follows <a href="http://www.php-fig.org/psr/psr-1/" title="PSR-1 spec" target="_blank">PSR-1</a>, <a href="http://www.php-fig.org/psr/psr-2/" title="PSR-2 spec" target="_blank">PSR-2</a>, and  <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
+Aphiria follows <a href="http://www.php-fig.org/psr/psr-12/" title="PSR-12 spec" target="_blank">PSR-12</a> coding standards and uses <a href="http://www.php-fig.org/psr/psr-4/" title="PSR-4 spec" target="_blank">PSR-4</a> autoloading.  All PHP files should specify `declare(strict_types=1);`.  Additionally, unless a class is specifically meant to be extended, declare them as `final` to encourage composition over inheritance.
 
 <h3 id="linter">Linter</h3>
 
