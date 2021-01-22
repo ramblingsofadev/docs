@@ -40,7 +40,7 @@
 
 <h2 id="basics">Basics</h2>
 
-Routing is the process of mapping HTTP requests to actions.  You can check out what makes Aphiria's routing library different [here](framework-comparisons.md#aphiria-routing).
+Routing is the process of mapping HTTP requests to actions.  You can check out what makes Aphiria's routing library different [here](framework-comparisons.md#aphiria-routing) as well as the [server configuration](installation.md#server-config) necessary to use it.
 
 Let's look at a fully-functional example (or view its [attribute-based alternative](#route-attributes-example)):
 
