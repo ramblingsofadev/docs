@@ -189,32 +189,6 @@ All class names:
   * Class filenames should simply be the class name with *.php* appended, eg *ListCompiler.php*
     
 Whenever possible, <a href="https://wiki.php.net/rfc/constructor_promotion" target="_blank">constructor property promotion</a> should be used for properties that have no custom logic in the constructor.
-  
-Class properties should appear before any methods.  The following is the preferred ordering of class properties and methods:
-
-<h4 id="properties">Properties</h4>
-
-1. Constants
-2. Public static properties
-3. Public properties
-4. Protected static properties
-5. Protected properties
-6. Private static properties
-7. Private properties
-
-<h4 id="methods">Methods</h4>
-
-1. Magic methods
-2. Public static methods
-3. Public abstract methods
-4. Public methods
-5. Protected static methods
-6. Protected abstract methods
-7. Protected methods
-8. Private static methods
-9. Private methods
-
-> **Note:** Methods of the same visibility should be ordered alphabetically.
 
 <h3 id="abstract-classes">Abstract Classes</h3>
 
