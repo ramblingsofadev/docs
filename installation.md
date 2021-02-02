@@ -82,7 +82,7 @@ To run Aphiria locally, run the following in a terminal:
 php aphiria app:serve
 ```
     
-This will run PHP's built-in web server. The site will be accessible at http://localhost.
+This will run PHP's built-in web server. The site will be accessible at http://localhost:8080.
 
 <h3 id="apache-config">Apache Config</h3>
 

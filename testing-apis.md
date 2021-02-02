@@ -62,7 +62,7 @@ $this->get('/books/123');
 
 // Or
 
-$this->get('http://localhost/books/123');
+$this->get('http://localhost:8080/books/123');
 ```
 
 You can pass in headers in your calls:
