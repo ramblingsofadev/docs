@@ -141,27 +141,13 @@ final class UserBinder extends Binder
 }
 ```
 
-If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, you can register `UserBinder` to your app with an [application builder](configuration.md#component-binders).  Otherwise, if you're using the DI library on its own, you will need to manually register your binders:
-
-```php
-$binders = [new UserBinder()];
-
-foreach ($binders as $binder) {
-    $binder->bind($container);
-}
-
-// Dispatch your binders (see below)...
-
-// Your app is all set
-```
-
-Although this is simple, it's probably a little heavy-handed to register all your bindings for each request when only a few will be needed to handle a request.  The [next section](#dispatching-binders) will go into more details on how to handle this more optimally.
+If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, you can register `UserBinder` to your app with an [application builder](configuration.md#component-binders).
 
 <h3 id="dispatching-binders">Dispatching Binders</h3>
 
-If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, your binders will automatically be dispatched, and you can skip the rest of this section.  Otherwise, you'll have to manually dispatch your binders.  Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, eg only when they're actually needed.  At a high level, it looks inside your binders to determine what each of them bind and resolve.  It then binds factories to lazily invoke `bind()` only when the binding's interface is resolved.  This is all done for you - you don't have to list out a binder's bindings to get this lazy dispatching like other frameworks have you do.
+Aphiria does something unique - it automatically dispatches a binder only when one or more of its bindings are needed by your application.  It does this by constructing a graph between binders and bound/resolved interfaces, allowing it to dispatch the bare minimum number of binders to handle a request, increasing performance.
 
-Let's build on the `UserBinder` from the [previous example](#binders) and set up our app to lazily dispatch it:
+If you're using the <a href="https://github.com/aphiria/app/issues" target="_blank">skeleton app</a>, your binders will automatically be dispatched, and you can skip the rest of this section.  Otherwise, you'll have to manually dispatch your binders.  Rather than having to dispatch _every_ binder on every request, you can use `LazyBinderDispatcher` to lazily dispatch them, ie only when they're actually needed.  Let's build on the `UserBinder` from the [previous example](#binders) and set up our app to lazily dispatch it:
 
 ```php
 use Aphiria\DependencyInjection\Binders\LazyBinderDispatcher;
@@ -169,7 +155,7 @@ use Aphiria\DependencyInjection\Binders\Metadata\Caching\FileBinderMetadataColle
 use Aphiria\DependencyInjection\Container;
 
 $container = new Container();
-$metadataCache = getenv('ENV_NAME') === 'production'
+$metadataCache = \getenv('ENV_NAME') === 'production'
     ? new FileBinderMetadataCollectionCache('/tmp/binderMetadataCollectionCache.txt')
     : null;
 $binderDispatcher = new LazyBinderDispatcher($metadataCache);
