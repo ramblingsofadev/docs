@@ -558,7 +558,7 @@ final class YamlConfigurationFileReader implements IConfigurationFileReader
 {
     public function readConfiguration(string $path, string $pathDelimiter = '.'): IConfiguration
     {
-        if (!file_exists($path)) {
+        if (!\file_exists($path)) {
             throw new InvalidConfigurationFileException("$path does not exist");
         }
 

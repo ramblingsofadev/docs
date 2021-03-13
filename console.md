@@ -105,7 +105,7 @@ final class GreetingCommandHandler implements ICommandHandler
         $greeting = "Hello, {$input->arguments['name']}";
         
         if ($input->options['yell'] === 'yes') {
-            $greeting = strtoupper($greeting);
+            $greeting = \strtoupper($greeting);
         }
     
         $output->writeln($greeting);
