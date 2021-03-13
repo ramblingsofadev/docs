@@ -474,6 +474,9 @@ $config->getFloat('foo');
 // Get the value as an integer
 $config->getInt('foo');
 
+// Get the value as an object
+$config->getObject('foo', fn (mixed $options): MyObject => new MyObject($options));
+
 // Get the value as a string
 $config->getString('foo');
 
@@ -491,6 +494,9 @@ $config->tryGetFloat('foo', $value);
 
 // Try to get the value as an integer
 $config->tryGetInt('foo', $value);
+
+// Try to get the value as an object
+$config->tryGetObject('foo', fn (mixed $options): MyObject => new MyObject($options), $value);
 
 // Try to get the value as a string
 $config->tryGetString('foo', $value);
@@ -586,6 +592,9 @@ GlobalConfiguration::getFloat('foo');
 // Get the value as an integer
 GlobalConfiguration::getInt('foo');
 
+// Get the value as an object
+GlobalConfiguration::getObject('foo', fn (mixed $options): MyObject => new MyObject($options));
+
 // Get the value as a string
 GlobalConfiguration::getString('foo');
 
@@ -603,6 +612,9 @@ GlobalConfiguration::tryGetFloat('foo', $value);
 
 // Try to get the value as an integer
 GlobalConfiguration::tryGetInt('foo', $value);
+
+// Try to get the value as an object
+GlobalConfiguration::tryGetObject('foo', fn (mixed $options): MyObject => new MyObject($options), $value);
 
 // Try to get the value as a string
 GlobalConfiguration::tryGetString('foo', $value);
