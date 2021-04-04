@@ -227,7 +227,7 @@ _Runtime: O(nm)_, n = number of values in the array list, and m = number of valu
 You can intersect an array list's values with an array by calling
 
 ```php
-$arrayList->intersect(['foo', 'bar']);
+$intersectedList = $arrayList->intersect(['foo', 'bar']);
 ```
 
 <h3 id="array-lists-remove-index">removeIndex()</h3>
@@ -253,7 +253,7 @@ _Runtime: O(n)_
 To reverse the values in the list, call
 
 ```php
-$arrayList->reverse();
+$reversedList = $arrayList->reverse();
 ```
 
 <h3 id="array-lists-sort">sort()</h3>
@@ -263,7 +263,7 @@ _Runtime: O(n log n)_
 You can sort values similar to the way you can sort PHP arrays via `usort()`:
 
 ```php
-$arrayList->sort(fn ($a, $b) => $a <=> $b);
+$sortedList = $arrayList->sort(fn ($a, $b) => $a <=> $b);
 ```
 
 <h3 id="array-lists-to-array">toArray()</h3>
@@ -283,7 +283,7 @@ _Runtime: O(nm)_, n = number of values in the array list, and m = number of valu
 You can union an array list's values with an array via
 
 ```php
-$arrayList->union(['foo', 'bar']);
+$unionedList = $arrayList->union(['foo', 'bar']);
 ```
 
 <h2 id="hash-tables">Hash Tables</h2>
@@ -510,7 +510,7 @@ _Runtime: O(nm)_
 You can intersect a hash set with an array by calling
 
 ```php
-$set->intersect(['foo', 'bar']);
+$intersectedSet = $set->intersect(['foo', 'bar']);
 ```
 
 <h3 id="hash-sets-remove-value">removeValue()</h3>
@@ -530,7 +530,7 @@ _Runtime: O(n log n)_
 You can sort values similar to the way you can sort PHP arrays via `usort()`:
 
 ```php
-$set->sort(fn ($a, $b) => $a <=> $b);
+$sortedSet = $set->sort(fn ($a, $b) => $a <=> $b);
 ```
 
 <h3 id="hash-sets-to-array">toArray()</h3>
@@ -550,7 +550,7 @@ _Runtime: O(nm)_
 You can union a hash set with an array via
 
 ```php
-$set->union(['foo', 'bar']);
+$unionedSet = $set->union(['foo', 'bar']);
 ```
 
 <h2 id="stacks">Stacks</h2>
