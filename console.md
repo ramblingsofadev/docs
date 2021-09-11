@@ -230,7 +230,7 @@ HELLO, DAVE
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
-It's possible to call a command from another command by injecting `ICommandBus` into your command handler:
+It's possible to call a command from another command by injecting `ICommandBus` into your command handler.  Here, we'll call the `bar` command with an argument and option:
 
 ```php
 use Aphiria\Console\Commands\Attributes\Command;
@@ -246,7 +246,8 @@ final class FooCommandHandler implements ICommandHandler
 
     public function handle(Input $input, IOutput $output)
     {
-        $this->commandBus->handle('foo arg1 --option1=value', $output);
+        // "php aphiria" is not needed prior to the name of the command we're calling
+        $this->commandBus->handle('bar arg1 --option1=value', $output);
     }
 }
 ```
