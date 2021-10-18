@@ -46,7 +46,7 @@ final class UserModule implements IModule
     // Gives us a fluent way to configure Aphiria components
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withBinders($appBuilder, new UserServiceBinder())
             ->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
@@ -74,11 +74,11 @@ use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-final class App implements IModule
+final class GlobalModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withModules($appBuilder, new MyModule());
 
@@ -106,7 +106,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add a binder
         $this->withBinders($appBuilder, new UserServiceBinder());
@@ -131,7 +131,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add some routes
         $this->withRoutes($appBuilder, function (RouteCollectionBuilder $routes) {
@@ -159,7 +159,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add global middleware (executed before each route)
         $this->withGlobalMiddleware($appBuilder, new MiddlewareBinding(Cors::class));
@@ -188,7 +188,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add console commands
         $this->withCommands($appBuilder, function (CommandRegistry $commands) {
@@ -225,7 +225,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add constraints to a class
         $this->withObjectConstraints($appBuilder, function (ObjectConstraintsRegistryBuilder $objectConstraintsBuilder) {
@@ -256,7 +256,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add a custom problem details status code for an exception
         $this->withProblemDetails(
@@ -384,13 +384,13 @@ use Aphiria\Application\IModule;
 use Aphiria\DependencyInjection\IContainer;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-final class App implements IModule
+final class GlobalModule implements IModule
 {
     use AphiriaComponents;
 
     public function __construct(private IContainer $container) {}
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withComponent($appBuilder, new SymfonyRouterComponent($this->container))
             ->withBinders($appBuilder, new SymfonyRouterBinder());
@@ -407,7 +407,7 @@ use Symfony\Component\Routing\Route;
 
 final class MyModule implements IModule
 {
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $appBuilder->getComponent(SymfonyRouterComponent::class)
             ->withRoute('GetUserById', new Route('users/{id}'));
@@ -450,7 +450,7 @@ final class MyModule implements IModule
 {
     use SymfonyComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withSymfonyRoute($appBuilder, 'GetUserById', new Route('users/{id}'));
     }

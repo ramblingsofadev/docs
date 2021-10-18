@@ -55,18 +55,18 @@ If the object was not valid, a `ValidationException` will be thrown.  That's it 
 
 If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, an instance of `IValidator` will already be [bound](dependency-injection.md#binders) to the DI container, which you can [inject](dependency-injection.md).
 
-You can enable attributes in `App`:
+You can enable attributes in `GlobalModule`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-final class App implements IModule
+final class GlobalModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withValidatorAttributes($appBuilder);
     }

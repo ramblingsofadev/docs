@@ -60,7 +60,7 @@ final class UserModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withBinders($appBuilder, new UserServiceBinder())
             ->withProblemDetails(
@@ -75,11 +75,11 @@ final class UserModule implements IModule
 Finally, let's register the module with our app, which is itself a module.
 
 ```php
-final class App implements IModule
+final class GlobalModule implements IModule
 {
     use AphiriaComponents;
     
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withModules($appBuilder, new UserModule());
     }

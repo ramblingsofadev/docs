@@ -271,18 +271,18 @@ Similar to [middleware](#route-attributes-middleware), you can add route constra
 
 <h3 id="scanning-for-attributes">Scanning For Attributes</h3>
 
-Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `App`:
+Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `GlobalModule`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Aphiria\Framework\Application\AphiriaComponents;
 
-final class App implements IModule
+final class GlobalModule implements IModule
 {
     use AphiriaComponents;
 
-    public function build(IApplicationBuilder $appBuilder): void
+    public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withRouteAttributes($appBuilder);
     }
