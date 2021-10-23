@@ -546,7 +546,7 @@ final class YamlConfigurationFileReader implements IConfigurationFileReader
   
 <h2 id="global-configuration">Global Configuration</h2>
 
-`GlobalConfiguration` is a static class that can access values from multiple configurations that where registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
+`GlobalConfiguration` is a static class that can access values from multiple configurations that were registered via `GlobalConfiguration::addConfigurationSource()`.  It is the most convenient way to read configuration values from places like [binders](dependency-injection.md#binders).  Let's look at its methods:
 
 ```php
 use Aphiria\Application\Configuration\GlobalConfiguration;
