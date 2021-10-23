@@ -59,13 +59,10 @@ You can enable attributes in `GlobalModule`:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class GlobalModule implements IModule
+final class GlobalModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withValidatorAttributes($appBuilder);

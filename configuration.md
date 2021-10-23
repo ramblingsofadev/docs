@@ -35,17 +35,13 @@ Let's look at an example of a module:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
 use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    // Gives us a fluent way to configure Aphiria components
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withBinders($appBuilder, new UserServiceBinder())
@@ -67,17 +63,14 @@ Here's the best part of how Aphiria was built - there's nothing special about Ap
 
 <h3 id="modules">Modules</h3>
 
-Use the `AphiriaComponents` trait to register a module:
+Either extend `AphiriaModule` or use the `AphiriaComponents` trait to register a module:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class GlobalModule implements IModule
+final class GlobalModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withModules($appBuilder, new MyModule());
@@ -99,13 +92,10 @@ You can configure your module to require [binders](dependency-injection.md#binde
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add a binder
@@ -123,14 +113,11 @@ You can manually register [routes](routing.md) for your module, and you can enab
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 use Aphiria\Routing\Builders\RouteCollectionBuilder;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add some routes
@@ -151,14 +138,11 @@ Some modules might need to add global [middleware](middleware.md) to your applic
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 use Aphiria\Middleware\MiddlewareBinding;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add global middleware (executed before each route)
@@ -179,15 +163,12 @@ You can manually register [console commands](console.md#creating-commands), and 
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
 use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add console commands
@@ -216,15 +197,12 @@ You can also manually configure [constraints](validation.md#constraints) for you
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\EmailConstraint;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Manually add constraints to a class
@@ -245,17 +223,13 @@ Exceptions may be mapped to [custom problem details](exception-handling.md#custo
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
 use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
-use Aphiria\Framework\Application\AphiriaComponents;
 use Aphiria\Net\Http\HttpStatusCodes;
 use Psr\Log\LogLevel;
 
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         // Add a custom problem details status code for an exception
@@ -380,14 +354,11 @@ Let's register the binder and component to our app:
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
 use Aphiria\DependencyInjection\IContainer;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class GlobalModule implements IModule
+final class GlobalModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function __construct(private IContainer $container) {}
 
     public function configure(IApplicationBuilder $appBuilder): void

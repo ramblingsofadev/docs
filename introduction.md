@@ -56,10 +56,8 @@ final class UserServiceBinder extends Binder
 Next, let's use a [module](configuration.md#modules) to register the binder.  We'll also configure our app to map an exception that `IUserService` might throw to an HTTP response.  Modules give you a place to configure each piece of your business domain, allowing you to easily plug-and-play code into your app.
 
 ```php
-final class UserModule implements IModule
+final class UserModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withBinders($appBuilder, new UserServiceBinder())
@@ -75,10 +73,8 @@ final class UserModule implements IModule
 Finally, let's register the module with our app, which is itself a module.
 
 ```php
-final class GlobalModule implements IModule
+final class GlobalModule extends AphiriaModule
 {
-    use AphiriaComponents;
-    
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withModules($appBuilder, new UserModule());

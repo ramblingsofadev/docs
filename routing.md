@@ -275,13 +275,10 @@ Before you can use attributes, you'll need to configure Aphiria to scan for them
 
 ```php
 use Aphiria\Application\Builders\IApplicationBuilder;
-use Aphiria\Application\IModule;
-use Aphiria\Framework\Application\AphiriaComponents;
+use Aphiria\Framework\Application\AphiriaModule;
 
-final class GlobalModule implements IModule
+final class GlobalModule extends AphiriaModule
 {
-    use AphiriaComponents;
-
     public function configure(IApplicationBuilder $appBuilder): void
     {
         $this->withRouteAttributes($appBuilder);
@@ -668,8 +665,8 @@ $request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
 
 $result = $routeMatcher->matchRoute(
     $request->getMethod(),
-    $request->getUri()->getHost(),
-    $request->getUri()->getPath()
+    $request->getUri()->host,
+    $request->getUri()->path
 );
 ```
 
