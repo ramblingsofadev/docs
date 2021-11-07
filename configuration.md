@@ -225,7 +225,8 @@ Exceptions may be mapped to [custom problem details](exception-handling.md#custo
 use Aphiria\Application\Builders\IApplicationBuilder;
 use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
-use Aphiria\Net\Http\HttpStatusCodes;
+use Aphiria\Framework\Application\AphiriaModule;
+use Aphiria\Net\Http\HttpStatusCode;
 use Psr\Log\LogLevel;
 
 final class UserModule extends AphiriaModule
@@ -236,7 +237,7 @@ final class UserModule extends AphiriaModule
         $this->withProblemDetails(
             $appBuilder,
             UserNotFoundException::class,
-            status: HttpStatusCodes::NOT_FOUND
+            status: HttpStatusCode::NotFound
         );
 
         // Add a completely custom problem details mapping for an exception
@@ -246,7 +247,7 @@ final class UserModule extends AphiriaModule
             type: 'https://example.com/errors/overdrawn',
             title: 'This account is overdrawn',
             detail: fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}",
-            status: HttpStatusCodes::BAD_REQUEST,
+            status: HttpStatusCode::BadRequest,
             instance: fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}",
             extensions: fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount]
         );

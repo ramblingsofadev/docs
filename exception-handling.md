@@ -52,10 +52,10 @@ You might not want all exceptions to result in a 500.  For example, if you have 
 ```php
 use Aphiria\Exceptions\GlobalExceptionHandler;
 use Aphiria\Framework\Api\Exceptions\ProblemDetailsExceptionRenderer;
-use Aphiria\Net\Http\HttpStatusCodes;
+use Aphiria\Net\Http\HttpStatusCode;
 
 $exceptionRenderer = new ProblemDetailsExceptionRenderer();
-$exceptionRenderer->mapExceptionToProblemDetails(UserNotFoundException::class, status: HttpStatusCodes::NOT_FOUND);
+$exceptionRenderer->mapExceptionToProblemDetails(UserNotFoundException::class, status: HttpStatusCode::NotFound);
 $globalExceptionHandler = new GlobalExceptionHandler($exceptionRenderer);
 $globalExceptionHandler->registerWithPhp();
 ```
@@ -68,7 +68,7 @@ $exceptionRenderer->mapExceptionToProblemDetails(
     type: 'https://example.com/errors/overdrawn',
     title: 'This account is overdrawn',
     detail: fn ($ex) => "Account {$ex->accountId} is overdrawn by {$ex->overdrawnAmount}",
-    status: HttpStatusCodes::BAD_REQUEST,
+    status: HttpStatusCode::BadRequest,
     instance: fn ($ex) => "https://example.com/accounts/{$ex->accountId}/errors/{$ex->id}",
     extensions: fn ($ex) => ['overdrawnAmount' => $ex->overdrawnAmount]
 );

@@ -143,9 +143,9 @@ $request = (new RequestBuilder())->withProperty('routeVars', ['id' => 123])
 If you'd like to use a different request target type besides origin form, you may:
 
 ```php
-use Aphiria\Net\Http\RequestTargetTypes;
+use Aphiria\Net\Http\RequestTargetType;
 
-$request = (new RequestBuilder())->withRequestTargetType(RequestTargetTypes::ABSOLUTE_FORM)
+$request = (new RequestBuilder())->withRequestTargetType(RequestTargetType::AbsoluteForm)
     ->build();
 ```
 
@@ -225,15 +225,15 @@ A URI identifies a resource, typically over a network.  They contain such inform
 use Aphiria\Net\Uri;
 
 $uri = new Uri('https://dave:abc123@example.com:443/foo?bar=baz#hash');
-$uri->getScheme(); // "https"
+$uri->scheme; // "https"
+$uri->user; // "dave"
+$uri->password; // "abc123"
+$uri->host; // "example.com"
+$uri->port; // 443
+$uri->path; // "/foo"
+$uri->queryString; // "bar=baz"
+$uri->fragment; // "hash"
 $uri->getAuthority(); // "//dave:abc123@example.com:443"
-$uri->getUser(); // "dave"
-$uri->getPassword(); // "abc123"
-$uri->getHost(); // "example.com"
-$uri->getPort(); // 443
-$uri->getPath(); // "/foo"
-$uri->getQueryString(); // "bar=baz"
-$uri->getFragment(); // "hash"
 ```
 
 To serialize a URI, just cast it to a string:
@@ -330,28 +330,30 @@ echo (string)$request;
 By default, this will use <a href="https://tools.ietf.org/html/rfc7230#section-5.3.1" target="_blank">origin-form</a> for the request target, but you can override the request type via the constructor:
 
 ```php
-use Aphiria\Net\Http\RequestTargetTypes;
+use Aphiria\Net\Http\RequestTargetType;
 
 $request = new Request(
     'GET',
     new Uri('https://example.com/foo?bar'),
-    requestTargetType: RequestTargetTypes::AUTHORITY_FORM
+    requestTargetType: RequestTargetType::AuthorityForm
 );
 ```
 
 The following request target types may be used:
 
-* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.2" target="_blank">`RequestTargetTypes::ABSOLUTE_FORM`</a>
-* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.4" target="_blank">`RequestTargetTypes::ASTERISK_FORM`</a>
-* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.3" target="_blank">`RequestTargetTypes::AUTHORITY_FORM`</a>
-* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.1" target="_blank">`RequestTargetTypes::ORIGIN_FORM`</a>
+* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.2" target="_blank">`RequestTargetType::AbsoluteForm`</a>
+* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.4" target="_blank">`RequestTargetType::AsteriskForm`</a>
+* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.3" target="_blank">`RequestTargetType::AuthorityForm`</a>
+* <a href="https://tools.ietf.org/html/rfc7230#section-5.3.1" target="_blank">`RequestTargetType::OriginForm`</a>
 
 <h2 id="multipart-requests">Multipart Requests</h2>
 
-Multipart requests contain multiple bodies, each with headers.  That's actually how file uploads work - each file gets a body with headers indicating the name, type, and size of the file.  Aphiria can parse these multipart bodies into a `MultipartBody`, which extends [`StreamBody`](#stream-bodies).  It contains additional methods to get the boundary and the list of `MultipartBodyPart` objects that make up the body:
+Multipart requests contain multiple bodies, each with headers.  That's actually how file uploads work - each file gets a body with headers indicating the name, type, and size of the file.  Aphiria can parse these multipart bodies into a `MultipartBody`, which extends [`StreamBody`](#stream-bodies).  It contains additional properties to get the boundary and the list of `MultipartBodyPart` objects that make up the body:
 
-* `getBoundary(): string`
-* `getParts(): MultipartBodyPart[]`
+```php
+$multipartBody->boundary; // string
+$multipartBody->parts; // MultipartBodyPart[]
+```
 
 You can check if a request is a multipart request:
 
@@ -369,18 +371,20 @@ use Aphiria\Net\Http\Formatting\RequestParser;
 $multipartBody = (new RequestParser)->readAsMultipart($request);
 ```
 
-Each `MultipartBodyPart` contains the following methods:
+Each `MultipartBodyPart` contains the following properties:
 
-* `getBody(): ?IBody`
-* `getHeaders(): Headers`
+```php
+$multipartBodyPart->body; // ?IBody
+$multipartBodyPart->headers; // Headers
+```
 
 <h3 id="saving-uploaded-files">Saving Uploaded Files</h3>
 
 To save a multipart body's parts to files in a memory-efficient manner, read each part as a stream and copy it to the destination path:
 
 ```php
-foreach ($multipartBody->getParts() as $multipartBodyPart) {
-    $bodyStream = $multipartBodyPart->getBody()->readAsStream();
+foreach ($multipartBody->parts as $multipartBodyPart) {
+    $bodyStream = $multipartBodyPart->body->readAsStream();
     $bodyStream->rewind();
     $bodyStream->copyToStream(new Stream(fopen('path/to/copy/to/' . uniqid(), 'wb')));
 }
@@ -430,7 +434,7 @@ $body = new MultipartBody([
     new MultipartBodyPart($image2Headers, $image2Body)
 ]);
 $headers = new Headers();
-$headers->add('Content-Type', "multipart/form-data; boundary={$body->getBoundary()}");
+$headers->add('Content-Type', "multipart/form-data; boundary={$body->boundary}");
 
 // Build the request
 $request = new Request(

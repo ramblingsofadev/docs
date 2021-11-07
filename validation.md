@@ -313,7 +313,7 @@ try {
     $errors = [];
 
     foreach ($ex->getViolations() as $violation) {
-        $errors[] = $violation->getErrorMessage();
+        $errors[] = $violation->errorMessage;
     }
 
     // Do something with the errors...
@@ -329,7 +329,7 @@ if (!$validator->tryValidateObject($blogPost, $violations)) {
     $errors = [];
 
     foreach ($violations as $violation) {
-        $errors[] = $violation->getErrorMessage();
+        $errors[] = $violation->errorMessage;
     }
 
     // Do something with the errors...

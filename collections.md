@@ -8,8 +8,8 @@
 
 1. [Introduction](#introduction)
 2. [Key-Value Pairs](#key-value-pairs)
-   1. [getKey()](#key-value-pairs-get-key)
-   2. [getValue()](#key-value-pairs-get-value)
+   1. [key](#key-value-pairs-key)
+   2. [value](#key-value-pairs-value)
 3. [Array Lists](#array-lists)
    1. [add()](#array-lists-add)
    2. [addRange()](#array-lists-add-range)
@@ -104,24 +104,24 @@ use Aphiria\Collections\KeyValuePair;
 $kvp = new KeyValuePair('thekey', 'thevalue');
 ```
 
-<h3 id="key-value-pairs-get-key-keys">KeyValuePair::getKey()</h3>
+<h3 id="key-value-pairs-key">KeyValuePair::key</h3>
 
 _Runtime: O(1)_
 
 To get the key-value pair's key, call
 
 ```php
-$kvp->getKey();
+$kvp->key;
 ```
 
-<h3 id="key-value-pairs-get-value">KeyValuePair::getValue()</h3>
+<h3 id="key-value-pairs-value">KeyValuePair::value</h3>
 
 _Runtime: O(1)_
 
 To get the key-value pair's value, call
 
 ```php
-$kvp->getValue();
+$kvp->value;
 ```
 
 <h2 id="array-lists">Array Lists</h2>

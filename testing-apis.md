@@ -34,13 +34,14 @@ Sending a request is very simple:
 
 ```php
 use App\Tests\IntegrationTestCase;
+use Aphiria\Net\Http\HttpStatusCode;
 
 final class BookQueryTest extends IntegrationTestCase
 {
     public function testQueryYieldsCorrectResult(): void
     {
         $response = $this->get('/books/search?query=great%20gatsby');
-        $this->assertStatusCodeEquals(200, $response);
+        $this->assertStatusCodeEquals(HttpStatusCode::Ok, $response);
         $this->assertParsedBodyEquals(new Book('The Great Gatsby'), $response);
     }
 }
@@ -146,6 +147,6 @@ $this->assertParsedBodyPassesCallback($response, User::class, fn ($user) => $use
 <h3 id="assert-status-code-equals">assertStatusCodeEquals</h3>
 
 ```php
-// Assert that the response status code equals a value
-$this->assertStatusCodeEquals(200, $response);
+// Assert that the response status code equals a value (can also use an int)
+$this->assertStatusCodeEquals(HttpStatusCode::Ok, $response);
 ```

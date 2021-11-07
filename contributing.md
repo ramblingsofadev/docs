@@ -18,13 +18,15 @@
    3. [PHPDoc](#phpdoc)
 6. [Naming Conventions](#naming-conventions)
    1. [Variables](#variables)
-   2. [Functions/Methods](#functions-methods)
-   3. [Constants](#constants)
-   4. [Namespaces](#namespaces)
-   5. [Classes](#classes)
-   6. [Abstract Classes](#abstract-classes)
-   7. [Interfaces](#interfaces)
-   8. [Traits](#traits)
+   2. [Properties](#properties)
+   3. [Functions/Methods](#functions-methods)
+   4. [Constants](#constants)
+   5. [Namespaces](#namespaces)
+   6. [Classes](#classes)
+   7. [Abstract Classes](#abstract-classes)
+   8. [Interfaces](#interfaces)
+   9. [Traits](#traits)
+   10. [Enums](#enums)
 7. [Financial Support](#financial-support)
 
 </div>
@@ -103,37 +105,26 @@ Use error suppression sparingly - try to fix any legitimate issues that Psalm fi
 Use PHPDoc to document **all** class properties, methods, and functions.  Constructors only need to document the parameters.  Method/function PHPDoc must include one blank line between the description and the following tag.  Here's an example:
 
 ```php
-final class Book
+final class User
 {
     /**
-     * @param string $title The title of the book
+     * @param string $firstName The user's first name
+     * @param string $lastName The user's last name
      */
-    public function __construct(private string $title)
-    {
-        $this->setTitle($title);
+    public function __construct(
+        public readonly string $firstName,
+        public readonly string $lastName
+    ) {
     }
     
     /**
-     * Gets the title of the book
+     * Gets the user's full name
      *
-     * @return string The title of the book
+     * @return string The user's full name
      */
-    public function getTitle(): string
+    public function getFullName(): string
     {
-        return $this->title;
-    }
-    
-    /**
-     * Sets the title of the book
-     *
-     * @param string $title The title of the book
-     * @return self For object chaining
-     */
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        
-        return $this;
+        return "{$this->firstName} {$this->lastName}";
     }
 }
 ```
@@ -148,6 +139,46 @@ All variable names:
 
 * Must be lower camel case, eg `$emailAddress`
 * Must not use Hungarian Notation, eg `$arrUsers`
+
+<h3 id="properties">Properties</h3>
+
+We should favor using class properties over `getXxx()` and `setXxx()` whenever accessing and setting the value is straight forward.  If a class property should only be read, it should be declared as `readonly` rather than using a `getXxx()` method.  For example, here is what **not** to do:
+
+```php
+class Book
+{
+    /** @var string The book title */
+    private string $title;
+    
+    /**
+     * Gets the book title
+     * 
+     * @return string The book title
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+}
+```
+
+Instead, declare the title to be `readonly`:
+
+```php
+class Book
+{
+    /**
+     * @param string $title The book title
+     */
+    public function __construct(public readonly string $title)
+    {
+    }
+}
+```
+
+The exception to this rule is when an interface needs to expose accessors to a property, but only because PHP interfaces do not support properties.
+
+We should also favor marking properties as `readonly`, even when `private`, if their values should not be set/changed outside of the construtor.
 
 <h3 id="functions-methods">Functions/Methods</h3>
 
@@ -209,6 +240,13 @@ All trait names:
 
 * Must be Pascal case, eg `ListValidator`
 * Must be not use `T`, `Trait`, or any other word in the name that implies it is a trait
+
+<h3 id="enums">Enums</h3>
+
+All enums:
+
+* Must use singular names, eg `StatusCode` instead of `StatusCodes`
+* Must be Pascal case, eg `StatusCode::NotFound` instead of `StatusCode::NOT_FOUND`
 
 <h2 id="financial-support">Financial Support</h2>
 

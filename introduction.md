@@ -64,7 +64,7 @@ final class UserModule extends AphiriaModule
             ->withProblemDetails(
                 $appBuilder,
                 UserNotFoundException::class,
-                status: HttpStatusCodes::NOT_FOUND
+                status: HttpStatusCode::NotFound
             );
     }
 }

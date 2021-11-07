@@ -24,20 +24,21 @@ Responses are HTTP messages that are sent by servers back to the client.  They c
 
 ```php
 use Aphiria\Net\Http\Headers;
+use Aphiria\Net\Http\HttpStatusCode;
 use Aphiria\Net\Http\Response;
 use Aphiria\Net\Http\StringBody;
 
 $response = new Response(
-    200,
+    HttpStatusCode::Ok, // Can also use an int
     new Headers(),
     new StringBody('foo')
 );
 
-// Get the status code
+// Get the status code as an HttpStatusCode enum
 $response->getStatusCode();
 
-// Set the status code
-$response->setStatusCode(500);
+// Set the status code (can also use an int)
+$response->setStatusCode(HttpStatusCode::InternalServerError);
 
 // Get the reason phrase
 $response->getReasonPhrase(); // "OK"
@@ -91,6 +92,7 @@ Cookies are headers that are automatically appended to each request from the cli
 ```php
 use Aphiria\Net\Http\Formatting\ResponseFormatter;
 use Aphiria\Net\Http\Headers\Cookie;
+use Aphiria\Net\Http\Headers\SameSiteMode;
 
 (new ResponseFormatter)->setCookie(
     $response,
@@ -102,7 +104,7 @@ use Aphiria\Net\Http\Headers\Cookie;
         domain: 'example.com',
         isSecure: true, // Defaults to false
         isHttpOnly: true, // Defaults to true
-        sameSite: Cookie::SAME_SITE_LAX // Defaults to lax
+        sameSite: SameSiteMode::Lax // Defaults to lax
     )
 );
 ```

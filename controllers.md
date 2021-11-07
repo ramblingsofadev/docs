@@ -211,7 +211,7 @@ final class JsonPrettifierController extends Controller
         $prettyJson = json_encode($bodyAsString, JSON_PRETTY_PRINT);
         $headers = new Headers();
         $headers->add('Content-Type', 'application/json');
-        $response = new Response(200, $headers, new StringBody($prettyJson));
+        $response = new Response(HttpStatusCode::Ok, $headers, new StringBody($prettyJson));
         
         return $response;
     }
@@ -238,7 +238,7 @@ final class LoginController extends Controller
         }
         
         // Write a cookie containing the auth token back to the response
-        $response = new Response(200);
+        $response = new Response();
         $authTokenCookie = new Cookie('authtoken', $authResults->getAuthToken(), 3600);
         $this->responseFormatter->setCookie($response, $authTokenCookie);
         
