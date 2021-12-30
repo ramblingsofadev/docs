@@ -52,6 +52,8 @@ Aphiria is broken into various libraries, each of which can be installed individ
 
 * `aphiria/api`
 * `aphiria/application`
+* `aphiria/authentication`
+* `aphiria/authorization`
 * `aphiria/collections`
 * `aphiria/console`
 * `aphiria/content-negotiation`
@@ -64,6 +66,7 @@ Aphiria is broken into various libraries, each of which can be installed individ
 * `aphiria/psr-adapters`
 * `aphiria/reflection`
 * `aphiria/router`
+* `aphiria/security`
 * `aphiria/sessions`
 * `aphiria/validation`
 

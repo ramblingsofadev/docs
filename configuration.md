@@ -13,8 +13,10 @@
    2. [Routes](#component-routes)
    3. [Middleware](#component-middleware)
    4. [Console Commands](#component-console-commands)
-   5. [Validator](#component-validator)
-   6. [Exception Handler](#component-exception-handler)
+   5. [Authenticators](#component-authentiators)
+   6. [Authorities](#component-authorities)
+   7. [Validator](#component-validator)
+   8. [Exception Handler](#component-exception-handler)
 3. [Adding Custom Components](#adding-custom-components)
 4. [Reading From Configs](#reading-from-configs)
    1. [Reading PHP Files](#reading-php-files)
@@ -187,6 +189,70 @@ final class UserModule extends AphiriaModule
 
         // Register built-in framework commands, but exclude certain ones
         $this->withFrameworkCommands($appBuilder, ['app:serve']);
+    }
+}
+```
+
+<h3 id="component-authenticators">Authenticators</h3>
+
+Aphiria provides methods for configuring your [authenticator](authentication.md).
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Authentication\AuthenticationScheme;
+use Aphiria\Authentication\Schemes\BasicAuthenticationOptions;
+use Aphiria\Authentication\Schemes\CookieAuthenticationOptions;
+use Aphiria\Framework\Application\AphiriaModule;
+
+final class GlobalModule extends AphiriaModule
+{
+    public function configure(IApplicationBuilder $appBuilder): void
+    {
+        // Register an authentication scheme
+        $this->withAuthenticationScheme($appBuilder, new AuthenticationScheme(
+            'basic',
+            BasicAuthenticationHandler::class,
+            new BasicAuthenticationOptions(realm: 'example.com', claimsIssuer: 'https://example.com')
+        ));
+        
+        // Register a default authentication scheme
+        $this->withAuthenticationScheme($appBuilder, new AuthenticationScheme(
+            'cookie',
+            CookieAuthenticationHandler::class,
+            new CookieAuthenticationOptions(cookieName: 'authToken', claimsIssuer: 'https://example.com')
+        ), true);
+    }
+}
+```
+
+<h3 id="component-authorities">Authorities</h3>
+
+Customizing your [authority](authorization.md) is also simple.
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Authorization\AuthorizationPolicy;
+use Aphiria\Authorization\Requirements\RolesRequirement;
+use Aphiria\Authorization\Requirements\RolesRequirementHandler;
+use Aphiria\Framework\Application\AphiriaModule;
+
+final class GlobalModule extends AphiriaModule
+{
+    public function configure(IApplicationBuilder $appBuilder): void
+    {
+        // Register an authorization policy
+        $this->withAuthorizationPolicy($appBuilder, new AuthorizationPolicy(
+            'requires-admin',
+            new RolesRequirement('admin'),
+            'cookie'
+        ));
+        
+        // Register an authorization requirement handler
+        $this->withAuthorizationRequirementHandler(
+            $appBuilder,
+            RolesRequirement::class,
+            new RolesRequirementHandler()
+        );
     }
 }
 ```
