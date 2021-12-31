@@ -12,9 +12,10 @@
     2. [Options](#scheme-options)
     3. [Basic Authentication](#basic-authentication)
     4. [Cookie Authentication](#cookie-authentication)
-3. [Authentication Results](#authentication-results)
-4. [Customizing Authentication Failure Responses](#customizing-authentication-failure-responses)
-5. [User Accessors](#user-accessors)
+3. [Configuring an Authenticator](#configuring-an-authenticator)
+4. [Authentication Results](#authentication-results)
+5. [Customizing Authentication Failure Responses](#customizing-authentication-failure-responses)
+6. [User Accessors](#user-accessors)
 
 </div>
 
@@ -89,11 +90,11 @@ An authentication scheme defines a particular way of authenticating an identity,
 * `authenticate(IRequest $request, AuthenticationScheme $scheme): AuthenticationResult`
     * Attempts to authenticate credentials passed via an HTTP request and create a [principal](security.md#working-with-principals)
 * `challenge(IRequest $request, IResponse $response, AuthenitcationScheme $scheme): void`
-    * In the case that authentication fails, this is called to decorate the response to let the user know they could not successfully be authenticated
+    * In the case that authentication fails, this is called to decorate the response to let the user know they could not successfully be authenticated, eg by redirecting to a login page or setting the status code to 401
 * `forbid(IRequest $request, IResponse $response, AuthenitcationScheme $scheme): void`
-    * In the case that an authenticated user attempted to access a resource they do not have permission to access, this is called to decorate the response to let them know their request was forbidden
+    * In the case that an authenticated user attempted to access a resource they do not have permission to access, this is called to decorate the response to let them know their request was forbidden, eg by redirecting to the forbidden page or setting the status code to 403
 
-If you can log in with a particular scheme, its handler should implement `ILoginAuthenticationSchemeHandler`, which defines two additional methods:
+Logging in involves passing data along in subsequent requests to help the application authenticate a user.  If you can log in with a particular scheme, its handler should implement `ILoginAuthenticationSchemeHandler`, which defines two additional methods:
 
 * `logIn(IPrincipal $user, IRequest $request, IResponse $response, AuthenticationScheme $scheme): void`
     * Logs a user in and decorates the response with data, eg a cookie, to keep a user logged in for subsequent requests.  `authenticate()` should be called prior to `logIn()` to make sure the credentials were valid.
@@ -215,6 +216,54 @@ $authenticator = (new AuthenticatorBuilder())
 ```
 
 Now, whenever we use our cookie scheme, cookies will be set using the above options, and redirects on challenges and forbidden requests will forward to the appropriate paths.
+
+<h2 id="configuring-an-authenticator">Configuring an Authenticator</h2>
+
+There are two recommended ways of creating your authenticator.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the authenticator will automatically be created for you in a [binder](dependency-injection.md#binders).  All you have to do is configure it in `GlobalModule`:
+
+```php
+use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Authentication\AuthenticationScheme;
+use Aphiria\Authentication\AuthenticationSchemeOptions;
+use Aphiria\Framework\Application\AphiriaModule;
+
+final class GlobalModule extends AphiriaModule
+{
+    public function configure(IApplicationBuilder $appBuilder): void
+    {
+        $this->withAuthenticationScheme($appBuilder, new AuthenticationScheme(
+            'token',
+            MyTokenHandler::class,
+            new AuthenticationSchemeOptions(claimsIssuer: 'https://example.com')
+        ));
+    }
+}
+```
+
+Then, any time you use the `#[Authenticate]` attribute or `IAuthenticator`, you'll be able to use your `token` scheme.
+
+If you are not using the skeleton app, the simplest method is to use `AuthenticatorBuilder` to configure and build your authenticator:
+
+```php
+use Aphiria\Authentication\AuthenticationScheme;
+use Aphiria\Authentication\AuthenticationSchemeOptions;
+use Aphiria\Authentication\AuthenticatorBuilder;
+use Aphiria\Authentication\ContainerAuthenticationSchemeHandlerResolver;
+use Aphiria\Authentication\RequestPropertyUserAccessor;
+use Aphiria\DependencyInjection\Container;
+
+$authenticator = (new AuthenticatorBuilder())
+    // This will resolve our scheme handler instances
+    ->withHandlerResolver(new ContainerAuthenticationSchemeHandlerResolver(new Container()))
+    // This will store and retrieve the current request's principal
+    ->withUserAccessor(new RequestPropertyUserAccessor())
+    ->withScheme(
+        'token', 
+        MyTokenHandler::class,
+        new AuthenticationSchemeOptions(claimsIssuer: 'https://example.com')
+    )
+    ->build();
+```
 
 <h2 id="authentication-results">Authentication Results</h2>
 
