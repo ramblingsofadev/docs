@@ -145,7 +145,7 @@ All variable names:
 We should favor using class properties over `getXxx()` and `setXxx()` whenever accessing and setting the value is straight forward.  If a class property should only be read, it should be declared as `readonly` rather than using a `getXxx()` method.  For example, here is what **not** to do:
 
 ```php
-class Book
+final class Book
 {
     /** @var string The book title */
     private string $title;
@@ -165,7 +165,7 @@ class Book
 Instead, declare the title to be `readonly`:
 
 ```php
-class Book
+final class Book
 {
     /**
      * @param string $title The book title
@@ -178,7 +178,7 @@ class Book
 
 The exception to this rule is when an interface needs to expose accessors to a property, but only because PHP interfaces do not support properties.
 
-We should also favor marking properties as `readonly`, even when `private`, if their values should not be set/changed outside of the construtor.
+We should also favor marking properties as `readonly`, even when `private`, if their values should not be set/changed outside of the constructor.
 
 <h3 id="functions-methods">Functions/Methods</h3>
 
@@ -253,8 +253,10 @@ All enums:
 Aphiria is primarily written by David Young in his spare time.  It is the labor of over a thousand hours of meticulously crafting its syntax, designing its architecture, and writing its code.  While Aphiria is and always will be free and open source, <a href="https://github.com/sponsors/davidbyoung" target="_blank">GitHub sponsorship</a> is always welcome.  While you're at it, consider sponsoring some others whose tools you might already be using:
 
 * <a href="https://github.com/sponsors/sebastianbergmann" target="_blank">Sebastian Bergmann (PHPUnit)</a>
-* <a href="https://github.com/sponsors/derickr" target="_blank">Derick Rethans (Xdebug)</a>
 * <a href="https://github.com/sponsors/Seldaek" target="_blank">Jordi Boggiano (Composer, Monolog, and Symfony)</a>
-* <a href="https://github.com/sponsors/fabpot" target="_blank">Fabien Potencier (Symfony)</a>
+* <a href="https://github.com/sponsors/orklah" target="_blank">Orklah (Psalm)</a>
 * <a href="https://github.com/sponsors/taylorotwell" target="_blank">Taylor Otwell (Laravel)</a>
+* <a href="https://github.com/sponsors/Ocramius" target="_blank">Marco Pivetta (Laminas, Doctrine)</a>
+* <a href="https://github.com/sponsors/fabpot" target="_blank">Fabien Potencier (Symfony)</a>
+* <a href="https://github.com/sponsors/derickr" target="_blank">Derick Rethans (Xdebug)</a>
 * <a href="https://github.com/sponsors/keradus" target="_blank">Dariusz Rumiński (PHP-CS-Fixer and PHP Coveralls)</a>

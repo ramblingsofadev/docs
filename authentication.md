@@ -7,15 +7,17 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 
 1. [Introduction](#introduction)
-2. [Authentication Schemes](#authentication-schemes)
-    1. [Default Scheme](#default-scheme)
-    2. [Options](#scheme-options)
-    3. [Basic Authentication](#basic-authentication)
-    4. [Cookie Authentication](#cookie-authentication)
-3. [Configuring an Authenticator](#configuring-an-authenticator)
-4. [Authentication Results](#authentication-results)
-5. [Customizing Authentication Failure Responses](#customizing-authentication-failure-responses)
-6. [User Accessors](#user-accessors)
+   1. [Principals](#principals) 
+   2. [Claims](#claims)
+3. [Authentication Schemes](#authentication-schemes)
+   1. [Default Scheme](#default-scheme)
+   2. [Options](#scheme-options)
+   3. [Basic Authentication](#basic-authentication)
+   4. [Cookie Authentication](#cookie-authentication)
+4. [Configuring an Authenticator](#configuring-an-authenticator)
+5. [Authentication Results](#authentication-results)
+6. [Customizing Authentication Failure Responses](#customizing-authentication-failure-responses)
+7. [User Accessors](#user-accessors)
 
 </div>
 
@@ -23,7 +25,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-Authentication is the process of verifying an identity.  Aphiria's authentication library builds on top of the concepts in its [security library](security.md), and allows for full customization to suit your application's needs.  At a high level, authentication uses named [schemes](#authentication-schemes) to authenticate users.  Each scheme gets a handler that actually performs the authentication logic, along with options for things like cookie names and lifetimes, login page paths to redirect to on authentication failure, etc.
+Authentication is the process of verifying an identity.  Aphiria's authentication library allows for full customization to suit your application's needs.  At a high level, authentication uses named [schemes](#authentication-schemes) to authenticate [principals](#principals).  Each scheme gets a handler that actually performs the authentication logic, along with options for things like cookie names and lifetimes, login page paths to redirect to on authentication failure, etc.
 
 You can enforce authentication either through attributes on a controller or a specific controller method:
 
@@ -32,7 +34,7 @@ use Aphiria\Api\Controllers\Controller;
 use Aphiria\Authentication\Attributes\Authenticate;
 
 #[Authenticate]
-class UserController extends Controller
+final class UserController extends Controller
 {
     // ...
 }
@@ -45,7 +47,7 @@ use Aphiria\Api\Controllers\Controller;
 use Aphiria\Authentication\IAuthenticator;
 use Aphiria\Routing\Attributes\Get;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     public function __construct(private IAuthenticator $authenticator) {}
     
@@ -67,7 +69,7 @@ The `#[Authenticate]` attribute can also take in a [scheme name](#authentication
 
 ```php
 #[Authenticate(schemeName: 'cookie')]
-class UserController extends Controller
+final class UserController extends Controller
 {
     // ...
 }
@@ -83,12 +85,89 @@ $authenticationResult = $this->authenticator->authenticate($this->request, schem
 
 We'll go into more details about how to customize responses when authentication does not pass [below](#customizing-authentication-failure-responses).
 
+<h3 id="principals">Principals</h3>
+
+Before we go too far into authentication, let's first go over some terminology.  A principal is the thing, usually a user or system process, that interacts with your application.  You can authenticate a principal and authorize actions performed by it.  A principal contains one or more identities, each of which may contain [claims](#claims).
+
+It should be noted that, in Aphiria, a principal is a generic representation of a user, and is solely meant for authorization and authentication.  Your application will likely have its own abstractions for users, and those abstractions' data can be used to populate identities and claims of a principal.
+
+> **Example:** Let's say you're going to the airport to board a flight.  You, the principal, will be asked to prove you are who you claim to be, which you'll do with your passport - an identity that contains claims about your citizenship, name, and date of birth.  At security, you'll be asked to re-prove your identity with your passport, and also be asked to prove that you have a ticket - another identity that contains claims about your name, your flight number, and assigned seat.  Airport security will authenticate your passport and ticket, and verify that you're authorized to board the flight.
+
+<h3 id="claims">Claims</h3>
+
+To create a principal, you first create its claims for its identities.  A claim is a statement about an identity, eg email, date of birth, roles, etc.  Let's look at an example:
+
+```php
+use Aphiria\Security\{Claim, ClaimType, Identity, User};
+
+// Claims data is usually stored in a database
+$claimsIssuer = 'example.com';
+// Claim types may either be ClaimType enum values or your own custom strings
+$claims = [
+    // This claim stores the user's ID
+    new Claim(ClaimType::NameIdentifier, '123', $claimsIssuer),
+    // This claim stores the user's name
+    new Claim(ClaimType::Name, 'Dave', $claimsIssuer),
+    // This claim stores the user's roles
+    new Claim(ClaimType::Role, 'admin', $claimsIssuer)
+];
+// You can also pass in an array of identities
+$user = new User(new Identity($claims));
+```
+
+> **Note:** You can have multiple claims of the same type in one identity.  For example, you might have multiple roles for a user, each of which would have its own distinct claim.
+
+`IPrincipal` contains some useful methods for aggregating claims made by all its identities:
+
+```php
+$allClaims = $user->getClaims();
+$allRoleClaims = $user->getClaims(ClaimType::Role);
+
+// Check that not only do they have a role claim type, but that its value is 'admin'
+if ($user->hasClaim(ClaimType::Role, 'admin')) {
+    // ...
+}
+
+// Add another identity
+$identity = new Identity([new Claim(ClaimType::Email, 'foo@example.com', 'example.com')]);
+$user->addIdentity($identity);
+```
+
+You can also loop through all the user's identities and query them directly:
+
+```php
+foreach ($user->getIdentities() as $identity) {
+    $allClaims = $identity->getClaims();
+    $allRoleClaims = $identity->getClaims(ClaimType::Role);
+    
+    if ($identity->hasClaim(ClaimType::Role, 'admin')) {
+        // ...
+    }
+    
+    // A convenience method for grabbing this identity's username
+    $username = $identity->getName();
+    // Another convenience method for grabbing this identity's ID
+    $id = $identity->getNameIdentifier();
+}
+```
+
+You'll frequently find yourself dealing with the user's primary identity.  By default, this is the first identity added to the user, but it can be customized with a callback to determine the primary identity.
+
+```php
+// This will make the last added identity the primary one
+$primaryIdentitySelector = fn (array $identities): ?IIdentity => $identities[\count($identities) - 1] ?? null;
+$user = new User($claims, $primaryIdentitySelector);
+$userId = $user->getPrimaryIdentity()?->getNameIdentifier();
+```
+
+Typically, the process of authentication will create the principal and store it, usually as a [request](http-requests.md) property.
+
 <h2 id="authentication-schemes">Authentication Schemes</h2>
 
-An authentication scheme defines a particular way of authenticating an identity, eg basic authentication.  Each scheme has a name, the name of its handler class, and options.  Handlers implement `IAuthenticationSchemeHandler`, which provides several methods:
+Now that we've clarified some terminology, let's dive into authentication schemes.  An authentication scheme defines a particular way of authenticating an identity, eg basic authentication.  Each scheme has a name, the name of its handler class, and options.  Handlers implement `IAuthenticationSchemeHandler`, which provides several methods:
 
 * `authenticate(IRequest $request, AuthenticationScheme $scheme): AuthenticationResult`
-    * Attempts to authenticate credentials passed via an HTTP request and create a [principal](security.md#working-with-principals)
+    * Attempts to authenticate credentials passed via an HTTP request and create a [principal](#principals)
 * `challenge(IRequest $request, IResponse $response, AuthenitcationScheme $scheme): void`
     * In the case that authentication fails, this is called to decorate the response to let the user know they could not successfully be authenticated, eg by redirecting to a login page or setting the status code to 401
 * `forbid(IRequest $request, IResponse $response, AuthenitcationScheme $scheme): void`
@@ -119,7 +198,7 @@ $authenticator = (new AuthenticatorBuilder())
 
 <h3 id="scheme-options">Options</h3>
 
-All scheme handlers accept a derived class of `AuthenticationSchemeOptions` to help you configure your authentication.  By default, options contain a claims issuer property to help populate your [claims](security.md#working-with-principals), but you may extend `AuthenticationSchemeOptions` and add any additional configurable properties you may need, eg cookie names, lifetimes, paths, domains, login page paths, and forbidden page paths.  We'll go into some examples below.
+All scheme handlers accept a derived class of `AuthenticationSchemeOptions` to help you configure your authentication.  By default, options contain a claims issuer property to help populate your [claims](#claims), but you may extend `AuthenticationSchemeOptions` and add any additional configurable properties you may need, eg cookie names, lifetimes, paths, domains, login page paths, and forbidden page paths.  We'll go into some examples below.
 
 <h3 id="basic-authentication">Basic Authentication</h3>
 
@@ -310,7 +389,7 @@ use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Routing\Attributes\Delete;
 
 #[Authenticate]
-class BookController extends Controller
+final class BookController extends Controller
 {
     public function __construct(private IUserAccessor $userAccessor) {}
     

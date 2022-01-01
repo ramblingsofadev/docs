@@ -737,7 +737,7 @@ $arrayList = new ImmutableArrayList(['foo', 'bar']);
 
 > **Note:** `ImmutableArrayList` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it.
 
-<h3 id="immutable-array-lists-contains-value">ImmutablecontainsValue()</h3>
+<h3 id="immutable-array-lists-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -747,7 +747,7 @@ To check for a value, call
 $containsValue = $arrayList->containsValue('foo');
 ```
 
-<h3 id="immutable-array-lists-count">Immutablecount()</h3>
+<h3 id="immutable-array-lists-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -757,7 +757,7 @@ To grab the number of values in the array list, call
 $count = $arrayList->count();
 ```
 
-<h3 id="immutable-array-lists-get">Immutableget()</h3>
+<h3 id="immutable-array-lists-get">get()</h3>
 
 _Runtime: O(1)_
 
@@ -769,7 +769,7 @@ $value = $arrayList->get(123);
 
 If the index is out of range, an `OutOfRangeException` will be thrown.
 
-<h3 id="immutable-array-lists-index-of">ImmutableindexOf()</h3>
+<h3 id="immutable-array-lists-index-of">indexOf()</h3>
 
 _Runtime: O(n)_
 
@@ -781,7 +781,7 @@ $index = $arrayList->indexOf('foo');
 
 If the array list doesn't contain the value, `null` will be returned.
 
-<h3 id="immutable-array-lists-to-array">ImmutabletoArray()</h3>
+<h3 id="immutable-array-lists-to-array">toArray()</h3>
 
 _Runtime: O(1)_
 
@@ -803,7 +803,7 @@ $hashTable = new ImmutableHashTable([new KeyValuePair('foo', 'bar')]);
 
 > **Note:** `ImmutableHashTable` implements `ArrayAccess` and `IteratorAggregate`, so you can use array-like accessors and iterate over it. When iterating, the keys will be numeric, and the values will be [key-value pairs](#key-value-pairs).
 
-<h3 id="immutable-hash-tables-contains-key">ImmutablecontainsKey()</h3>
+<h3 id="immutable-hash-tables-contains-key">containsKey()</h3>
 
 _Runtime: O(1)_
 
@@ -813,7 +813,7 @@ To check for a key, call
 $containsKey = $hashTable->containsKey('foo');
 ```
 
-<h3 id="immutable-hash-tables-contains-value">ImmutablecontainsValue()</h3>
+<h3 id="immutable-hash-tables-contains-value">containsValue()</h3>
 
 _Runtime: O(n)_
 
@@ -823,7 +823,7 @@ To check for a value, call
 $containsValue = $hashTable->containsValue('foo');
 ```
 
-<h3 id="immutable-hash-tables-count">Immutablecount()</h3>
+<h3 id="immutable-hash-tables-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -833,7 +833,7 @@ To get the number of values in the hash table, call
 $count = $hashTable->count();
 ```
 
-<h3 id="immutable-hash-tables-get">Immutableget()</h3>
+<h3 id="immutable-hash-tables-get">get()</h3>
 
 _Runtime: O(1)_
 
@@ -845,7 +845,7 @@ $value = $hashTable->get('foo');
 
 If the value does not exist, an `OutOfBoundsException` will be thrown.
 
-<h3 id="immutable-hash-tables-get-keys">ImmutablegetKeys()</h3>
+<h3 id="immutable-hash-tables-get-keys">getKeys()</h3>
 
 _Runtime: O(n)_
 
@@ -855,7 +855,7 @@ You can grab all of the keys in the hash table:
 $hashTable->getKeys();
 ```
 
-<h3 id="immutable-hash-tables-get-values">ImmutablegetValues()</h3>
+<h3 id="immutable-hash-tables-get-values">getValues()</h3>
 
 _Runtime: O(n)_
 
@@ -865,7 +865,7 @@ You can grab all of the values in the hash table:
 $hashTable->getValues();
 ```
 
-<h3 id="immutable-hash-tables-to-array">ImmutabletoArray()</h3>
+<h3 id="immutable-hash-tables-to-array">toArray()</h3>
 
 _Runtime: O(n)_
 
@@ -877,7 +877,7 @@ $array = $hashTable->toArray();
 
 This will return a list of `KeyValuePair` - not an associative array.  The reason for this is that keys can be non-strings (eg objects) in hash tables, but keys in PHP associative arrays must be serializable.
 
-<h3 id="immutable-hash-tables-try-get">ImmutabletryGet()</h3>
+<h3 id="immutable-hash-tables-try-get">tryGet()</h3>
 
 _Runtime: O(1)_
 
@@ -900,7 +900,7 @@ $set = new ImmutableHashSet(['foo', 'bar']);
 
 > **Note:** `ImmutableHashSet` implements `IteratorAggregate`, so you can iterate over it.
 
-<h3 id="immutable-hash-sets-contains-value">ImmutablecontainsValue()</h3>
+<h3 id="immutable-hash-sets-contains-value">containsValue()</h3>
 
 _Runtime: O(1)_
 
@@ -910,7 +910,7 @@ To check for a value, call
 $containsValue = $set->containsValue('foo');
 ```
 
-<h3 id="immutable-hash-sets-count">Immutablecount()</h3>
+<h3 id="immutable-hash-sets-count">count()</h3>
 
 _Runtime: O(1)_
 
@@ -920,7 +920,7 @@ To grab the number of values in the set, call
 $count = $set->count();
 ```
 
-<h3 id="immutable-hash-sets-to-array">ImmutabletoArray()</h3>
+<h3 id="immutable-hash-sets-to-array">toArray()</h3>
 
 _Runtime: O(n)_
 

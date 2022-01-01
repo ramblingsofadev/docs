@@ -29,7 +29,7 @@ use Aphiria\Authorization\Attributes\AuthorizeRoles;
 use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Attributes\Post;
 
-class ArticleController extends Controller
+final class ArticleController extends Controller
 {
     #[Post('/article')]
     #[AuthorizeRoles(['admin', 'contributor', 'editor'])]
@@ -48,7 +48,7 @@ use Aphiria\Authorization\IAuthority;
 use Aphiria\Authorization\AuthorizationPolicy;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 
-class ArticleController extends Controller
+final class ArticleController extends Controller
 {
     public function __construct(private IAuthority $authority, private IUserAccessor $userAccessor) {}
 
@@ -76,7 +76,7 @@ Authorization isn't just limited to checking roles.  In the next section, we'll 
 
 <h2 id="policies">Policies</h2>
 
-A policy consists of a name, one or more requirements, and the [authentication scheme](authentication.md#authentication-schemes) to use.  A policy can check whether or not a principal's [claims](security.md#working-with-principals) pass the requirements.
+A policy consists of a name, one or more requirements, and the [authentication scheme](authentication.md#authentication-schemes) to use.  A policy can check whether or not a principal's [claims](authentication.md#claims) pass the requirements.
 
 Let's say our application requires users to be at least 13 years old to use it.  In this case, we'll create a policy that checks the `ClaimType::DateOfBirth` claim.  First, let's define our POPO requirement class:
 
@@ -148,7 +148,7 @@ use Aphiria\Authorization\Attributes\AuthorizePolicy;
 use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Attributes\Post;
 
-class RentalController extends Controller
+final class RentalController extends Controller
 {
     #[Post('/rentals')]
     #[AuthorizePolicy('age-check')]
@@ -167,7 +167,7 @@ use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Authorization\IAuthority;
 
 #[Authenticate]
-class RentalController extends Controller
+final class RentalController extends Controller
 {
     public function __construct(private IAuthority $authority, private IUserAccessor $userAccessor) {}
 
@@ -328,7 +328,7 @@ use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Attributes\Delete;
 
 #[Authenticate]
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     public function __construct(
         private ICommentRepository $comments,

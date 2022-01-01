@@ -284,7 +284,7 @@ final class MaxLength extends ConstraintAttribute
 You can now use this constraint just like any other built-in constraint:
 
 ```php
-class BlogPost
+final class BlogPost
 {
     #[MaxLength(32)]
     public string $title;
