@@ -216,14 +216,23 @@ final class SqlBasicAuthenticationHandler extends BasicAuthenticationHandler
 {
     public function __construct(private PDO $pdo) {}
     
-    protected function createAuthenticationResultFromCredentials(string $username,string $password,AuthenticationScheme $scheme): AuthenticationResult
-    {
-        $statement = $this->pdo->prepare('SELECT id, email, hashed_password, array_to_json(roles) AS roles FROM users WHERE LOWER(email) = 
-        :email');
+    protected function createAuthenticationResultFromCredentials(
+        string $username,
+        string $password,
+        AuthenticationScheme $scheme
+    ): AuthenticationResult {
+        $sql = <<<SQL
+SELECT id, email, hashed_password, array_to_json(roles) AS roles FROM users
+WHERE LOWER(email) = :email
+SQL;
+        $statement = $this->pdo->prepare($sql);
         $statement->execute(['email' => \strtolower(\trim($username))]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         
-        if ($row === false || \count($row) === 0 || !\password_verify($password, $row['hashed_password'])) {
+        if (
+            $statement->rowCount() !== 1
+            || !\password_verify($password, $row['hashed_password'])
+        ) {
             return AuthenticationResult::fail('Invalid credentials');
         }
         

@@ -114,7 +114,9 @@ final class MinimumAgeRequirementHandler implements IAuthorizationRequirementHan
             return;
         }
         
-        if ($dateOfBirthClaims[0]->value->diff(new \DateTime('now'))->y < $requirement->minimumAge) {
+        $age = $dateOfBirthClaims[0]->value->diff(new \DateTime('now'))->y;
+        
+        if ($age < $requirement->minimumAge) {
             $authorizationContext->fail();
             
             return;
