@@ -89,9 +89,9 @@ We'll go into more details about how to customize responses when authentication 
 
 Before we go too far into authentication, let's first go over some terminology.  A principal is the thing, usually a user or system process, that interacts with your application.  You can authenticate a principal and authorize actions performed by it.  A principal contains one or more identities, each of which may contain [claims](#claims).
 
-It should be noted that, in Aphiria, a principal is a generic representation of a user, and is solely meant for authorization and authentication.  Your application will likely have its own abstractions for users, and those abstractions' data can be used to populate identities and claims of a principal.
-
 > **Example:** Let's say you're going to the airport to board a flight.  You, the principal, will be asked to prove you are who you claim to be, which you'll do with your passport - an identity that contains claims about your citizenship, name, and date of birth.  At security, you'll be asked to re-prove your identity with your passport, and also be asked to prove that you have a ticket - another identity that contains claims about your name, your flight number, and assigned seat.  Airport security will authenticate your passport and ticket, and verify that you're authorized to board the flight.
+
+It should be noted that, in Aphiria, a principal is a generic representation of a user, and is solely meant for authentication and authorization.  Your application will likely have its own abstractions for users, and those abstractions' data can be used to populate identities and claims of a principal.  We'll also use the terms "user" and "principal" interchangeably from here on out.
 
 <h3 id="claims">Claims</h3>
 
