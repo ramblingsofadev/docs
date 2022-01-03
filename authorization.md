@@ -222,7 +222,7 @@ final class GlobalModule extends AphiriaModule
 }
 ```
 
-> **Note:** Can you can configure whether you want the authority to continue checking requirements after a failure by setting the `aphiria.authorization.continueOnFailure` [config setting](configuration.md) in the skeleton app's _config.php_.
+> **Note:** Can you can configure whether you want the authority to continue checking requirements after a failure by setting the `aphiria.authorization.continueOnFailure` [config setting](configuration.md#global-configuration) in the skeleton app's _config.php_.
 
 Then, any time you use the `#[AuthorizePolicy]` or `#[AuthorizeRoles]` attributes or `IAuthority`, you'll be able to use your policies.
 
