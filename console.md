@@ -607,6 +607,7 @@ Name | Description
 ------ | ------
 `app:serve` | Runs your application locally
 `framework:flushcaches` | Flushes all the framework's caches, eg the binder metadata, constraints, command, route, and trie caches
+`route:list` | Lists all the routes in your application
 
 If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can register all framework commands in `GlobalModule`:
 
