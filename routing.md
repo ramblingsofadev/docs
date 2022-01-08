@@ -244,6 +244,8 @@ use Aphiria\Routing\Attributes\Middleware;
 #[Middleware(Authorization::class, parameters: ['role' => 'admin'])]
 ```
 
+> **Note:** If you're using the full framework or the [middleware library](middleware.md), you can also use the nearly identical `Aphiria\Middleware\Attributes\Middleware` attribute instead of the routing library's.  The two are interchangeable.
+
 You can also add middleware to a controller class to indicate that it applies to all routes in that controller.
 
 <h3 id="route-attributes-constraints">Route Constraints</h3>

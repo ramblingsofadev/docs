@@ -132,6 +132,8 @@ final class UserController extends Controller
 }
 ```
 
+> **Note:** There are two nearly identical attributes for middleware: `Aphiria\Middleware\Attributes\Middleware` and `Aphiria\Routing\Attributes\Middleware`.  If you're using the Aphiria [router](routing.md), they can be used interchangeably.  The middleware library's attribute is useful if you choose not to use the Aphiria router.
+
 <h2 id="executing-middleware">Executing Middleware</h2>
 
 If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, middleware will be executed automatically for you.  You can also define both [global middleware](configuration.md#component-middleware) and [route middleware](routing.md#middleware).
