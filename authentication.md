@@ -389,23 +389,20 @@ By default, when authentication in the `Authenticate` middleware fails, `challen
 
 <h2 id="user-accessors">User Accessors</h2>
 
-Once you have authenticated a principal using the `Authenticate` middleware, you can store and retrieve that principal for the duration of the request using `IUserAccessor`.  By default, `RequestPropertyUserAccessor` will be used to store the principal as a [custom property](http-requests.md#basics) on the request.  If you need to access the principal in your controller, simply compose `IUserAccessor`:
+Once you have authenticated a principal using the `Authenticate` middleware, you can store and retrieve that principal for the duration of the request using `IUserAccessor`.  By default, `RequestPropertyUserAccessor` will be used to store the principal as a [custom property](http-requests.md#basics) on the request.  If you need to access the principal in your controller, simply call `Controller::getUser()`:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Authentication\Attributes\Authenticate;
-use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Routing\Attributes\Delete;
 
 #[Authenticate]
 final class BookController extends Controller
 {
-    public function __construct(private IUserAccessor $userAccessor) {}
-    
     #[Delete('/books/:id')]
     public function deleteBook(int $id): void
     {
-        $user = $this->userAccessor->getUser($this->request);
+        $user = $this->getUser();
         
         // ...
     }

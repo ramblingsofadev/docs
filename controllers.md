@@ -14,6 +14,7 @@
    4. [Validating Request Bodies](#validating-request-bodies)
 3. [Parsing Request Data](#parsing-request-data)
 4. [Formatting Response Data](#formatting-response-data)
+5. [Getting the Current User](#getting-the-current-user)
 
 </div>
 
@@ -243,6 +244,25 @@ final class LoginController extends Controller
         $this->responseFormatter->setCookie($response, $authTokenCookie);
         
         return $response;
+    }
+}
+```
+
+<h2 id="getting-the-current-user">Getting the Current User</h2>
+
+If you're using the [authentication library](authentication.md), you can grab the current [user](authentication.md#principals):
+
+```php
+final class BookController extends Controller
+{
+    #[Get('books/:id')]
+    #[Authenticate]
+    public function getBook(int $id): Book
+    {
+        // This can be null if the user was not set by authentication middleware
+        $user = $this->getUser();
+        
+        // ...
     }
 }
 ```
