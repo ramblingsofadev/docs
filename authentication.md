@@ -52,7 +52,7 @@ final class UserController extends Controller
     public function __construct(private IAuthenticator $authenticator) {}
     
     #[Get('/users/:id')]
-    public function getUser(int $id): User
+    public function getUserById(int $id): User
     {
         $authenticationResult = $this->authenticator->authenticate($this->request);
         

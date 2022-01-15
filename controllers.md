@@ -35,7 +35,7 @@ final class UserController extends Controller
     public function __construct(private IUserService $users) {}
 
     #[Get('users/:userId')]
-    public function getUser(int $userId): User
+    public function getUserById(int $userId): User
     {
         return $this->users->getUserById($userId);
     }
@@ -52,7 +52,7 @@ final class UserController extends Controller
     public function __construct(private IUserService $users) {}
     
     #[Get('users/:userId')]
-    public function getUser(int $userId): IResponse
+    public function getUserById(int $userId): IResponse
     {
         $user = $this->users->getUserById($userId);
 
@@ -94,7 +94,7 @@ final class UserController extends Controller
     public function __construct(private IUserService $users) {}
     
     #[Get('users/:userId')]
-    public function getUser(int $userId): IResponse
+    public function getUserById(int $userId): IResponse
     {
         $user = $this->users->getUserById($userId);
         $headers = new Headers();
