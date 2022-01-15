@@ -32,14 +32,14 @@ final class UserController extends Controller
     }
 
     #[Get('/users/:id')]
-    public function getUser(int $id): User
+    public function getUserById(int $id): User
     {
         return $this->users->getUserById($id);
     }
 }
 ```
 
-In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUser()` to whatever format the client wants (eg JSON or XML).  This is all done with **zero configuration** of your plain-old PHP objects (POPOs).
+In `createUser()`, Aphiria uses [content negotiation](content-negotiation.md) to deserialize the request body to a `Credentials` object.  Likewise, Aphiria determines how to serialize the `User` from `getUserById()` to whatever format the client wants (eg JSON or XML).  This is all done with **zero configuration** of your plain-old PHP objects (POPOs).
 
 Let's configure our [DI container](dependency-injection.md) to inject an instance of `IUserService` into our controller via a [binder](dependency-injection.md#binders).
 
