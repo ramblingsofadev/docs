@@ -147,8 +147,12 @@ We should favor using class properties over `getXxx()` and `setXxx()` whenever a
 ```php
 final class Book
 {
-    /** @var string The book title */
-    private string $title;
+    /**
+     * @param string $title The book title
+     */
+    public function __construct(private string $title)
+    {
+    }
     
     /**
      * Gets the book title
