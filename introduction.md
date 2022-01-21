@@ -26,7 +26,7 @@ final class UserController extends Controller
     #[Post('/users')]
     public function createUser(Credentials $creds): IResponse
     {
-        $user = $this->users->createUser($creds->email, $creds->password);
+        $user = $this->users->create($creds->email, $creds->password);
 
         return $this->created("/users/{$user->id}", $user);
     }
@@ -34,7 +34,7 @@ final class UserController extends Controller
     #[Get('/users/:id')]
     public function getUserById(int $id): User
     {
-        return $this->users->getUserById($id);
+        return $this->users->getById($id);
     }
 }
 ```

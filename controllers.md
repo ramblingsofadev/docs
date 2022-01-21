@@ -37,7 +37,7 @@ final class UserController extends Controller
     #[Get('users/:userId')]
     public function getUserById(int $userId): User
     {
-        return $this->users->getUserById($userId);
+        return $this->users->getById($userId);
     }
 }
 ```
@@ -54,7 +54,7 @@ final class UserController extends Controller
     #[Get('users/:userId')]
     public function getUserById(int $userId): IResponse
     {
-        $user = $this->users->getUserById($userId);
+        $user = $this->users->getById($userId);
 
         return $this->ok($user);
     }
@@ -96,7 +96,7 @@ final class UserController extends Controller
     #[Get('users/:userId')]
     public function getUserById(int $userId): IResponse
     {
-        $user = $this->users->getUserById($userId);
+        $user = $this->users->getById($userId);
         $headers = new Headers();
         $headers->add('Cache-Control', 'no-cache');
         
