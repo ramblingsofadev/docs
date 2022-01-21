@@ -151,7 +151,13 @@ foreach ($user->getIdentities() as $identity) {
 }
 ```
 
-You'll frequently find yourself dealing with the user's primary identity.  By default, this is the first identity added to the user, but it can be customized with a callback to determine the primary identity.
+You'll frequently find yourself dealing with a user's primary identity when checking claims.  Grabbing it is easy.
+
+```php
+$primaryIdentity = $user->getPrimaryIdentity();
+```
+
+By default, this is the first identity added to the user, but it can be customized with a callback to determine the primary identity.
 
 ```php
 // This will make the last added identity the primary one
