@@ -121,8 +121,8 @@ The following properties are available to you in `Input`:
 
 ```php
 $input->commandName; // The name of the command that was invoked
-$input->arguments['argName']; // The value of 'argName'
-$input->options['optionName']; // The value of 'optionName'
+$input->arguments['argName']; // The value of "argName"
+$input->options['optionName']; // The value of "optionName"
 ```
 
 If you're checking to see if an option that does not have a value is set, use `array_key_exists('optionName', $input->options)` - the value will be `null`, and `isset()` will return `false`.

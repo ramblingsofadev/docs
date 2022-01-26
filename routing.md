@@ -356,11 +356,11 @@ $routes->group(
         parameters: ['role' => 'admin']
     ),
     function (RouteCollectionBuilder $routes) {
-        // This route's path will be 'courses/:courseId'
+        // This route's path will be "courses/:courseId"
         $routes->get('')
             ->mapsToMethod(CourseController::class, 'getCourseById');
 
-        // This route's path will be 'courses/:courseId/professors'
+        // This route's path will be "courses/:courseId/professors"
         $routes->get('/professors')
             ->mapsToMethod(CourseController::class, 'getCourseProfessors');
     }
@@ -449,7 +449,7 @@ final class CommentController extends Controller
     ]
     public function getAllComments2_0(): array
     {
-        // This route will require an API-VERSION value of 'v2.0'
+        // This route will require an API-VERSION value of "v2.0"
     }
 }
 ```
@@ -645,7 +645,7 @@ To enable caching, pass in an `ITrieCache` (`FileTrieCache` comes with Aphiria) 
 use Aphiria\Routing\UriTemplates\Compilers\Tries\Caching\FileTrieCache;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 
-// Let's say that your environment name is stored in an environment var named 'ENV_NAME'
+// Let's say that your environment name is stored in an environment var named "ENV_NAME"
 $trieCache = \getenv('ENV_NAME') === 'production'
     ? new FileTrieCache('/tmp/trieCache.txt')
     : null;

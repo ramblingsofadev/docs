@@ -123,7 +123,7 @@ $user = new User(new Identity($claims));
 $allClaims = $user->getClaims();
 $allRoleClaims = $user->getClaims(ClaimType::Role);
 
-// Check that not only do they have a role claim type, but that its value is 'admin'
+// Check that not only do they have a role claim type, but that its value is "admin"
 if ($user->hasClaim(ClaimType::Role, 'admin')) {
     // ...
 }

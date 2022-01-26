@@ -121,7 +121,8 @@ use Aphiria\Net\Http\StringBody;
 $request = (new RequestBuilder())->withMethod('POST')
     ->withUri('http://example.com/users')
     ->withBody(new StringBody('{"name":"Dave"}'))
-    ->withHeader('Content-Type', 'application/json');
+    ->withHeader('Content-Type', 'application/json')
+    ->build();
 ```
 
 > **Note:** If you specify a body, you **must** also specify a content type.  You can also pass in `null` to remove a body from the request.
