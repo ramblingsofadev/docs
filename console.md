@@ -522,7 +522,7 @@ $options = new ProgressBarFormatterOptions(
 $progressBar = new ProgressBar(100, $formatter, $options);
 ```
 
-If you'd like to customize the format of the progress bar text, you may by specifying `sprintf()`-encoded text.  The following placeholders are built in for you to use in the `$outputFormatter` parameter of `ProgressBarFormatterOptions`:
+If you'd like to customize the format of the progress bar text, you may by specifying `sprintf()`-encoded text.  The following placeholders are built in for you to use in the `$outputFormat` parameter of `ProgressBarFormatterOptions`:
 
 * `%progress%` - The current progress
 * `%maxSteps%` - The max number of steps
