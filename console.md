@@ -390,17 +390,17 @@ Chris  - Rock     - good
 Jim    - Gaffigan - pale
 ```
 
-There are a few useful functions for customizing the padding formatter:
+You can pass in an options parameter to customize the output of the padding formatter:
 
 ```php
-// Set the end-of-line character
-$paddingFormatter->eolChar = "\n";
+use Aphiria\Console\Output\Formatters\PaddingFormatterOptions;
 
-// Set whether or not to pad after strings
-$paddingFormatter->setPadAfter(true);
-
-// Set the string to use for padding
-$paddingFormatter->setPaddingString(' ');
+$options = new PaddingFormatterOptions(
+    paddingString: ' ',
+    padAfter: true,
+    eolChar: "\n"
+);
+$paddingFormatter->format($rows, fn ($row) => $row[0] . ' - ' . $row[1] . ' - ' . $row[2], $options);
 ```
 
 <h3 id="tables">Tables</h3>
@@ -445,26 +445,20 @@ This will return:
 +--------+---------+
 ```
 
-There are a few useful functions for customizing the look of tables:
+Like `PaddingFormatter`, you can specify some options to customize the look of tables:
 
 ```php
-// Set the string to use to pad cells (defaults to a space)
-$table->setCellPaddingString(' ');
+use Aphiria\Console\Output\Formatters\TableFormatterOptions;
 
-// Set the end-of-line character (defaults to LF)
-$table->eolChar = "\n";
-
-// Set the horizontal border character
-$table->setHorizontalBorderChar('-');
-
-// Set the vertical border character
-$table->setVerticalBorderChar('|');
-
-// Set the border intersection character
-$table->setIntersectionChar('+');
-
-// Set whether or not to pad after strings
-$table->setPadAfter(true);
+$options = new TableFormatterOptions(
+    cellPaddingString: ' ',
+    horizontalBorderChar: '-',
+    verticalBorderChar: '|',
+    intersectionChar: '+',
+    padAfter: true,
+    eolChar: "\n"
+);
+$table->format($rows, $headers, $options);
 ```
     
 <h3 id="progress-bars">Progress Bars</h3>
@@ -513,30 +507,28 @@ Each time progress is made, the formatter will be update.
 
 <h4 id="customizing-progress-bars">Customizing Progress Bars</h4>
 
-You may customize the characters used in your progress bar via:
+You may customize the look of your progress bar with some options:
 
 ```php
-$formatter->completedProgressChar = '*';
-$formatter->remainingProgressChar = '-';
+use Aphiria\Console\Output\Formatters\ProgressBarFormatterOptions;
+
+$options = new ProgressBarFormatterOptions(
+    progressBarWidth: 100,
+    outputFormat: '%bar% - Time remaining: %timeRemaining%',
+    completedProgressChar: '=',
+    remainingProgressChar: '-',
+    redrawFrequency: 1
+);
+$progressBar = new ProgressBar(100, $formatter, $options);
 ```
 
-If you'd like to customize the format of the progress bar text, you may by specifying `sprintf()`-encoded text.  The following placeholders are built in for you to use:
+If you'd like to customize the format of the progress bar text, you may by specifying `sprintf()`-encoded text.  The following placeholders are built in for you to use in the `$outputFormatter` parameter of `ProgressBarFormatterOptions`:
 
 * `%progress%` - The current progress
 * `%maxSteps%` - The max number of steps
 * `%bar%` - The actual progress bar that's drawn
 * `%timeRemaining%` - The amount of time remaining
 * `%percent%` - The current progress as a percentage
-
-To specify the format, pass it into `ProgressBarFormatter`:
-
-```php
-$formatter = new ProgressBarFormatter(
-    $output,
-    80,
-    '%bar% - Time remaining: %timeRemaining%'
-);
-```
 
 <h2 id="style-elements">Style Elements</h2>
 
