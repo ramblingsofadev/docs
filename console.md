@@ -403,6 +403,8 @@ $options = new PaddingFormatterOptions(
 $paddingFormatter->format($rows, fn ($row) => $row[0] . ' - ' . $row[1] . ' - ' . $row[2], $options);
 ```
 
+> **Note:** You can set a default set of options for `PaddingFormatter` and `TableFormatter` in their constructors if you do not want to pass in options on every call to `format()`.
+
 <h3 id="tables">Tables</h3>
 
 ASCII tables are a great way to show tabular data in a console.  To create a table, use `TableFormatter`:
