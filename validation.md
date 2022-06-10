@@ -295,7 +295,7 @@ final class BlogPost
 
 <h2 id="error-messages">Error Messages</h2>
 
-Error messages provide human-readable explanations of what failed during validation.  `IConstraints` contain error message IDs and placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
+Error messages provide human-readable explanations of what failed during validation.  `IConstraint` contains error message IDs and placeholders, which can give more specifics on why a constraint failed.  For example, `MaxConstraint` has a default error message ID of `Field must be less than {max}`, and it provides a `max` error message placeholder so that you can display the actual max in the error message.
 
 Depending on how you're validating a value, there are different ways of grabbing the constraint violations.  If you're using `IValidator::validate*()` methods, you can grab the violations from the `ValidationException`:
 
