@@ -250,6 +250,9 @@ final class FooCommandHandler implements ICommandHandler
     {
         // "php aphiria" is not needed prior to the name of the command we're calling
         $this->commandBus->handle('bar arg1 --option1=value', $output);
+        
+        // Or call the command with an Input object:
+        $this->commandBus->handle(new Input('bar', ['arg1' => null], ['option1' => 'value']), $output);
     }
 }
 ```
