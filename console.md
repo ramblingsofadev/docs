@@ -48,20 +48,25 @@ If you're already using the <a href="https://github.com/aphiria/app" target="_bl
 #!/usr/bin/env php
 <?php
 
-use Aphiria\Console\Application;
 use Aphiria\Console\Commands\CommandRegistry;
+use Aphiria\Console\ConsoleGateway;
+use Aphiria\Console\Input\Compilers\InputCompiler;
 use Aphiria\Console\StatusCode;
 use Aphiria\DependencyInjection\Container;
+use Aphiria\Framework\Console\ConsoleApplication;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $commands = new CommandRegistry();
 
 // Register your commands here...
 
-global $argv;
-$statusCode = (new Application($commands, new Container()))->handle($argv);
-exit($statusCode instanceof StatusCode ? $statusCode->value : $statusCode);
+$gateway = new ConsoleGateway($commands, new Container());
+$input = (new InputCompiler($commands))->compile($_SERVER['argv'] ?? []);
+$app = new ConsoleApplication($gateway, $input);
+$status = $app->run();
+
+exit(\is_int($status) ? $status : $status instance StatusCode ? $status->value : StatusCode::Ok->value);
 ```
 
 Now, you're set to start [running commands](#running-commands).
@@ -202,18 +207,14 @@ If you're using the <a href="https://github.com/aphiria/app" target="_blank">ske
 Let's manually register a command to the application:
 
 ```php
-use Aphiria\Console\Application;
 use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
-use Aphiria\DependencyInjection\Container;
 
 $commands = new CommandRegistry();
 $greetingCommand = new Command('greet', arguments: [/* ... */], options: [/* ... */]);
 $commands->registerCommand($greetingCommand, GreetingCommandHandler::class);
 
-// Actually run the application
-global $argv;
-exit((new Application($commands, new Container()))->handle($argv));
+// Run the application (see above how to do this)...
 ```
 
 To call this command, run this from the command line:
@@ -232,11 +233,10 @@ HELLO, DAVE
 
 <h3 id="calling-from-code">Calling From Code</h3>
 
-It's possible to call a command from another command by injecting `ICommandBus` into your command handler.  Here, we'll call the `bar` command with an argument and option:
+It's possible to call a command from another command by injecting `ICommandHandler` into your command handler, which will be bound to an instance of `ConsoleGateway`.  Here, we'll call the `bar` command with an argument and option:
 
 ```php
 use Aphiria\Console\Commands\Attributes\Command;
-use Aphiria\Console\Commands\ICommandBus;
 use Aphiria\Console\Commands\ICommandHandler;
 use Aphiria\Console\Input\Input;
 use Aphiria\Console\Output\IOutput;
@@ -244,15 +244,11 @@ use Aphiria\Console\Output\IOutput;
 #[Command('foo')]
 final class FooCommandHandler implements ICommandHandler
 {
-    public function __construct(private ICommandBus $commandBus) {}
+    public function __construct(private ICommandHandler $gateway) {}
 
     public function handle(Input $input, IOutput $output)
     {
-        // "php aphiria" is not needed prior to the name of the command we're calling
-        $this->commandBus->handle('bar arg1 --option1=value', $output);
-        
-        // Or call the command with an Input object:
-        $this->commandBus->handle(new Input('bar', ['arg1' => null], ['option1' => 'value']), $output);
+        $this->gateway->handle(new Input('bar', ['arg1' => null], ['option1' => 'value']), $output);
     }
 }
 ```
@@ -314,7 +310,7 @@ use Aphiria\Console\Commands\CommandRegistry;
 $commands = new CommandRegistry();
 $attributeCommandRegistrant = new AttributeCommandRegistrant(['PATH_TO_SCAN'], $container);
 $attributeCommandRegistrant->registerCommands($commands);
-````
+```
 
 <h2 id="prompts">Prompts</h2>
 
@@ -569,10 +565,18 @@ The following elements come built-into Aphiria:
 You can create your own style elements.  Elements are registered to `ElementRegistry`.
 
 ```php
+use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Console\Output\Compilers\Elements\{Colors, Element, ElementRegistry, Style, TextStyles};
 use Aphiria\Console\Output\Compilers\OutputCompiler;
 use Aphiria\Console\Output\ConsoleOutput;
+use Aphiria\DependencyInjection\Container;
+use Aphiria\Framework\Console\ConsoleApplication;
 
+$commands = new CommandRegistry();
+
+// Register your commands here...
+
+// Register a custom element
 $elements = new ElementRegistry();
 $elements->registerElement(
     new Element('foo', new Style(Colors::BLACK, Colors::YELLOW, [TextStyles::BOLD])
@@ -580,10 +584,13 @@ $elements->registerElement(
 $outputCompiler = new OutputCompiler($elements);
 $output = new ConsoleOutput($outputCompiler);
 
-// Now, pass it into the app (assume it's already set up)
-global $argv;
-$statusCode = (new Application($commands, new Container()))->handle($argv);
-exit($statusCode instanceof StatusCode ? $statusCode->value : $statusCode);
+// Now, pass it into the app
+$gateway = new ConsoleGateway($commands, new Container());
+$input = (new InputCompiler($commands))->compile($_SERVER['argv'] ?? []);
+$app = new ConsoleApplication($gateway, $input, $output);
+$status = $app->run();
+
+exit(\is_int($status) ? $status : $status instance StatusCode ? $status->value : StatusCode::Ok->value);
 ```
 
 <h3 id="overriding-built-in-elements">Overriding Built-In Elements</h3>

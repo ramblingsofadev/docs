@@ -24,6 +24,7 @@
    3. [Custom File Readers](#custom-file-readers)
 5. [Global Configuration](#global-configuration)
    1. [Building The Global Configuration](#building-the-global-configuration)
+6. [Custom Applications](#custom-applications)
 
 </div>
 
@@ -62,6 +63,8 @@ final class UserModule extends AphiriaModule
 ```
 
 Here's the best part of how Aphiria was built - there's nothing special about Aphiria-provided components.  You can [write your own components](#adding-custom-components) to be just as powerful and easy to use as Aphiria's.
+
+Another great thing about Aphiria's application builders is that they allow you to abstract away the runtime of your application (eg PHP-FPM or Swoole) without having to touch your domain logic.  We'll get into more details on how to do this [below](#custom-applications).
 
 <h3 id="modules">Modules</h3>
 
@@ -348,8 +351,8 @@ You can add your own custom components to application builders.  They typically 
 Let's say you prefer to use Symfony's router, and want to be able to add routes from your modules.  This requires a few simple steps:
 
 1. Create a binder for the Symfony services
-3. Create a component to let you add routes from modules
-2. Register the binder and component to your app
+2. Create a component to let you add routes from modules
+3. Register the binder and component to your app
 4. Start using the component
 
 First, let's create a binder for the router so that the DI container can resolve it:
@@ -680,3 +683,87 @@ $globalConfigurationBuilder->withPhpFileConfigurationSource('config.php')
 > **Note:** The reading of files and environment variables is deferred until `build()` is called.
 
 After `build()` is called, you can start accessing the values from `config.php`, `config.json`, and environment variables via `GlobalConfiguration`.
+
+<h2 id="custom-applications">Custom Applications</h2>
+
+This is more of an advanced topic.  Applications are specific to their runtimes, eg PHP-FPM or Swoole.  They typically take the input (eg an HTTP request or console input) and pass it to  a "gateway" object (eg `ApiGateway` or `ConsoleGateway`), which is the highest layer of application code that is agnostic to the PHP runtime.  So, if you switch from PHP-FPM to Swoole, you'd have to change the `IApplication` instance you're running, but the gateway would not have to change because it does not care what the PHP runtime is.
+
+By default, API and console applications are built with `SynchronousApiApplicationBuilder` and `ConsoleApplicationBuilder`, respectively.  Which application builder you're using depends on the `APP_BUILDER_API` and `APP_BUILDER_CONSOLE` environment variables set in your _.env_ file.  Application builder classes return a simple `IApplication` interface that looks like this:
+
+```php
+interface IApplication
+{
+    public function run(): int;
+}
+```
+
+The simplest way to change the `IApplication` you're running is to create your own `IApplicationBuilder` and update the appropriate environment variable to use it.  For example, let's say we wanted to switch our Aphiria app to use Swoole instead:
+
+```php
+use Aphiria\Application\IApplication;
+use Aphiria\Net\Http\IRequest;
+use Aphiria\Net\Http\IRequestHandler;
+use Aphiria\Net\Http\IResponse;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+use Swoole\Http\Server;
+
+final class SwooleApplication implements IApplication
+{
+    public function __construct(private Server $server, private IRequestHandler $apiGateway) {}
+
+    public function run(): int
+    {
+        $server->on('request', function (Request $swooleRequest, Response $swooleResponse) use ($this) {
+            $aphiriaRequest = $this->createAphiriaRequest($swooleRequest);
+            $aphiriaResponse = $this->apiGateway->handle($aphiriaRequest);
+            $this->copyToSwooleResponse($aphiriaResponse, $swooleResponse);
+        });
+        $server->start();
+        
+        return 0;
+    }
+    
+    private function copyToSwooleResponse(IResponse $aphiriaResponse, Response $swooleResponse): void
+    {
+        // ...
+    }
+    
+    private function createAphiriaRequest(Request $request): IRequest
+    {
+        // ...
+    }
+}
+```
+
+Next, create an `IApplicationBuilder` that builds an instance of our `SwooleApplication`:
+
+```php
+namespace App;
+
+use Aphiria\Application\Builders\ApplicationBuilder;
+use Aphiria\Application\IApplication;
+use Aphiria\DependencyInjection\IServiceResolver;
+use Aphiria\Net\Http\IRequestHandler;
+use Swoole\Http\Server;
+
+final class SwooleApplicationBuilder extends ApplicationBuilder
+{
+    public function __construct(private IServiceResolver $serviceResolver) {}
+
+    public function build(): SwooleApplication
+    {
+        $this->configureModules();
+        $this->buildComponents();
+        $server = new Server(/* ... */);
+        
+        return new SwooleApplication($server, $this->serviceResolver->resolve(IRequestHandler::class));
+    }
+}
+```
+
+Finally, update `APP_BUILDER_API` in your _.env_ file, and your application will now support running asynchronously via Swoole.
+
+```dotenv
+APP_BUILDER_API=\App\SwooleApplicationBuilder
+```
