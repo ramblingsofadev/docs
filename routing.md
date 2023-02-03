@@ -225,7 +225,7 @@ final class CourseController extends Controller
     }
     
     #[Get('professors')]
-    public function getCourseProfessors(): array
+    public function getCourseProfessors(int $courseId): array
     {
         // ...
     }
