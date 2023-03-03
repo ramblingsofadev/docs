@@ -364,7 +364,7 @@ $routes->group(
         $routes->get('/professors')
             ->mapsToMethod(CourseController::class, 'getCourseProfessors');
     }
-)
+);
 ```
 
 <h3 id="route-builders-middleware">Middleware</h3>
