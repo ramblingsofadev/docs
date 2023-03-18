@@ -43,25 +43,23 @@ final class ArticleController extends Controller
 Here's the identical functionality, just using `IAuthority` instead of an attribute:
 
 ```php
-use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Authorization\IAuthority;
 use Aphiria\Authorization\AuthorizationPolicy;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 
 final class ArticleController extends Controller
 {
-    public function __construct(private IAuthority $authority, private IUserAccessor $userAccessor) {}
+    public function __construct(private IAuthority $authority) {}
 
     #[Post('/article')]
     public function createArticle(Article $article): IResponse
     {
-        $user = $this->userAccessor->getUser($this->request);
         $policy = new AuthorizationPolicy(
             'create-article',
             new RolesRequirement(['admin', 'contributor', 'editor'])
         );
     
-        if (!$this->authority->authorize($user, $policy)->passed) {
+        if (!$this->authority->authorize($this->getUser(), $policy)->passed) {
             return $this->forbidden();
         }
         
@@ -165,20 +163,17 @@ Similarly, we could authorize this by composing `IAuthority`:
 
 ```php
 use Aphiria\Authentication\Attributes\Authenticate;
-use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Authorization\IAuthority;
 
 #[Authenticate]
 final class RentalController extends Controller
 {
-    public function __construct(private IAuthority $authority, private IUserAccessor $userAccessor) {}
+    public function __construct(private IAuthority $authority) {}
 
     #[Post('/rentals')]
     public function createRental(Rental $rental): IResponse
     {
-        $user = $this->userAccessor->getUser($this->request);
-    
-        if (!$this->authority->authorize($user, 'age-check')->passed) {
+        if (!$this->authority->authorize($this->getUser(), 'age-check')->passed) {
             return $this->forbidden();
         }
         
@@ -324,7 +319,6 @@ Finally, let's use `IAuthority` to do resource authorization in our controller:
 ```php
 use Aphiria\Api\Controllers\Controller;
 use Aphiria\Authentication\Attributes\Authenticate;
-use Aphiria\Authentication\IUserAccessor;
 use Aphiria\Authorization\IAuthority;
 use Aphiria\Net\Http\IResponse;
 use Aphiria\Routing\Attributes\Delete;
@@ -334,8 +328,7 @@ final class CommentController extends Controller
 {
     public function __construct(
         private ICommentRepository $comments,
-        private IAuthority $authority,
-        private IUserAccessor $userAccessor
+        private IAuthority $authority
     ) {
     }
 
@@ -345,10 +338,8 @@ final class CommentController extends Controller
         if (($comment = $this->comments->getById($id)) === null) {
             return $this->notFound();
         }
-    
-        $user = $this->userAccessor->getUser($this->request);
-    
-        if (!$this->authority->authorize($user, 'authorized-deleter', $comment)->passed) {
+        
+        if (!$this->authority->authorize($this->getUser(), 'authorized-deleter', $comment)->passed) {
             return $this->forbidden();
         }
     
