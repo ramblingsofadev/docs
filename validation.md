@@ -34,11 +34,13 @@ use Aphiria\Validation\Constraints\Attributes\{Email, Required};
 
 final class User
 {
-    public int $id;
-    #[Email]
-    public string $email;
-    #[Required]
-    public string $name;
+    public function __construct(
+        public readonly int $id,
+        #[Email]
+        public readonly string $email,
+        #[Required]
+        public readonly string $name
+    ) {}
 }
 ```
 
