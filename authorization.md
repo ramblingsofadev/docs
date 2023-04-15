@@ -134,6 +134,7 @@ use Aphiria\Authorization\AuthorizationPolicy;
 
 $authority = (new AuthorityBuilder())
     ->withRequirementHandler(MinimumAgeRequirement::class, new MinimumAgeRequirementHandler())
+    // We can access this policy by its name ("age-check")
     ->withPolicy(new AuthorizationPolicy('age-check', new MinimumAgeRequirement(13)))
     ->build();
 ```
@@ -197,6 +198,13 @@ final class GlobalModule extends AphiriaModule
 {
     public function configure(IApplicationBuilder $appBuilder): void
     {
+        // Register a requirement handler
+        $this->withAuthorizationRequirementHandler(
+            $appBuilder,
+            RolesRequirement::class,
+            new RolesRequirementHandler()
+        );
+        
         // Register a policy
         $this->withAuthorizationPolicy(
             $appBuilder,
@@ -206,18 +214,11 @@ final class GlobalModule extends AphiriaModule
                 'cookie'
             )
         );
-        
-        // Register a requirement handler
-        $this->withAuthorizationRequirementHandler(
-            $appBuilder,
-            RolesRequirement::class,
-            new RolesRequirementHandler()
-        );
     }
 }
 ```
 
-> **Note:** Can you can configure whether you want the authority to continue checking requirements after a failure by setting the `aphiria.authorization.continueOnFailure` [config setting](configuration.md#global-configuration) in the skeleton app's _config.php_.
+> **Note:** You can configure the authority to continue checking requirements after a failure by setting the `aphiria.authorization.continueOnFailure` [config setting](configuration.md#global-configuration) in the skeleton app's _config.php_.
 
 Then, any time you use the `#[AuthorizePolicy]` or `#[AuthorizeRoles]` attributes or `IAuthority`, you'll be able to use your policies.
 
@@ -230,12 +231,12 @@ use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirementHandler;
 
 $authority = (new AuthorityBuilder())
+    ->withRequirementHandler(RolesRequirement::class, new RolesRequirementHandler())
     ->withPolicy(new AuthorizationPolicy(
         'roles',
         new RolesRequirement('admin'),
         'cookie'
     ))
-    ->withRequirementHandler(RolesRequirement::class, new RolesRequirementHandler())
     // Choose whether we want to continue checking requirements after a failure
     ->withContinueOnFailure(false)
     ->build();
