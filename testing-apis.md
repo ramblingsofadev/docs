@@ -8,6 +8,7 @@
 
 1. [Introduction](#introduction)
 2. [Sending Requests](#sending-requests)
+   1. [Negotiating Content](#negotiating-content)
 3. [Response Assertions](#response-assertions)
    1. [assertCookieEquals](#assert-cookie-equals)
    2. [assertHasCookie](#assert-has-cookie)
@@ -75,10 +76,24 @@ $this->delete('/users/123', headers: ['Authorization' => 'Basic Zm9vOmJhcg==']);
 All methods except `get()` also support passing in a body:
 
 ```php
-$this->post('/users', body: new User(1, 'foo@bar.com'));
+$this->post('/users', body: new User('foo@bar.com'));
 ```
 
 If you pass in an instance of `IBody`, that will be used as the request body.  Otherwise, [content negotiation](content-negotiation.md) will be applied to the value you pass in.
+
+<h2 id="negotiating-content">Negotiating Content</h2>
+
+You may find yourself wanting to [retrieve the response body as a typed PHP object](content-negotiation.md).  For example, let's say your API has an endpoint to create a user, and you want to make sure to delete that user by ID after your test:
+
+```php
+$response = $this->post('/users', body: new User('foo@bar.com'));
+// Assume our application has a CreatedUser class with an ID property
+$createdUser = $this->negotiateResponseBody(CreatedUser::class, $response);
+
+// Perform some assertions...
+
+$this->delete("/users/{$createdUser->id}");
+```
 
 <h2 id="response-assertions">Response Assertions</h2>
 

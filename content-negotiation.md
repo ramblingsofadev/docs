@@ -85,24 +85,12 @@ Accept-Charset: utf-8, utf-16
 Here's how we'd negotiate the request content:
 
 ```php
+use Aphiria\ContentNegotiation\BodyNegotiator;
 use App\Users\User;
 
+$bodyNegotiator = new BodyNegotiator($contentNegotiator);
 // Assume the request was already instantiated
-$result = $contentNegotiator->negotiateRequestContent(User::class, $request);
-
-// The properties of a content negotiation result:
-$mediaTypeFormatter = $result->formatter; // An instance of JsonMediaTypeFormatter
-$mediaType = $result->mediaType; // "application/json"
-$encoding = $result->encoding; // "utf-8"
-$language = $result->language; // "en-us"
-```
-
-> **Note:** Any of these properties could be null if they could not be negotiated.
-
-With these results, we know everything we need to try to deserialize the request body:
-
-```php
-$user = $mediaTypeFormatter->readFromStream($request->getBody()->readAsStream(), User::class);
+$user = $bodyNegotiator->negotiateRequestBody(User::class, $request);
 echo $user->id; // 123
 echo $user->email; // "foo@example.com"
 ```
