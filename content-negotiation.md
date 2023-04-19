@@ -82,15 +82,15 @@ Accept-Charset: utf-8, utf-16
 {"id":123,"email":"foo@example.com"}
 ```
 
-Here's how we'd negotiate the request content:
+Here's how we'd negotiate and deserialize the request body:
 
 ```php
-use Aphiria\ContentNegotiation\BodyNegotiator;
+use Aphiria\ContentNegotiation\NegotiatedBodyDeserializer;
 use App\Users\User;
 
-$bodyNegotiator = new BodyNegotiator($contentNegotiator);
+$bodyDeserializer = new NegotiatedBodyDeserializer($contentNegotiator);
 // Assume the request was already instantiated
-$user = $bodyNegotiator->negotiateRequestBody(User::class, $request);
+$user = $bodyDeserializer->readRequestBodyAs(User::class, $request);
 echo $user->id; // 123
 echo $user->email; // "foo@example.com"
 ```
