@@ -215,6 +215,7 @@ Let's look at an example concrete implementation of this handler:
 ```php
 use Aphiria\Authentication\{AuthenticationResult, AuthenticationScheme};
 use Aphiria\Authentication\Schemes\BasicAuthenticationHandler;
+use Aphiria\Net\Http\Request;
 use Aphiria\Security\{Claim, ClaimType, Identity, User};
 use PDO;
 
@@ -225,6 +226,7 @@ final class SqlBasicAuthenticationHandler extends BasicAuthenticationHandler
     protected function createAuthenticationResultFromCredentials(
         string $username,
         string $password,
+        IRequest $request,
         AuthenticationScheme $scheme
     ): AuthenticationResult {
         $sql = <<<SQL
@@ -291,7 +293,7 @@ use Aphiria\Net\Http\Headers\SameSiteMode;
 $authenticator = (new AuthenticatorBuilder())
     // ...
     ->withScheme(new AuthenticationScheme(
-        'basic',
+        'cookie',
          MyCookieAuthenticationHandler::class,
          new CookieAuthenticationOptions(
             cookieName: 'authToken',
@@ -309,7 +311,7 @@ $authenticator = (new AuthenticatorBuilder())
     ->build();
 ```
 
-Now, whenever we use our cookie scheme, cookies will be set using the above options, and redirects on challenges and forbidden requests will forward to the appropriate paths.
+Now, whenever we use our `cookie` scheme, cookies will be set using the above options, and redirects on challenges and forbidden requests will forward to the appropriate paths.
 
 <h2 id="configuring-an-authenticator">Configuring an Authenticator</h2>
 
