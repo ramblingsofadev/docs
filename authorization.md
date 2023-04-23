@@ -283,7 +283,7 @@ final class AuthorizedDeleterRequirementHandler implements IAuthorizationRequire
         
         if ($comment->authorId === $user->getPrimaryId()?->getNameIdentifier()) {
             // The deleter of the comment is the comment's author
-            $context->requirementPassed($requirement);
+            $authorizationContext->requirementPassed($requirement);
             
             return;
         }
@@ -291,14 +291,14 @@ final class AuthorizedDeleterRequirementHandler implements IAuthorizationRequire
         foreach ($requirement->authorizedRoles as $authorizedRole) {
             if ($user->hasClaim(ClaimType::Role, $authorizedRole)) {
                 // This user had one of the authorized roles
-                $context->requirementPassed($requirement);
+                $authorizationContext->requirementPassed($requirement);
                 
                 return;
             }
         }
         
         // This requirement failed
-        $context->fail();
+        $authorizationContext->fail();
     }
 }
 ```
