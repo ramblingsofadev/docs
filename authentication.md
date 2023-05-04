@@ -280,7 +280,7 @@ $authenticator = (new AuthenticatorBuilder())
 
 <h3 id="cookie-authentication">Cookie Authentication</h3>
 
-In the case that you are using cookie values to authenticate, you can extend `CookieAuthenticationHandler` and define the methods `createAuthenticationResultFromCookie()` and `getCookieValueFromUser()` to create an authentication result from a cookie value and to create the cookie value that will be used to authenticate in subsequent requests, respectively.  This handler uses `CookieAuthenticationOptions` to give you control over your cookies.
+In the case that you are using cookie values to authenticate, you can extend `CookieAuthenticationHandler` and define the methods `createAuthenticationResultFromCookie()` and `createCookieValueForUser()` to create an authentication result from a cookie value and to create the cookie value that will be used to authenticate in subsequent requests, respectively.  This handler uses `CookieAuthenticationOptions` to give you control over your cookies.
 
 We won't go over how extend `CookieAuthenticationHandler` because it is very similar to the [example above](#basic-authentication), but here is how we would register our implementation:
 
