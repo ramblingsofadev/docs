@@ -9,6 +9,7 @@
 1. [Introduction](#introduction)
    1. [Principals](#principals) 
    2. [Claims](#claims)
+   3. [Builder](#builder)
 3. [Authentication Schemes](#authentication-schemes)
    1. [Default Scheme](#default-scheme)
    2. [Options](#scheme-options)
@@ -167,6 +168,57 @@ $userId = $user->getPrimaryIdentity()?->getNameIdentifier();
 ```
 
 Typically, the process of authentication will create the principal and store it, usually as a [request](http-requests.md) property.
+
+<h3 id="builder">Builder</h3>
+
+Aphiria provides a fluent builder syntax for principals and identities.  For example, the code in the [claims documentation](#claims) can be simplified to:
+
+```php
+use Aphiria\Security\IdentityBuilder;
+use Aphiria\Security\PrincipalBuilder;
+
+$user = (new PrincipalBuilder(defaultClaimsIssuer: 'example.com'))
+    ->withIdentity(function (IdentityBuilder $identity) {
+        $identity->withNameIdentifier('123')
+            ->withName('Dave')
+            ->withRoles('admin')
+    })->build();
+```
+
+The following fluent methods are available to build your identities in `IdentityBuilder`:
+
+* `withActor(string $value, ?string $issuer)`
+* `withAuthenticationSchemeName(string $authenticationSchemeName)`
+  * This must be set for the claims to be considered authenticated
+* `withClaims(Claim|Claim[] $claims)`
+* `withCountry(string $value, ?string $issuer)`
+* `withDateOfBirth(DateTimeInterface $value, ?string $issuer)`
+* `withDns(string $value, ?string $issuer)`
+* `withEmail(string $value, ?string $issuer)`
+* `withGender(string $value, ?string $issuer)`
+* `withGivenName(string $value, ?string $issuer)`
+* `withHomePhone(string $value, ?string $issuer)`
+* `withLocality(string $value, ?string $issuer)`
+* `withMobilePhone(string $value, ?string $issuer)`
+* `withName(string $value, ?string $issuer)`
+* `withNameIdentifier(mixed $value, ?string $issuer)`
+* `withOtherPhone(string $value, ?string $issuer)`
+* `withPostalCode(string|int $value, ?string $issuer)`
+* `withRoles(string|string[] $value, ?string $issuer)`
+  * If you specify multiple roles, a unique claim for each role will be created with claim type `ClaimType::Role`
+* `withRsa(string $value, ?string $issuer)`
+* `withSid(string $value, ?string $issuer)`
+* `withStateOrProvince(string $value, ?string $issuer)`
+* `withStreetAddress(string $value, ?string $issuer)`
+* `withSurname(string $value, ?string $issuer)`
+* `withThumbprint(string $value, ?string $issuer)`
+* `withUpn(string $value, ?string $issuer)`
+* `withUri(string $value, ?string $issuer)`
+* `withX500DistinguishedName(string $value, ?string $issuer)`
+
+> **Note:** If you pass in an issuer into any of the above methods, it will supersede the default claims issuer set in the `PrincipalBuilder` constructor.  An issuer must be set either in `PrincipalBuilder::__construct()` or in the claim builder methods above.
+
+You can also specify a primary identity selector via `PrincipalBuilder::withPrimaryIdentitySelector()` and passing in a `Closure` like the example [above](#claims).
 
 <h2 id="authentication-schemes">Authentication Schemes</h2>
 
