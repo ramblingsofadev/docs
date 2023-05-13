@@ -181,7 +181,7 @@ $user = (new PrincipalBuilder(defaultClaimsIssuer: 'example.com'))
     ->withIdentity(function (IdentityBuilder $identity) {
         $identity->withNameIdentifier('123')
             ->withName('Dave')
-            ->withRoles('admin')
+            ->withRoles('admin');
     })->build();
 ```
 
