@@ -76,7 +76,7 @@ final class UserController extends Controller
 }
 ```
 
-> **Note:** Authentication will only fail if _all_ authentication scheme names fail to authenticate.  When this happens, `IAuthenticator::challenge()` will be called for each scheme.
+> **Note:** Authentication will only fail if _all_ authentication scheme names fail to authenticate.  When this happens, `IAuthenticator::challenge()` will be called for each scheme.  If authentication passes for any scheme, the principal's identities will be merged with all other successfully authenticated schemes.
 
 Likewise, you can specify a scheme to authenticate against in `IAuthenticator::authenticate()`:
 
@@ -84,7 +84,7 @@ Likewise, you can specify a scheme to authenticate against in `IAuthenticator::a
 $authenticationResult = $this->authenticator->authenticate($this->request, schemeName: 'cookie');
 ```
 
-> **Note:** Not specifying a scheme name will cause authentication to use the [default scheme](#default-scheme).
+> **Note:** Not specifying a scheme name will cause authentication to use the [default scheme](#default-scheme).  Also, identical to using the attribute for authentication, if you make multiple calls to `IAuthenticator::authenticate()` but with different scheme names, the principal returned in the result will contain all authenticated identities merged together.
 
 We'll go into more details about how to customize responses when authentication does not pass [below](#customizing-authentication-failure-responses).
 
@@ -295,7 +295,7 @@ SQL;
             $statement->rowCount() !== 1
             || !\password_verify($password, $row['hashed_password'])
         ) {
-            return AuthenticationResult::fail('Invalid credentials');
+            return AuthenticationResult::fail('Invalid credentials', $scheme->name);
         }
         
         $claimsIssuer = $scheme->options->claimsIssuer ?? $scheme->name;
@@ -310,7 +310,7 @@ SQL;
         
         $user = new User(new Identity($claims, $scheme->name));
         
-        return AuthenticationResult::pass($user);
+        return AuthenticationResult::pass($user, $scheme->name);
     }
 }
 ```
@@ -423,16 +423,16 @@ An `AuthenticationResult` is returned when authenticating.  To indicate successf
 use Aphiria\Authentication\AuthenticationResult;
 
 // $user is the authenticated principal
-$result = AuthenticationResult::pass($user);
+$result = AuthenticationResult::pass($user, $scheme->name);
 ```
 
 Likewise, you can indicate a failure by calling
 
 ```php
-$result = AuthenticationResult::fail('Invalid credentials');
+$result = AuthenticationResult::fail('Invalid credentials', $scheme->name);
 
 // Or pass in an exception instead
-$result = AuthenticationResult::fail(new InvalidCredentialException());
+$result = AuthenticationResult::fail(new InvalidCredentialException(), $scheme->name);
 ```
 
 You can grab info about the result:
@@ -447,7 +447,7 @@ $user = $result->user;
 
 <h2 id="customizing-authentication-failure-responses">Customizing Authentication Failure Responses</h2>
 
-By default, when authentication in the `Authenticate` middleware fails, `challenge()` will be called on the same scheme handler that we attempted to authenticate with.  Most handlers' `challenge()` methods will set the status code to 401 or redirect you to the login page, depending on the implementation.  If you'd like to customize this, you can extend `Authenticate` and override `handleFailedAuthenticationResult()` to return a response.
+By default, when authentication in the `Authenticate` middleware fails, `challenge()` will be called on the same scheme handler that we attempted to authenticate with.  Most handlers' `challenge()` methods will set the status code to 401 or redirect you to the login page, depending on the implementation.  If you'd like to customize this, you can extend `Authenticate` and override `handleFailedAuthenticationResults()` to return a response.
 
 <h2 id="user-accessors">User Accessors</h2>
 
