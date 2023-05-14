@@ -66,15 +66,17 @@ final class UserController extends Controller
 }
 ```
 
-The `#[Authenticate]` attribute can also take in a [scheme name](#authentication-schemes) parameter if you wish to use a specific scheme:
+The `#[Authenticate]` attribute can also take in a [scheme name](#authentication-schemes) or list of scheme names parameter if you wish to use a specific scheme:
 
 ```php
-#[Authenticate(schemeName: 'cookie')]
+#[Authenticate(schemeNames: ['cookie', 'bearer'])]
 final class UserController extends Controller
 {
     // ...
 }
 ```
+
+> **Note:** Authentication will only fail if _all_ authentication scheme names fail to authenticate.  When this happens, `IAuthenticator::challenge()` will be called for each scheme.
 
 Likewise, you can specify a scheme to authenticate against in `IAuthenticator::authenticate()`:
 
