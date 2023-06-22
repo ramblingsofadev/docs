@@ -447,7 +447,7 @@ $user = $result->user;
 
 <h2 id="customizing-authentication-failure-responses">Customizing Authentication Failure Responses</h2>
 
-By default, when authentication in the `Authenticate` middleware fails, `challenge()` will be called on the same scheme handler that we attempted to authenticate with.  Most handlers' `challenge()` methods will set the status code to 401 or redirect you to the login page, depending on the implementation.  If you'd like to customize this, you can extend `Authenticate` and override `handleFailedAuthenticationResults()` to return a response.
+By default, when authentication in the `Authenticate` middleware fails, `challenge()` will be called on the same scheme handler that we attempted to authenticate with.  Most handlers' `challenge()` methods will set the status code to 401 or redirect you to the login page, depending on the implementation.  If you'd like to customize this, you can extend `Authenticate` and override `handleFailedAuthenticationResult()` to return a response.
 
 <h2 id="user-accessors">User Accessors</h2>
 
