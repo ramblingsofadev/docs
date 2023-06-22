@@ -21,7 +21,8 @@
 4. [Reading From Configs](#reading-from-configs)
    1. [Reading PHP Files](#reading-php-files)
    2. [Reading JSON Files](#reading-json-files)
-   3. [Custom File Readers](#custom-file-readers)
+   3. [Reading YAML Files](#reading-yaml-files)
+   4. [Custom File Readers](#custom-file-readers)
 5. [Global Configuration](#global-configuration)
    1. [Building The Global Configuration](#building-the-global-configuration)
 6. [Custom Applications](#custom-applications)
@@ -584,35 +585,19 @@ use Aphiria\Application\Configuration\JsonConfigurationFileReader;
 $config = (new JsonConfigurationFileReader)->readConfiguration('config.json');
 ```
 
-<h3 id="custom-file-readers">Custom File Readers</h3>
+<h3 id="reading-YAML-files">Reading YAML Files</h3>
 
-You can create your own custom file reader.  Let's look at an example that reads from YAML files:
+Aphiria supports reading YAML config files, too, as long as they parse to an associative array in PHP.
 
 ```php
-use Aphiria\Application\Configuration\HashTableConfiguration;
-use Aphiria\Application\Configuration\IConfiguration;
-use Aphiria\Application\Configuration\IConfigurationFileReader;
-use Aphiria\Application\Configuration\InvalidConfigurationFileException;
-use Symfony\Component\Yaml\Yaml;
+use Aphiria\Application\Configuration\YamlConfigurationFileReader;
 
-final class YamlConfigurationFileReader implements IConfigurationFileReader
-{
-    public function readConfiguration(string $path, string $pathDelimiter = '.'): IConfiguration
-    {
-        if (!\file_exists($path)) {
-            throw new InvalidConfigurationFileException("$path does not exist");
-        }
-
-        $hashTable = Yaml::parseFile($path);
-
-        if (!\is_array($hashTable)) {
-            throw new InvalidConfigurationFileException("Failed to convert YAML in $path to an array");
-        }
-
-        return new HashTableConfiguration($hashTable, $pathDelimiter);
-    }
-}
+$config = (new YamlConfigurationFileReader)->readConfiguration('config.yaml');
 ```
+
+<h3 id="custom-file-readers">Custom File Readers</h3>
+
+You can create your own custom file reader by implementing `IConfigurationFileReader`, which just needs to know how to convert the file contents to a PHP associative array.
   
 <h2 id="global-configuration">Global Configuration</h2>
 
