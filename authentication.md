@@ -399,14 +399,11 @@ use Aphiria\Authentication\AuthenticationScheme;
 use Aphiria\Authentication\AuthenticationSchemeOptions;
 use Aphiria\Authentication\AuthenticatorBuilder;
 use Aphiria\Authentication\ContainerAuthenticationSchemeHandlerResolver;
-use Aphiria\Authentication\RequestPropertyUserAccessor;
 use Aphiria\DependencyInjection\Container;
 
 $authenticator = (new AuthenticatorBuilder())
     // This will resolve our scheme handler instances
     ->withHandlerResolver(new ContainerAuthenticationSchemeHandlerResolver(new Container()))
-    // This will store and retrieve the current request's principal
-    ->withUserAccessor(new RequestPropertyUserAccessor())
     ->withScheme(
         'token', 
         MyTokenHandler::class,
