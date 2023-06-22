@@ -292,7 +292,7 @@ final class UserModule extends AphiriaModule
 Exceptions may be mapped to [custom problem details](exception-handling.md#custom-problem-details-mappings) and [PSR-3 log levels](exception-handling.md#exception-log-levels).
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Console\Output\IOutput;
 use Aphiria\Console\StatusCodes;
 use Aphiria\Framework\Application\AphiriaModule;
