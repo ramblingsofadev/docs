@@ -60,7 +60,7 @@ If you're using the <a href="https://github.com/aphiria/app" target="_blank">ske
 You can enable attributes in `GlobalModule`:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 
 final class GlobalModule extends AphiriaModule
@@ -99,9 +99,9 @@ $validator = new Validator($objectConstraints);
 If you prefer to not use attributes, you can use a fluent syntax to manually register constraints instead:
 
 ```php
-use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\EmailConstraint;
 use Aphiria\Validation\Constraints\RequiredConstraint;
+use Aphiria\Validation\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Validator;
 
 // Set up our validator

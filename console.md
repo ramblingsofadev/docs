@@ -288,7 +288,7 @@ final class GreetingCommandHandler implements ICommandHandler
 Before you can use attributes, you'll need to configure Aphiria to scan for them.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can do so in `GlobalModule`:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 
 final class GlobalModule extends AphiriaModule
@@ -616,7 +616,7 @@ Name | Description
 If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, you can register all framework commands in `GlobalModule`:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 
 final class GlobalModule extends AphiriaModule

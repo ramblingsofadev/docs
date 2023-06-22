@@ -188,7 +188,7 @@ final class RentalController extends Controller
 There are two recommended ways of creating your authority.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the authority will automatically be created for you in a [binder](dependency-injection.md#binders).  All you have to do is configure it in `GlobalModule`:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Authorization\AuthorizationPolicy;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirementHandler;

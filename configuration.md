@@ -38,11 +38,11 @@ Application builders provide an easy way to configure your application.  They ar
 Let's look at an example of a module:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaModule;
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
+use Aphiria\Routing\RouteCollectionBuilder;
 
 final class UserModule extends AphiriaModule
 {
@@ -72,7 +72,7 @@ Another great thing about Aphiria's application builders is that they allow you 
 Either extend `AphiriaModule` or use the `AphiriaComponents` trait to register a module:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 
 final class GlobalModule extends AphiriaModule
@@ -97,7 +97,7 @@ A component is a piece of your application that is shared across business domain
 You can configure your module to require [binders](dependency-injection.md#binders).
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 
 final class UserModule extends AphiriaModule
@@ -118,9 +118,9 @@ final class UserModule extends AphiriaModule
 You can manually register [routes](routing.md) for your module, and you can enable route attributes.
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
+use Aphiria\Routing\RouteCollectionBuilder;
 
 final class UserModule extends AphiriaModule
 {
@@ -143,7 +143,7 @@ final class UserModule extends AphiriaModule
 Some modules might need to add global [middleware](middleware.md) to your application.
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
 use Aphiria\Middleware\MiddlewareBinding;
 
@@ -168,7 +168,7 @@ final class UserModule extends AphiriaModule
 You can manually register [console commands](console.md#creating-commands), and enable command attributes from your modules.
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Console\Commands\Command;
 use Aphiria\Console\Commands\CommandRegistry;
 use Aphiria\Framework\Application\AphiriaModule;
@@ -202,7 +202,7 @@ final class UserModule extends AphiriaModule
 Aphiria provides methods for configuring your [authenticator](authentication.md).
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Authentication\AuthenticationScheme;
 use Aphiria\Authentication\Schemes\BasicAuthenticationOptions;
 use Aphiria\Authentication\Schemes\CookieAuthenticationOptions;
@@ -234,7 +234,7 @@ final class GlobalModule extends AphiriaModule
 Customizing your [authority](authorization.md) is also simple.
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Authorization\AuthorizationPolicy;
 use Aphiria\Authorization\Requirements\RolesRequirement;
 use Aphiria\Authorization\Requirements\RolesRequirementHandler;
@@ -266,10 +266,10 @@ final class GlobalModule extends AphiriaModule
 You can also manually configure [constraints](validation.md#constraints) for your models and enable [validator attributes](validation.md#creating-a-validator).
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Framework\Application\AphiriaModule;
-use Aphiria\Validation\Builders\ObjectConstraintsRegistryBuilder;
 use Aphiria\Validation\Constraints\EmailConstraint;
+use Aphiria\Validation\ObjectConstraintsRegistryBuilder;
 
 final class UserModule extends AphiriaModule
 {
@@ -424,7 +424,7 @@ final class SymfonyRouterComponent implements IComponent
 Let's register the binder and component to our app:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\DependencyInjection\IContainer;
 use Aphiria\Framework\Application\AphiriaModule;
 
@@ -443,7 +443,7 @@ final class GlobalModule extends AphiriaModule
 All that's left is to start using the component from a module:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Symfony\Component\Routing\Route;
 
@@ -460,7 +460,7 @@ final class MyModule implements IModule
 If you'd like a more fluent syntax like the Aphiria components, just use a trait:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\DependencyInjection\Container;
 use Symfony\Component\Routing\Route;
 
@@ -484,7 +484,7 @@ trait SymfonyComponents
 Then, use that trait inside your module:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Application\IModule;
 use Symfony\Component\Routing\Route;
 
@@ -726,8 +726,8 @@ Next, create an `IApplicationBuilder` that builds an instance of our `SwooleAppl
 ```php
 namespace App;
 
-use Aphiria\Application\Builders\ApplicationBuilder;
 use Aphiria\Application\IApplication;
+use Aphiria\Application\ApplicationBuilder;
 use Aphiria\DependencyInjection\IServiceResolver;
 use Aphiria\Net\Http\IRequestHandler;
 use Swoole\Http\Server;

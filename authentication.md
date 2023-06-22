@@ -372,7 +372,7 @@ Now, whenever we use our `cookie` scheme, cookies will be set using the above op
 There are two recommended ways of creating your authenticator.  If you're using the <a href="https://github.com/aphiria/app" target="_blank">skeleton app</a>, the authenticator will automatically be created for you in a [binder](dependency-injection.md#binders).  All you have to do is configure it in `GlobalModule`:
 
 ```php
-use Aphiria\Application\Builders\IApplicationBuilder;
+use Aphiria\Application\IApplicationBuilder;
 use Aphiria\Authentication\AuthenticationScheme;
 use Aphiria\Authentication\AuthenticationSchemeOptions;
 use Aphiria\Framework\Application\AphiriaModule;

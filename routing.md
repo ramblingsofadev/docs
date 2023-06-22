@@ -45,8 +45,8 @@ Routing is the process of mapping HTTP requests to actions.  You can check out w
 Let's look at a fully-functional example (or view its [attribute-based alternative](#route-attributes-example)):
 
 ```php
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\RouteCollectionBuilder;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 use App\Books\Api\{Authorization, BookController};
 
@@ -342,9 +342,9 @@ If you're using the <a href="https://github.com/aphiria/app" target="_blank">ske
 <h3 id="route-builders-groups">Route Groups</h3>
 
 ```php
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
-use Aphiria\Routing\Builders\RouteGroupOptions;
 use Aphiria\Routing\Middleware\MiddlewareBinding;
+use Aphiria\Routing\RouteCollectionBuilder;
+use Aphiria\Routing\RouteGroupOptions;
 
 $routes->group(
     new RouteGroupOptions(
@@ -562,8 +562,8 @@ $constraintFactory->registerConstraintFactory(
 Finally, register this constraint factory with the trie compiler:
 
 ```php
-use Aphiria\Routing\Builders\RouteCollectionBuilder;
 use Aphiria\Routing\Matchers\TrieRouteMatcher;
+use Aphiria\Routing\RouteCollectionBuilder;
 use Aphiria\Routing\UriTemplates\Compilers\Tries\{TrieCompiler, TrieFactory};
 
 $routes = new RouteCollectionBuilder();
