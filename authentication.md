@@ -81,7 +81,7 @@ final class UserController extends Controller
 Likewise, you can specify a scheme to authenticate against in `IAuthenticator::authenticate()`:
 
 ```php
-$authenticationResult = $this->authenticator->authenticate($this->request, schemeName: 'cookie');
+$authenticationResult = $this->authenticator->authenticate($this->request, schemeNames: 'cookie');
 ```
 
 > **Note:** Not specifying a scheme name will cause authentication to use the [default scheme](#default-scheme).  Also, identical to using the attribute for authentication, if you make multiple calls to `IAuthenticator::authenticate()` but with different scheme names, the principal returned in the result will contain all authenticated identities merged together.
