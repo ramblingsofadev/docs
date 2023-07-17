@@ -102,9 +102,10 @@ Response assertions can be used to make sure the data sent back by your applicat
 Name | Description
 ------ | ------
 [`assertCookieEquals()`](#assert-cookie-equals) | Asserts that the response sets a cookie with a particular value
+[`assertCookieIsUnset()`](#assert-has-cookie) | Asserts that the response unsets a cookie
 [`assertHasCookie()`](#assert-has-cookie) | Asserts that the response sets a cookie
 [`assertHasHeader()`](#assert-has-header) | Asserts that the response sets a particular header
-[`assertHeaderEquals()`](#assert-header-equals) | Asserts that the response sets a header with a particular value
+[`assertHeaderEquals()`](#assert-header-equals) | Asserts that the response sets a header with a particular value.  Note that if you pass in a non-array value, then only the first header value is compared against.
 [`assertHeaderMatchesRegex()`](#assert-header-matches-regex) | Asserts that the response sets a header whose value matches a regular expression
 [`assertParsedBodyEquals()`](#assert-parsed-body-equals) | Asserts that the [parsed response body](content-negotiation.md) equals a particular value
 [`assertParsedBodyPassesCallback()`](#assert-parsed-body-passes-callback) | Asserts that the [parsed response body](content-negotiation.md) passes a callback function
