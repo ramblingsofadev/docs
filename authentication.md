@@ -125,7 +125,7 @@ $user = new User(new Identity($claims));
 
 ```php
 $allClaims = $user->getClaims();
-$allRoleClaims = $user->getClaims(ClaimType::Role);
+$allRoleClaims = $user->filterClaims(ClaimType::Role);
 
 // Check that not only do they have a role claim type, but that its value is "admin"
 if ($user->hasClaim(ClaimType::Role, 'admin')) {
@@ -142,7 +142,7 @@ You can also loop through all the user's identities and query them directly:
 ```php
 foreach ($user->getIdentities() as $identity) {
     $allClaims = $identity->getClaims();
-    $allRoleClaims = $identity->getClaims(ClaimType::Role);
+    $allRoleClaims = $identity->filterClaims(ClaimType::Role);
     
     if ($identity->hasClaim(ClaimType::Role, 'admin')) {
         // ...
