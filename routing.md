@@ -154,13 +154,13 @@ Let's actually define a route:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
+use Aphiria\Authentication\Attributes\Authenticate;
 use Aphiria\Routing\Attributes\{Get, Middleware};
-use App\Books\Api\Authorization;
 use App\Books\Book;
 
 final class BookController extends Controller
 {
-    #[Get('/books/:bookId'), Middleware(Authorization::class)]
+    #[Get('/books/:bookId'), Authenticate()]
     public function getBookById(int $bookId): Book
     {
         // ...
@@ -198,25 +198,22 @@ use Aphiria\Routing\Attributes\Get;
 
 <h3 id="route-attributes-groups">Route Groups</h3>
 
-You can apply route groups, constraints, and middleware to all endpoints in a controller:
+You can apply route groups, constraints, and middleware to all endpoints in a controller using the `#[Controller]` attribute.
 
 ```php
-use Aphiria\Api\Controllers\Controller;
-use Aphiria\Routing\Attributes\{Get, Middleware, RouteConstraint, RouteGroup};
-use App\Courses\Api\Authorization;
+use Aphiria\Api\Controllers\Controller as BaseController;
+use Aphiria\Authentication\Attributes\Authenticate;
+use Aphiria\Routing\Attributes\{Controller, Get, RouteConstraint};
 use App\Courses\Course;
 
-#[
-    RouteGroup(
-        path: 'courses/:courseId',
-        host: 'api.example.com',
-        isHttpsOnly: true,
-        parameters: ['role' => 'admin']
-    ),
-    RouteConstraint(MyConstraint::class),
-    Middleware(Authentication::class)
-]
-final class CourseController extends Controller
+#[Controller(
+    path: 'courses/:courseId',
+    host: 'api.example.com',
+    isHttpsOnly: true
+)]
+#[RouteConstraint(MyConstraint::class)]
+#[Authenticate]
+final class CourseController extends BaseController
 {
     #[Get('')]
     public function getCourseById(int $courseId): Course
@@ -258,10 +255,8 @@ use App\Users\User;
 
 final class UserController extends Controller
 {
-    #[
-        Get('users/:userId'),
-        RouteConstraint(MyConstraint::class, constructorParameters: ['param1'])
-    ]
+    #[Get('users/:userId')]
+    #[RouteConstraint(MyConstraint::class, constructorParameters: ['param1'])]
     public function getUserById(int $userId): User
     {
         // ...
@@ -434,19 +429,15 @@ use Aphiria\Routing\Attributes\{Get, RouteConstraint};
 
 final class CommentController extends Controller
 {
-    #[
-        Get('comments', parameters: ['API-VERSION' => 'v1.0']),
-        RouteConstraint(ApiVersionConstraint::class)
-    ]
+    #[Get('comments', parameters: ['API-VERSION' => 'v1.0'])]
+    #[RouteConstraint(ApiVersionConstraint::class)]
     public function getAllComments1_0(): array
     {
         // This route will require an API-VERSION value of 'v1.0'
     }
     
-    #[
-        Get('comments', parameters: ['API-VERSION' => 'v2.0']),
-        RouteConstraint(ApiVersionConstraint::class)
-    ]
+    #[Get('comments', parameters: ['API-VERSION' => 'v2.0'])]
+    #[RouteConstraint(ApiVersionConstraint::class)]
     public function getAllComments2_0(): array
     {
         // This route will require an API-VERSION value of "v2.0"
