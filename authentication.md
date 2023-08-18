@@ -108,7 +108,7 @@ $claimsIssuer = 'example.com';
 // Claim types may either be ClaimType enum values or your own custom strings
 $claims = [
     // This claim stores the user's ID
-    new Claim(ClaimType::NameIdentifier, '123', $claimsIssuer),
+    new Claim(ClaimType::NameIdentifier, 123, $claimsIssuer),
     // This claim stores the user's name
     new Claim(ClaimType::Name, 'Dave', $claimsIssuer),
     // This claim stores the user's roles
@@ -176,18 +176,15 @@ Typically, the process of authentication will create the principal and store it,
 Aphiria provides a fluent builder syntax for principals and identities.  For example, the code in the [claims documentation](#claims) can be simplified to:
 
 ```php
-use Aphiria\Security\IdentityBuilder;
 use Aphiria\Security\PrincipalBuilder;
 
-$user = (new PrincipalBuilder(defaultClaimsIssuer: 'example.com'))
-    ->withIdentity(function (IdentityBuilder $identity) {
-        $identity->withNameIdentifier('123')
-            ->withName('Dave')
-            ->withRoles('admin');
-    })->build();
+$user = (new PrincipalBuilder('example.com'))->withNameIdentifier(123)
+    ->withName('Dave')
+    ->withRoles('admin')
+    ->build();
 ```
 
-The following fluent methods are available to build your identities in `IdentityBuilder`:
+This will build a primary identity with the specified claims.  The following fluent methods are available to build your identities in `Principal`:
 
 * `withActor(string $value, ?string $issuer)`
 * `withAuthenticationSchemeName(string $authenticationSchemeName)`
@@ -219,6 +216,24 @@ The following fluent methods are available to build your identities in `Identity
 * `withX500DistinguishedName(string $value, ?string $issuer)`
 
 > **Note:** If you pass in an issuer into any of the above methods, it will supersede the default claims issuer set in the `PrincipalBuilder` constructor.  An issuer must be set either in `PrincipalBuilder::__construct()` or in the claim builder methods above.
+
+If you want to build multiple identities for your principal, you can.
+
+```php
+use Aphiria\Security\IdentityBuilder;
+use Aphiria\Security\PrincipalBuilder;
+
+$user = (new PrincipalBuilder('example.com'))
+    ->withIdentity(function (IdentityBuilder $identity) {
+        $identity->withName('Dave');
+    })
+    ->withIdentity(function (IdentityBuilder $identity) {
+        $identity->withThumbprint('abc123');
+    })
+    ->build();
+```
+
+`IdentityBuilder` provides the same fluent methods as `PrincipalBuilder` above.
 
 You can also specify a primary identity selector via `PrincipalBuilder::withPrimaryIdentitySelector()` and passing in a `Closure` like the example [above](#claims).
 
