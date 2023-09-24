@@ -486,22 +486,4 @@ final class BookController extends Controller
 
 <h2 id="mocking-authentication">Mocking Authentication</h2>
 
-Mocking authentication calls in integration tests is easy.  Just call `actingAs()` in your test and pass in a callback for the call(s) you want to make while authenticating as the desired principal:
-
-```php
-use Aphiria\Net\Http\HttpStatusCode;
-use Aphiria\Security\Identity;
-use Aphiria\Security\User;
-use App\Tests\Integration\IntegrationTestCase;
-
-class UserIntegrationTest extends IntegrationTestCase
-{
-    public function testLogin(): void
-    {
-        // For the scoped call in actingAs(), we'll authenticate as the input user
-        $user = new User([new Identity([])]);
-        $response = $this->actingAs($user, fn () => $this->post('/login'));
-        $this->assertStatusCodeEquals(HttpStatusCode::Ok, $response);
-    }
-}
-```
+You can learn how to mock authentication in your tests [here](testing-apis.md#mocking-authentication).

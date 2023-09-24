@@ -9,7 +9,8 @@
 1. [Introduction](#introduction)
 2. [Sending Requests](#sending-requests)
    1. [Negotiating Content](#negotiating-content)
-3. [Response Assertions](#response-assertions)
+3. [Mocking Authentication](#mocking-authentication)
+4. [Response Assertions](#response-assertions)
    1. [assertCookieEquals](#assert-cookie-equals)
    2. [assertHasCookie](#assert-has-cookie)
    3. [assertHasHeader](#assert-has-header)
@@ -93,6 +94,30 @@ $createdUser = $this->negotiateResponseBody(CreatedUser::class, $response);
 // Perform some assertions...
 
 $this->delete("/users/{$createdUser->id}");
+```
+
+<h2 id="mocking-authentication">Mocking Authentication</h2>
+
+Mocking authentication calls in integration tests is easy.  Just call `actingAs()` in your test and pass in a callback for the call(s) you want to make while authenticating as the desired principal:
+
+```php
+use Aphiria\Net\Http\HttpStatusCode;
+use Aphiria\Net\Http\StringBody;
+use Aphiria\Security\Identity;
+use Aphiria\Security\User;
+use App\Tests\Integration\IntegrationTestCase;
+
+class UserIntegrationTest extends IntegrationTestCase
+{
+    public function testUpdatingEmail(): void
+    {
+        // For the scoped call in actingAs(), we'll authenticate as the input user
+        $user = new User([new Identity([])]);
+        $body = new StringBody('foo@bar.com');
+        $response = $this->actingAs($user, fn () => $this->put('/email', body: $body));
+        $this->assertStatusCodeEquals(HttpStatusCode::Ok, $response);
+    }
+}
 ```
 
 <h2 id="response-assertions">Response Assertions</h2>
