@@ -104,7 +104,7 @@ final class MinimumAgeRequirementHandler implements IAuthorizationRequirementHan
             throw new \InvalidArgumentException('Requirement must be of type ' . MinimumAgeRequirement::class);
         }
         
-        $dateOfBirthClaims = $user->getClaims(ClaimType::DateOfBirth);
+        $dateOfBirthClaims = $user->filterClaims(ClaimType::DateOfBirth);
         
         if (\count($dateOfBirthClaims) !== 1) {
             $authorizationContext->fail();

@@ -224,24 +224,20 @@ final class JsonPrettifierController extends Controller
 If you need to write data back to the [response](http-responses.md), eg cookies or creating a redirect, an instance of `ResponseFormatter` is automatically available in the controller:
 
 ```php
-final class LoginController extends Controller
+final class PreferencesController extends Controller
 {
-    public function __construct(private IAuthenticator $authenticator) {}
+    public function __construct(private IPreferenceService $preferences) {}
 
-    #[Post('login')]
-    public function logIn(LoginDto $login): IResponse
+    #[Put('preferences')]
+    public function savePreferences(Preferences $preferences): IResponse
     {
-        $authResults = null;
-        
-        // Assume this logic resides in your application
-        if (!$this->authenticator->tryLogIn($login->username, $login->password, $authResults)) {
-            return $this->unauthorized();
-        }
-        
-        // Write a cookie containing the auth token back to the response
+        // Store the preferences
+        $this->preferences->save($preferences);
+    
+        // Write a cookie containing the preferences for a better UX
         $response = new Response();
-        $authTokenCookie = new Cookie('authtoken', $authResults->getAuthToken(), 3600);
-        $this->responseFormatter->setCookie($response, $authTokenCookie);
+        $preferencesCookie = new Cookie('preferences', $preferences->toJson(), 60 * 60 * 24 * 30);
+        $this->responseFormatter->setCookie($response, $preferencesCookie);
         
         return $response;
     }
