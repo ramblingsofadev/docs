@@ -148,7 +148,7 @@ $loggingMiddleware = new LoggingMiddleware();
 $authMiddleware = new AuthenticationMiddleware();
 $controllerHandler = new ControllerRequestHandler();
 
-$pipeline = (new MiddlewarePipelineFactory)->createPipeline(
+$pipeline = (new MiddlewarePipelineFactory())->createPipeline(
     [$loggingMiddleware, $authMiddleware],
     $controllerHandler
 );
@@ -157,6 +157,6 @@ $pipeline = (new MiddlewarePipelineFactory)->createPipeline(
 `$pipeline` will itself be a request handler, which you can then send a request through and receive a response:
 
 ```php
-$request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
+$request = (new RequestFactory())->createRequestFromSuperglobals($_SERVER);
 $response = $pipeline->handle($request);
 ```

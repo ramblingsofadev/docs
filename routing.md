@@ -480,7 +480,7 @@ PHP is irritatingly difficult to extract headers from `$_SERVER`.  If you're usi
 ```php
 use Aphiria\Routing\Requests\RequestHeaderParser;
 
-$headers = (new RequestHeaderParser)->parseHeaders($_SERVER);
+$headers = (new RequestHeaderParser())->parseHeaders($_SERVER);
 ```
 
 <h2 id="route-variable-constraints">Route Variable Constraints</h2>
@@ -540,8 +540,8 @@ use Aphiria\Routing\UriTemplates\Constraints\RouteVariableConstraintFactory;
 use Aphiria\Routing\UriTemplates\Constraints\RouteVariableConstraintFactoryRegistrant;
 
 // Register some built-in constraints to our factory
-$constraintFactory = (new RouteVariableConstraintFactoryRegistrant)
-    ->registerConstraintFactories(new RouteVariableConstraintFactory);
+$constraintFactory = (new RouteVariableConstraintFactoryRegistrant())
+    ->registerConstraintFactories(new RouteVariableConstraintFactory());
 
 // Register our custom constraint
 $constraintFactory->registerConstraintFactory(
@@ -652,7 +652,7 @@ You can use [Aphiria's net library](http-requests.md) to route the request inste
 ```php
 use Aphiria\Net\Http\RequestFactory;
 
-$request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
+$request = (new RequestFactory())->createRequestFromSuperglobals($_SERVER);
 
 // Set up your route matcher like before...
 

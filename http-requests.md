@@ -95,7 +95,7 @@ PHP has superglobal arrays that store information about the requests.  They're a
 ```php
 use Aphiria\Net\Http\RequestFactory;
 
-$request = (new RequestFactory)->createRequestFromSuperglobals($_SERVER);
+$request = (new RequestFactory())->createRequestFromSuperglobals($_SERVER);
 ```
 
 Aphiria reads all the information it needs from the `$_SERVER` superglobal - it doesn't need the others.
@@ -251,7 +251,7 @@ In vanilla PHP, you can read URL-encoded form data via the `$_POST` superglobal.
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Let's assume the raw body is "email=foo%40bar.com"
-$formInput = (new RequestParser)->readAsFormInput($request);
+$formInput = (new RequestParser())->readAsFormInput($request);
 echo $formInput->get('email'); // "foo@bar.com"
 ```
 
@@ -263,7 +263,7 @@ In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphi
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Assume the query string was "?foo=bar"
-$queryStringParams = (new RequestParser)->parseQueryString($request);
+$queryStringParams = (new RequestParser())->parseQueryString($request);
 echo $queryStringParams->get('foo'); // "bar"
 ```
 
@@ -274,7 +274,7 @@ To check if a request is a JSON request, call
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$isJson = (new RequestParser)->isJson($request);
+$isJson = (new RequestParser())->isJson($request);
 ```
 
 Rather than having to parse a JSON body yourself, you can use `RequestParser` to do it for you:
@@ -282,7 +282,7 @@ Rather than having to parse a JSON body yourself, you can use `RequestParser` to
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$json = (new RequestParser)->readAsJson($request);
+$json = (new RequestParser())->readAsJson($request);
 ```
 
 <h2 id="getting-request-cookies">Getting Cookies</h2>
@@ -293,7 +293,7 @@ Aphiria has a helper to grab cookies from request headers as an [immutable hash 
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Assume the request contained the header "Cookie: userid=123"
-$cookies = (new RequestParser)->parseCookies($request);
+$cookies = (new RequestParser())->parseCookies($request);
 echo $cookies->get('userid'); // "123"
 ```
 
@@ -304,7 +304,7 @@ If you use the [`RequestFactory`](#creating-request-from-superglobals) to create
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$clientIPAddress = (new RequestParser)->getClientIPAddress($request);
+$clientIPAddress = (new RequestParser())->getClientIPAddress($request);
 ```
 
 > **Note:** This will take into consideration any [trusted proxy header values](#trusted-proxies) when determining the original client IP address.
@@ -361,7 +361,7 @@ You can check if a request is a multipart request:
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$isMultipart = (new RequestParser)->isMultipart($request);
+$isMultipart = (new RequestParser())->isMultipart($request);
 ```
 
 To parse a request body as a multipart body, call
@@ -369,7 +369,7 @@ To parse a request body as a multipart body, call
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$multipartBody = (new RequestParser)->readAsMultipart($request);
+$multipartBody = (new RequestParser())->readAsMultipart($request);
 ```
 
 Each `MultipartBodyPart` contains the following properties:
@@ -396,13 +396,13 @@ foreach ($multipartBody->parts as $multipartBodyPart) {
 To grab the actual MIME type of an HTTP body, call
 
 ```php
-$actualMimeType = (new RequestParser)->getActualMimeType($multipartBodyPart);
+$actualMimeType = (new RequestParser())->getActualMimeType($multipartBodyPart);
 ```
 
 To get the MIME type that was specified by the client, call
 
 ```php
-$clientMimeType = (new RequestParser)->getClientMimeType($multipartBodyPart);
+$clientMimeType = (new RequestParser())->getClientMimeType($multipartBodyPart);
 ```
 
 <h3 id="creating-multipart-requests">Creating Multipart Requests</h3>
