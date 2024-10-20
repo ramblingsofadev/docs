@@ -68,7 +68,7 @@ use Aphiria\Net\Http\Formatting\ResponseFormatter;
 use Aphiria\Net\Http\Response;
 
 $response = new Response();
-(new ResponseFormatter())->writeJson($response, ['foo' => 'bar']);
+new ResponseFormatter()->writeJson($response, ['foo' => 'bar']);
 ```
 
 This will set the contents of the response, as well as the appropriate `Content-Type` headers.
@@ -82,7 +82,7 @@ use Aphiria\Net\Http\Formatting\ResponseFormatter;
 use Aphiria\Net\Http\Response;
 
 $response = new Response();
-(new ResponseFormatter())->redirectToUri($response, 'http://example.com');
+new ResponseFormatter()->redirectToUri($response, 'http://example.com');
 ```
 
 <h2 id="setting-response-cookies">Setting Cookies</h2>
