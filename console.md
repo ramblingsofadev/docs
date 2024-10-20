@@ -62,7 +62,7 @@ $commands = new CommandRegistry();
 // Register your commands here...
 
 $gateway = new ConsoleGateway($commands, new Container());
-$input = (new InputCompiler($commands))->compile($_SERVER['argv'] ?? []);
+$input = new InputCompiler($commands)->compile($_SERVER['argv'] ?? []);
 $app = new ConsoleApplication($gateway, $input);
 $status = $app->run();
 
@@ -495,7 +495,7 @@ $progressBar->advance(2);
 Alternatively, you can set a specific progress:
 
 ```php
-$progressBar->setProgress(50);
+$progressBar->progress = 50;
 ```
 
 To explicitly complete the progress bar, call
@@ -586,7 +586,7 @@ $output = new ConsoleOutput($outputCompiler);
 
 // Now, pass it into the app
 $gateway = new ConsoleGateway($commands, new Container());
-$input = (new InputCompiler($commands))->compile($_SERVER['argv'] ?? []);
+$input = new InputCompiler($commands)->compile($_SERVER['argv'] ?? []);
 $app = new ConsoleApplication($gateway, $input, $output);
 $status = $app->run();
 

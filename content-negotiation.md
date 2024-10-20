@@ -166,13 +166,13 @@ Media type formatters can read and write a particular data format to a stream.  
 
 ```php
 $mediaTypeFormatter = $result->formatter;
-$mediaTypeFormatter->readFromStream($request->getBody(), User::class);
+$mediaTypeFormatter->readFromStream($request->body, User::class);
 ```
 
 Similarly, you can serialize a value and write it to the response body:
 
 ```php
-$mediaTypeFormatter->writeToStream($valueToWrite, $response->getBody());
+$mediaTypeFormatter->writeToStream($valueToWrite, $response->body);
 ```
 
 Aphiria provides the following formatters out of the box:

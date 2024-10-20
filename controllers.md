@@ -208,7 +208,7 @@ final class JsonPrettifierController extends Controller
             return $this->badRequest();
         }
         
-        $bodyAsString = $this->request->getBody()->readAsString();
+        $bodyAsString = $this->request->body->readAsString();
         $prettyJson = json_encode($bodyAsString, JSON_PRETTY_PRINT);
         $headers = new Headers();
         $headers->add('Content-Type', 'application/json');
@@ -256,7 +256,7 @@ final class BookController extends Controller
     public function getBook(int $id): Book
     {
         // This can be null if the user was not set by authentication middleware
-        $user = $this->getUser();
+        $user = $this->user;
         
         // ...
     }

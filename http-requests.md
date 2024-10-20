@@ -46,28 +46,28 @@ use Aphiria\Net\Uri;
 $request = new Request('GET', new Uri('https://example.com'));
 
 // Grab the HTTP method, eg "GET"
-$method = $request->getMethod();
+$method = $request->method;
 
 // Grab the URI:
-$uri = $request->getUri();
+$uri = $request->uri;
 
 // Grab the protocol version, eg 1.1:
-$protocolVersion = $request->getProtocolVersion();
+$protocolVersion = $request->protocolVersion;
 
 // Grab the headers (you can add new headers to the returned hash table)
-$headers = $request->getHeaders();
+$headers = $request->headers;
 
 // Set a header
-$request->getHeaders()->add('Foo', 'bar');
+$request->headers->add('Foo', 'bar');
 
 // Get the body (could be null)
-$body = $request->getBody();
+$body = $request->body;
 
 // Set the body
-$request->setBody(new StringBody('foo'));
+$request->body = new StringBody('foo');
 
 // Grab any special metadata properties (a custom hash table that you can define)
-$properties = $request->getProperties();
+$properties = $request->properties;
 ```
 
 <h2 id="creating-requests">Creating Requests</h2>
@@ -95,7 +95,7 @@ PHP has superglobal arrays that store information about the requests.  They're a
 ```php
 use Aphiria\Net\Http\RequestFactory;
 
-$request = (new RequestFactory())->createRequestFromSuperglobals($_SERVER);
+$request = new RequestFactory()->createRequestFromSuperglobals($_SERVER);
 ```
 
 Aphiria reads all the information it needs from the `$_SERVER` superglobal - it doesn't need the others.
@@ -107,7 +107,7 @@ Aphiria comes with a fluent syntax for building your requests, which is somewhat
 ```php
 use Aphiria\Net\Http\RequestBuilder;
 
-$request = (new RequestBuilder())->withMethod('GET')
+$request = new RequestBuilder()->withMethod('GET')
     ->withUri('http://example.com')
     ->withHeader('Cookie', 'foo=bar')
     ->build();
@@ -118,7 +118,7 @@ You can specify a body of a request:
 ```php
 use Aphiria\Net\Http\StringBody;
 
-$request = (new RequestBuilder())->withMethod('POST')
+$request = new RequestBuilder()->withMethod('POST')
     ->withUri('http://example.com/users')
     ->withBody(new StringBody('{"name":"Dave"}'))
     ->withHeader('Content-Type', 'application/json')
@@ -130,14 +130,14 @@ $request = (new RequestBuilder())->withMethod('POST')
 You can specify multiple headers in one call:
 
 ```php
-$request = (new RequestBuilder())->withManyHeaders(['Foo' => 'bar', 'Baz' => 'buzz'])
+$request = new RequestBuilder()->withManyHeaders(['Foo' => 'bar', 'Baz' => 'buzz'])
     ->build();
 ```
 
 You can also set any request properties:
 
 ```php
-$request = (new RequestBuilder())->withProperty('routeVars', ['id' => 123])
+$request = new RequestBuilder()->withProperty('routeVars', ['id' => 123])
     ->build();
 ```
 
@@ -146,7 +146,7 @@ If you'd like to use a different request target type besides origin form, you ma
 ```php
 use Aphiria\Net\Http\RequestTargetType;
 
-$request = (new RequestBuilder())->withRequestTargetType(RequestTargetType::AbsoluteForm)
+$request = new RequestBuilder()->withRequestTargetType(RequestTargetType::AbsoluteForm)
     ->build();
 ```
 
@@ -157,7 +157,7 @@ Aphiria also has a [negotiated](content-negotiation.md) request builder that can
 ```php
 use Aphiria\ContentNegotiation\NegotiatedRequestBuilder;
 
-$request = (new NegotiatedRequestBuilder())->withMethod('POST')
+$request = new NegotiatedRequestBuilder()->withMethod('POST')
     ->withUri('http://example.com/users')
     ->withBody(new User('Dave'))
     ->build();
@@ -251,19 +251,19 @@ In vanilla PHP, you can read URL-encoded form data via the `$_POST` superglobal.
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Let's assume the raw body is "email=foo%40bar.com"
-$formInput = (new RequestParser())->readAsFormInput($request);
+$formInput = new RequestParser()->readAsFormInput($request);
 echo $formInput->get('email'); // "foo@bar.com"
 ```
 
 <h2 id="getting-query-string-data">Getting Query String Data</h2>
 
-In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphiria, it's stored in the request's URI.  `Uri::getQueryString()` returns the raw query string - to return it as an [immutable hash table](collections.md#immutable-hash-tables), use `RequestParser`:
+In vanilla PHP, query string data is read from the `$_GET` superglobal.  In Aphiria, it's stored in the request's URI.  `Uri::queryString` returns the raw query string - to return it as an [immutable hash table](collections.md#immutable-hash-tables), use `RequestParser`:
 
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Assume the query string was "?foo=bar"
-$queryStringParams = (new RequestParser())->parseQueryString($request);
+$queryStringParams = new RequestParser()->parseQueryString($request);
 echo $queryStringParams->get('foo'); // "bar"
 ```
 
@@ -274,7 +274,7 @@ To check if a request is a JSON request, call
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$isJson = (new RequestParser())->isJson($request);
+$isJson = new RequestParser()->isJson($request);
 ```
 
 Rather than having to parse a JSON body yourself, you can use `RequestParser` to do it for you:
@@ -282,7 +282,7 @@ Rather than having to parse a JSON body yourself, you can use `RequestParser` to
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$json = (new RequestParser())->readAsJson($request);
+$json = new RequestParser()->readAsJson($request);
 ```
 
 <h2 id="getting-request-cookies">Getting Cookies</h2>
@@ -293,7 +293,7 @@ Aphiria has a helper to grab cookies from request headers as an [immutable hash 
 use Aphiria\Net\Http\Formatting\RequestParser;
 
 // Assume the request contained the header "Cookie: userid=123"
-$cookies = (new RequestParser())->parseCookies($request);
+$cookies = new RequestParser()->parseCookies($request);
 echo $cookies->get('userid'); // "123"
 ```
 
@@ -304,7 +304,7 @@ If you use the [`RequestFactory`](#creating-request-from-superglobals) to create
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$clientIPAddress = (new RequestParser())->getClientIPAddress($request);
+$clientIPAddress = new RequestParser()->getClientIPAddress($request);
 ```
 
 > **Note:** This will take into consideration any [trusted proxy header values](#trusted-proxies) when determining the original client IP address.
@@ -361,7 +361,7 @@ You can check if a request is a multipart request:
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$isMultipart = (new RequestParser())->isMultipart($request);
+$isMultipart = new RequestParser()->isMultipart($request);
 ```
 
 To parse a request body as a multipart body, call
@@ -369,7 +369,7 @@ To parse a request body as a multipart body, call
 ```php
 use Aphiria\Net\Http\Formatting\RequestParser;
 
-$multipartBody = (new RequestParser())->readAsMultipart($request);
+$multipartBody = new RequestParser()->readAsMultipart($request);
 ```
 
 Each `MultipartBodyPart` contains the following properties:
@@ -396,13 +396,13 @@ foreach ($multipartBody->parts as $multipartBodyPart) {
 To grab the actual MIME type of an HTTP body, call
 
 ```php
-$actualMimeType = (new RequestParser())->getActualMimeType($multipartBodyPart);
+$actualMimeType = new RequestParser()->getActualMimeType($multipartBodyPart);
 ```
 
 To get the MIME type that was specified by the client, call
 
 ```php
-$clientMimeType = (new RequestParser())->getClientMimeType($multipartBodyPart);
+$clientMimeType = new RequestParser()->getClientMimeType($multipartBodyPart);
 ```
 
 <h3 id="creating-multipart-requests">Creating Multipart Requests</h3>

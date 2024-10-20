@@ -35,28 +35,28 @@ $response = new Response(
 );
 
 // Get the status code as an HttpStatusCode enum
-$response->getStatusCode();
+$response->statusCode;
 
 // Set the status code (can also use an int)
-$response->setStatusCode(HttpStatusCode::InternalServerError);
+$response->statusCode = HttpStatusCode::InternalServerError;
 
 // Get the reason phrase
-$response->getReasonPhrase(); // "OK"
+$response->reasonPhrase; // "OK"
 
 // Get the protocol version
-$response->getProtocolVersion(); // 1.1
+$response->protocolVersion; // 1.1
 
 // Get the headers (you can add new headers to the returned hash table)
-$response->getHeaders();
+$response->headers;
 
 // Set a header
-$response->getHeaders()->add('Foo', 'bar');
+$response->headers->add('Foo', 'bar');
 
 // Get the body (could be null)
-$response->getBody();
+$response->body;
 
 // Set the body
-$response->setBody(new StringBody('foo'));
+$response->body = new StringBody('foo');
 ```
 
 <h2 id="json-responses">JSON Responses</h2>

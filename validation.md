@@ -241,12 +241,11 @@ use Aphiria\Validation\Constraints\IConstraint;
 
 final class MaxLengthConstraint implements IConstraint
 {
-    public function __construct(private int $maxLength) {}
-
-    public function getErrorMessageId(): string
-    {
-        return 'Length cannot exceed {maxLength}';
+    public string $errorMessageId {
+        get => 'Length cannot exceed {maxLength}'
     }
+
+    public function __construct(private int $maxLength) {}
 
     public function getErrorMessagePlaceholders(mixed $value): array
     {
@@ -314,7 +313,7 @@ try {
 } catch (ValidationException $ex) {
     $errors = [];
 
-    foreach ($ex->getViolations() as $violation) {
+    foreach ($ex->violations as $violation) {
         $errors[] = $violation->errorMessage;
     }
 

@@ -59,7 +59,7 @@ final class ArticleController extends Controller
             new RolesRequirement(['admin', 'contributor', 'editor'])
         );
     
-        if (!$this->authority->authorize($this->getUser(), $policy)->passed) {
+        if (!$this->authority->authorize($this->user, $policy)->passed) {
             return $this->forbidden();
         }
         
@@ -132,7 +132,7 @@ Finally, let's register this requirement handler and use it in a policy:
 use Aphiria\Authorization\AuthorityBuilder;
 use Aphiria\Authorization\AuthorizationPolicy;
 
-$authority = (new AuthorityBuilder())
+$authority = new AuthorityBuilder()
     ->withRequirementHandler(MinimumAgeRequirement::class, new MinimumAgeRequirementHandler())
     // We can access this policy by its name ("age-check")
     ->withPolicy(new AuthorizationPolicy('age-check', new MinimumAgeRequirement(13)))
@@ -174,7 +174,7 @@ final class RentalController extends Controller
     #[Post('/rentals')]
     public function createRental(Rental $rental): IResponse
     {
-        if (!$this->authority->authorize($this->getUser(), 'age-check')->passed) {
+        if (!$this->authority->authorize($this->user, 'age-check')->passed) {
             return $this->forbidden();
         }
         
@@ -230,7 +230,7 @@ use Aphiria\Authorization\AuthorizationPolicy;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirementHandler;
 
-$authority = (new AuthorityBuilder())
+$authority = new AuthorityBuilder()
     ->withRequirementHandler(RolesRequirement::class, new RolesRequirementHandler())
     ->withPolicy(new AuthorizationPolicy(
         'roles',
@@ -281,7 +281,7 @@ final class AuthorizedDeleterRequirementHandler implements IAuthorizationRequire
             throw new \InvalidArgumentException('Resource must be of type ' . Comment::class);
         }
         
-        if ($comment->authorId === $user->getPrimaryId()?->getNameIdentifier()) {
+        if ($comment->authorId === $user->primaryId?->nameIdentifier) {
             // The deleter of the comment is the comment's author
             $authorizationContext->requirementPassed($requirement);
             
@@ -309,7 +309,7 @@ Now, let's register this policy:
 use Aphiria\Authorization\AuthorityBuilder;
 use Aphiria\Authorization\AuthorizationPolicy;
 
-$authority = (new AuthorityBuilder())
+$authority = new AuthorityBuilder()
     ->withRequirementHandler(AuthorizedDeleterRequirement::class, new AuthorizedDeleterRequirementHandler())
     ->withPolicy(new AuthorizationPolicy('authorized-deleter', new AuthorizedDeleterRequirement(['admin'])))
     ->build();
@@ -340,7 +340,7 @@ final class CommentController extends Controller
             return $this->notFound();
         }
         
-        if (!$this->authority->authorize($this->getUser(), 'authorized-deleter', $comment)->passed) {
+        if (!$this->authority->authorize($this->user, 'authorized-deleter', $comment)->passed) {
             return $this->forbidden();
         }
     

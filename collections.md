@@ -33,12 +33,12 @@
    5. [containsValue()](#hash-tables-contains-value)
    6. [count()](#hash-tables-count)
    7. [get()](#hash-tables-get)
-   8. [getKeys()](#hash-tables-get-keys)
-   9. [getValues()](#hash-tables-get-values)
-   10. [removeKey()](#hash-tables-remove-key)
-   11. [removeValue()](#hash-tables-remove-value)
-   12. [toArray()](#hash-tables-to-array)
-   13. [tryGet()](#hash-tables-try-get)
+   8. [keys](#hash-tables-get-keys)
+   9. [removeKey()](#hash-tables-remove-key)
+   10. [removeValue()](#hash-tables-remove-value)
+   11. [toArray()](#hash-tables-to-array)
+   12. [tryGet()](#hash-tables-try-get)
+   13. [values](#hash-tables-get-values)
 5. [Hash Sets](#hash-sets)
    1. [add()](#hash-sets-add)
    2. [addRange()](#hash-sets-add-range)
@@ -77,10 +77,10 @@
    2. [containsValue()](#immutable-hash-tables-contains-value)
    3. [count()](#immutable-hash-tables-count)
    4. [get()](#immutable-hash-tables-get)
-   5. [getKeys()](#immutable-hash-tables-get-keys)
-   6. [getValues()](#immutable-hash-tables-get-values)
-   7. [toArray()](#immutable-hash-tables-to-array)
-   8. [tryGet()](#immutable-hash-tables-try-get)
+   5. [keys](#immutable-hash-tables-get-keys)
+   6[toArray()](#immutable-hash-tables-to-array)
+   7[tryGet()](#immutable-hash-tables-try-get)
+   8[values](#immutable-hash-tables-get-values)
 10. [Immutable Hash Sets](#immutable-hash-sets)
     1. [containsValue()](#immutable-hash-sets-contains-value)
     2. [count()](#immutable-hash-sets-count)
@@ -376,24 +376,14 @@ $value = $hashTable->get('foo');
 
 If the value does not exist, an `OutOfBoundsException` will be thrown.
 
-<h3 id="hash-tables-get-keys">getKeys()</h3>
+<h3 id="hash-tables-get-keys">keys</h3>
 
 _Runtime: O(n)_
 
 You can grab all of the keys in the hash table:
 
 ```php
-$hashTable->getKeys();
-```
-
-<h3 id="hash-tables-get-values">getValues()</h3>
-
-_Runtime: O(n)_
-
-You can grab all of the values in the hash table:
-
-```php
-$hashTable->getValues();
+$hashTable->keys;
 ```
 
 <h3 id="hash-tables-remove-key">removeKey()</h3>
@@ -437,6 +427,16 @@ If you would like to try to safely get a value that may or may not exist, use `t
 ```php
 $value = null;
 $exists = $hashTable->tryGet('foo', $value);
+```
+
+<h3 id="hash-tables-get-values">values</h3>
+
+_Runtime: O(n)_
+
+You can grab all of the values in the hash table:
+
+```php
+$hashTable->values;
 ```
 
 <h2 id="hash-sets">Hash Sets</h2>
@@ -845,24 +845,14 @@ $value = $hashTable->get('foo');
 
 If the value does not exist, an `OutOfBoundsException` will be thrown.
 
-<h3 id="immutable-hash-tables-get-keys">getKeys()</h3>
+<h3 id="immutable-hash-tables-get-keys">keys</h3>
 
 _Runtime: O(n)_
 
 You can grab all of the keys in the hash table:
 
 ```php
-$hashTable->getKeys();
-```
-
-<h3 id="immutable-hash-tables-get-values">getValues()</h3>
-
-_Runtime: O(n)_
-
-You can grab all of the values in the hash table:
-
-```php
-$hashTable->getValues();
+$hashTable->keys;
 ```
 
 <h3 id="immutable-hash-tables-to-array">toArray()</h3>
@@ -886,6 +876,16 @@ If you would like to try to safely get a value that may or may not exist, use `t
 ```php
 $value = null;
 $exists = $hashTable->tryGet('foo', $value);
+```
+
+<h3 id="immutable-hash-tables-get-values">values</h3>
+
+_Runtime: O(n)_
+
+You can grab all of the values in the hash table:
+
+```php
+$hashTable->values;
 ```
 
 <h2 id="immutable-hash-sets">Immutable Hash Sets</h2>

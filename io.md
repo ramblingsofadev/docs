@@ -74,10 +74,10 @@ $stream->rewind();
 To get the length of a stream, call
 
 ```php
-$stream->getLength();
+$stream->length;
 ```
 
-If it is not knowable, then `getLength()` will return `null`.
+If it is not knowable, then `length` will return `null`.
 
 > **Note:** If you happen to know the length of the stream ahead of time, you can pass it into the constructor, eg `new Stream(fopen('path/to/file', 'r+b'), 2056)`.  If you write anything to the stream, then the length is recalculated.
 

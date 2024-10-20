@@ -51,7 +51,7 @@ final class RequestManipulator implements IMiddleware
     public function handle(IRequest $request, IRequestHandler $next): IResponse
     {
         // Do our work before returning $next->handle($request)
-        $request->getProperties()->add('Foo', 'bar');
+        $request->properties->add('Foo', 'bar');
 
         return $next->handle($request);
     }
@@ -73,7 +73,7 @@ final class ResponseManipulator implements IMiddleware
         $response = $next->handle($request);
 
         // Make our changes
-        $response->getHeaders()->add('Foo', 'bar');
+        $response->headers->add('Foo', 'bar');
 
         return $response;
     }
@@ -98,7 +98,7 @@ final class RoleMiddleware extends ParameterizedMiddleware
         $accessToken = null;
 
         if (
-            !$request->getHeaders()->tryGetFirst('Authorization', $accessToken)
+            !$request->headers->tryGetFirst('Authorization', $accessToken)
             || !$this->authService->accessTokenIsValid($accessToken)
         ) {
             return new Response(401);
@@ -148,7 +148,7 @@ $loggingMiddleware = new LoggingMiddleware();
 $authMiddleware = new AuthenticationMiddleware();
 $controllerHandler = new ControllerRequestHandler();
 
-$pipeline = (new MiddlewarePipelineFactory())->createPipeline(
+$pipeline = new MiddlewarePipelineFactory()->createPipeline(
     [$loggingMiddleware, $authMiddleware],
     $controllerHandler
 );
@@ -157,6 +157,6 @@ $pipeline = (new MiddlewarePipelineFactory())->createPipeline(
 `$pipeline` will itself be a request handler, which you can then send a request through and receive a response:
 
 ```php
-$request = (new RequestFactory())->createRequestFromSuperglobals($_SERVER);
+$request = new RequestFactory()->createRequestFromSuperglobals($_SERVER);
 $response = $pipeline->handle($request);
 ```

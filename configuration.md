@@ -564,7 +564,7 @@ You can load this PHP file into a configuration object:
 ```php
 use Aphiria\Application\Configuration\PhpConfigurationFileReader;
 
-$config = (new PhpConfigurationFileReader())->readConfiguration('config.php');
+$config = new PhpConfigurationFileReader()->readConfiguration('config.php');
 ```
 
 Grab the supported languages by using `.` as a delimiter for nested sections:
@@ -582,7 +582,7 @@ Similarly, you can read JSON config files.
 ```php
 use Aphiria\Application\Configuration\JsonConfigurationFileReader;
 
-$config = (new JsonConfigurationFileReader())->readConfiguration('config.json');
+$config = new JsonConfigurationFileReader()->readConfiguration('config.json');
 ```
 
 <h3 id="reading-YAML-files">Reading YAML Files</h3>
@@ -592,7 +592,7 @@ Aphiria supports reading YAML config files, too, as long as they parse to an ass
 ```php
 use Aphiria\Application\Configuration\YamlConfigurationFileReader;
 
-$config = (new YamlConfigurationFileReader())->readConfiguration('config.yaml');
+$config = new YamlConfigurationFileReader()->readConfiguration('config.yaml');
 ```
 
 <h3 id="custom-file-readers">Custom File Readers</h3>

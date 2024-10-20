@@ -124,7 +124,7 @@ $user = new User(new Identity($claims));
 `IPrincipal` contains some useful methods for aggregating claims made by all its identities:
 
 ```php
-$allClaims = $user->getClaims();
+$allClaims = $user->claims;
 $allRoleClaims = $user->filterClaims(ClaimType::Role);
 
 // Check that not only do they have a role claim type, but that its value is "admin"
@@ -140,8 +140,8 @@ $user->addIdentity($identity);
 You can also loop through all the user's identities and query them directly:
 
 ```php
-foreach ($user->getIdentities() as $identity) {
-    $allClaims = $identity->getClaims();
+foreach ($user->identities as $identity) {
+    $allClaims = $identity->claims;
     $allRoleClaims = $identity->filterClaims(ClaimType::Role);
     
     if ($identity->hasClaim(ClaimType::Role, 'admin')) {
@@ -149,16 +149,16 @@ foreach ($user->getIdentities() as $identity) {
     }
     
     // A convenience method for grabbing this identity's username
-    $username = $identity->getName();
+    $username = $identity->name;
     // Another convenience method for grabbing this identity's ID
-    $id = $identity->getNameIdentifier();
+    $id = $identity->nameIdentifier;
 }
 ```
 
 You'll frequently find yourself dealing with a user's primary identity when checking claims.  Grabbing it is easy.
 
 ```php
-$primaryIdentity = $user->getPrimaryIdentity();
+$primaryIdentity = $user->primaryIdentity;
 ```
 
 By default, this is the first identity added to the user, but it can be customized with a callback to determine the primary identity.
@@ -167,7 +167,7 @@ By default, this is the first identity added to the user, but it can be customiz
 // This will make the last added identity the primary one
 $primaryIdentitySelector = fn (array $identities): ?IIdentity => $identities[\count($identities) - 1] ?? null;
 $user = new User($claims, $primaryIdentitySelector);
-$userId = $user->getPrimaryIdentity()?->getNameIdentifier();
+$userId = $user->primaryIdentity?->nameIdentifier;
 ```
 
 Typically, the process of authentication will create the principal and store it, usually as a [request](http-requests.md) property.
@@ -179,7 +179,7 @@ Aphiria provides a fluent builder syntax for principals and identities.  For exa
 ```php
 use Aphiria\Security\PrincipalBuilder;
 
-$user = (new PrincipalBuilder('example.com'))->withNameIdentifier(123)
+$user = new PrincipalBuilder('example.com')->withNameIdentifier(123)
     ->withName('Dave')
     ->withRoles('admin')
     ->build();
@@ -224,7 +224,7 @@ If you want to build multiple identities for your principal, you can.
 use Aphiria\Security\IdentityBuilder;
 use Aphiria\Security\PrincipalBuilder;
 
-$user = (new PrincipalBuilder('example.com'))
+$user = new PrincipalBuilder('example.com')
     ->withIdentity(function (IdentityBuilder $identity) {
         $identity->withName('Dave');
     })
@@ -266,7 +266,7 @@ You can register a scheme to be your application's default.  This means that any
 use Aphiria\Authentication\AuthenticationScheme;
 use Aphiria\Authentication\AuthenticatorBuilder;
 
-$authenticator = (new AuthenticatorBuilder())
+$authenticator = new AuthenticatorBuilder()
     // ...
     ->withScheme(new AuthenticationScheme('cookie', MyCookieHandler::class), true)
     ->build();
@@ -338,7 +338,7 @@ use Aphiria\Authentication\AuthenticationScheme;
 use Aphiria\Authentication\AuthenticatorBuilder;
 use Aphiria\Authentication\Schemes\BasicAuthenticationOptions;
 
-$authenticator = (new AuthenticatorBuilder())
+$authenticator = new AuthenticatorBuilder()
     // ...
     ->withScheme(new AuthenticationScheme(
         'basic',
@@ -360,7 +360,7 @@ use Aphiria\Authentication\AuthenticatorBuilder;
 use Aphiria\Authentication\Schemes\CookieAuthenticationOptions;
 use Aphiria\Net\Http\Headers\SameSiteMode;
 
-$authenticator = (new AuthenticatorBuilder())
+$authenticator = new AuthenticatorBuilder()
     // ...
     ->withScheme(new AuthenticationScheme(
         'cookie',
@@ -417,7 +417,7 @@ use Aphiria\Authentication\AuthenticatorBuilder;
 use Aphiria\Authentication\ContainerAuthenticationSchemeHandlerResolver;
 use Aphiria\DependencyInjection\Container;
 
-$authenticator = (new AuthenticatorBuilder())
+$authenticator = new AuthenticatorBuilder()
     // This will resolve our scheme handler instances
     ->withHandlerResolver(new ContainerAuthenticationSchemeHandlerResolver(new Container()))
     ->withScheme(
@@ -464,7 +464,7 @@ By default, when authentication in the `Authenticate` middleware fails, `challen
 
 <h2 id="user-accessors">User Accessors</h2>
 
-Once you have authenticated a principal using the `Authenticate` middleware, you can store and retrieve that principal for the duration of the request using `IUserAccessor`.  By default, `RequestPropertyUserAccessor` will be used to store the principal as a [custom property](http-requests.md#basics) on the request.  If you need to access the principal in your controller, simply call `Controller::getUser()`:
+Once you have authenticated a principal using the `Authenticate` middleware, you can store and retrieve that principal for the duration of the request using `IUserAccessor`.  By default, `RequestPropertyUserAccessor` will be used to store the principal as a [custom property](http-requests.md#basics) on the request.  If you need to access the principal in your controller, simply call `$this->user`:
 
 ```php
 use Aphiria\Api\Controllers\Controller;
@@ -477,7 +477,7 @@ final class BookController extends Controller
     #[Delete('/books/:id')]
     public function deleteBook(int $id): void
     {
-        $user = $this->getUser();
+        $user = $this->user;
         
         // ...
     }
