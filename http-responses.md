@@ -94,7 +94,7 @@ use Aphiria\Net\Http\Formatting\ResponseFormatter;
 use Aphiria\Net\Http\Headers\Cookie;
 use Aphiria\Net\Http\Headers\SameSiteMode;
 
-(new ResponseFormatter())->setCookie(
+new ResponseFormatter()->setCookie(
     $response,
     new Cookie(
         name: 'token',
@@ -116,7 +116,7 @@ Use `ResponseFormatter::setCookies()` to set multiple cookies at once.
 To delete a cookie on the client, call
 
 ```php
-(new ResponseFormatter())->deleteCookie($response, 'userid');
+new ResponseFormatter()->deleteCookie($response, 'userid');
 ```
 
 <h2 id="writing-responses">Writing Responses</h2>
@@ -126,14 +126,14 @@ Once you're ready to start sending the response back to the client, you can use 
 ```php
 use Aphiria\Net\Http\ResponseWriter;
 
-(new ResponseWriter())->writeResponse($response);
+new ResponseWriter()->writeResponse($response);
 ```
 
 By default, this will write the response to the `php://output` stream.  You can override the stream it writes to via the constructor:
 
 ```php
 $outputStream = new Stream(fopen('path/to/output', 'wb'));
-(new ResponseWriter($outputStream))->writeResponse($response);
+new ResponseWriter($outputStream)->writeResponse($response);
 ```
 
 <h2 id="serializing-responses">Serializing Responses</h2>
