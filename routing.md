@@ -57,7 +57,7 @@ $routes->get('/books/:bookId')
     ->withMiddleware(Authorization::class);
 
 // Set up the route matcher
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes->build()))->createTrie());
+$routeMatcher = new TrieRouteMatcher(new TrieFactory($routes->build())->createTrie());
 
 // Finally, let's find a matching route
 $result = $routeMatcher->matchRoute(
@@ -294,7 +294,7 @@ use Aphiria\Routing\UriTemplates\Compilers\Tries\TrieFactory;
 $routes = new RouteCollection();
 $routeAttributeRegistrant = new AttributeRouteRegistrant(['PATH_TO_SCAN']);
 $routeAttributeRegistrant->registerRoutes($routes);
-$routeMatcher = new TrieRouteMatcher((new TrieFactory($routes))->createTrie());
+$routeMatcher = new TrieRouteMatcher(new TrieFactory($routes)->createTrie());
 
 // Find a matching route
 $result = $routeMatcher->matchRoute(
