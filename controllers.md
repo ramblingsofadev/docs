@@ -6,15 +6,19 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [Parameter Resolution](#parameter-resolution)
-   1. [Request Bodies](#request-body-parameters)
-   2. [URI Parameters](#uri-parameters)
-   3. [Arrays in Request Bodies](#arrays-in-request-bodies)
-   4. [Validating Request Bodies](#validating-request-bodies)
-3. [Parsing Request Data](#parsing-request-data)
-4. [Formatting Response Data](#formatting-response-data)
-5. [Getting the Current User](#getting-the-current-user)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#parameter-resolution">Parameter Resolution</a><ol>
+<li><a href="#request-body-parameters">Request Bodies</a></li>
+<li><a href="#uri-parameters">URI Parameters</a></li>
+<li><a href="#arrays-in-request-bodies">Arrays in Request Bodies</a></li>
+<li><a href="#validating-request-bodies">Validating Request Bodies</a></li>
+</ol>
+</li>
+<li><a href="#parsing-request-data">Parsing Request Data</a></li>
+<li><a href="#formatting-response-data">Formatting Response Data</a></li>
+<li><a href="#getting-the-current-user">Getting the Current User</a></li>
+</ol>
 
 </div>
 

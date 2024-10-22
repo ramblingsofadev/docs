@@ -6,11 +6,15 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Type Finder](#type-finder)
-   1. [Finding Classes](#finding-classes)
-   2. [Finding Interfaces](#finding-interfaces)
-   3. [Finding All Types](#finding-all-types)
-   4. [Finding Sub-Types](#finding-sub-types)
+<ol>
+<li><a href="#type-finder">Type Finder</a><ol>
+<li><a href="#finding-classes">Finding Classes</a></li>
+<li><a href="#finding-interfaces">Finding Interfaces</a></li>
+<li><a href="#finding-all-types">Finding All Types</a></li>
+<li><a href="#finding-sub-types">Finding Sub-Types</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

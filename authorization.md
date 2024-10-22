@@ -6,12 +6,14 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-2. [Policies](#policies)
-3. [Configuring an Authority](#configuring-an-authority)
-4. [Resource Authorization](#resource-authorization)
-5. [Authorization Results](#authorization-results)
-6. [Customizing Failed Authorization Responses](#customizing-failed-authorization-responses)
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#policies">Policies</a></li>
+<li><a href="#configuring-an-authority">Configuring an Authority</a></li>
+<li><a href="#resource-authorization">Resource Authorization</a></li>
+<li><a href="#authorization-results">Authorization Results</a></li>
+<li><a href="#customizing-failed-authorization-responses">Customizing Failed Authorization Responses</a></li>
+</ol>
 
 </div>
 

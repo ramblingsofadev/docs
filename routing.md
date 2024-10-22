@@ -6,33 +6,47 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-   1. [Route Variables](#route-variables)
-   2. [Optional Route Parts](#optional-route-parts)
-   3. [Route Groups](#route-groups)
-   4. [Middleware](#middleware)
-   5. [Route Constraints](#route-constraints)
-2. [Route Attributes](#route-attributes)
-   1. [Example](#route-attributes-example)
-   2. [Route Groups](#route-attributes-groups)
-   3. [Middleware](#route-attributes-middleware)
-   4. [Route Constraints](#route-attributes-constraints)
-   5. [Scanning For Attributes](#scanning-for-attributes)
-3. [Route Builders](#route-builders)
-   1. [Route Groups](#route-builders-groups)
-   2. [Middleware](#route-builders-middleware)
-   3. [Route Constraints](#route-builders-constraints)
-4. [Versioned API Example](#versioned-api-example)
-   1. [Getting Headers in PHP](#getting-php-headers)
-5. [Route Variable Constraints](#route-variable-constraints)
-   1. [Built-In Constraints](#built-in-constraints)
-   2. [Making Your Own Custom Constraints](#making-your-own-custom-constraints)
-6. [Creating Route URIs](#creating-route-uris)
-7. [Caching](#caching)
-   1. [Route Caching](#route-caching)
-   2. [Trie Caching](#trie-caching)
-8. [Using Aphiria's Net Library](#using-aphirias-net-library)
-9. [Matching Algorithm](#matching-algorithm)
+<ol>
+<li><a href="#basics">Basics</a><ol>
+<li><a href="#route-variables">Route Variables</a></li>
+<li><a href="#optional-route-parts">Optional Route Parts</a></li>
+<li><a href="#route-groups">Route Groups</a></li>
+<li><a href="#middleware">Middleware</a></li>
+<li><a href="#route-constraints">Route Constraints</a></li>
+</ol>
+</li>
+<li><a href="#route-attributes">Route Attributes</a><ol>
+<li><a href="#route-attributes-example">Example</a></li>
+<li><a href="#route-attributes-groups">Route Groups</a></li>
+<li><a href="#route-attributes-middleware">Middleware</a></li>
+<li><a href="#route-attributes-constraints">Route Constraints</a></li>
+<li><a href="#scanning-for-attributes">Scanning For Attributes</a></li>
+</ol>
+</li>
+<li><a href="#route-builders">Route Builders</a><ol>
+<li><a href="#route-builders-groups">Route Groups</a></li>
+<li><a href="#route-builders-middleware">Middleware</a></li>
+<li><a href="#route-builders-constraints">Route Constraints</a></li>
+</ol>
+</li>
+<li><a href="#versioned-api-example">Versioned API Example</a><ol>
+<li><a href="#getting-php-headers">Getting Headers in PHP</a></li>
+</ol>
+</li>
+<li><a href="#route-variable-constraints">Route Variable Constraints</a><ol>
+<li><a href="#built-in-constraints">Built-In Constraints</a></li>
+<li><a href="#making-your-own-custom-constraints">Making Your Own Custom Constraints</a></li>
+</ol>
+</li>
+<li><a href="#creating-route-uris">Creating Route URIs</a></li>
+<li><a href="#caching">Caching</a><ol>
+<li><a href="#route-caching">Route Caching</a></li>
+<li><a href="#trie-caching">Trie Caching</a></li>
+</ol>
+</li>
+<li><a href="#using-aphirias-net-library">Using Aphiria&#39;s Net Library</a></li>
+<li><a href="#matching-algorithm">Matching Algorithm</a></li>
+</ol>
 
 </div>
 

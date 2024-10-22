@@ -6,12 +6,18 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [Bindings](#bindings)
-3. [Auto-Wiring](#auto-wiring)
-   1. [Targeted Bindings](#targeted-bindings)
-4. [Binders](#binders)
-   1. [Dispatching Binders](#dispatching-binders)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#bindings">Bindings</a></li>
+<li><a href="#auto-wiring">Auto-Wiring</a><ol>
+<li><a href="#targeted-bindings">Targeted Bindings</a></li>
+</ol>
+</li>
+<li><a href="#binders">Binders</a><ol>
+<li><a href="#dispatching-binders">Dispatching Binders</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

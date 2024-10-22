@@ -6,14 +6,18 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Streams](#streams)
-   1. [Reading from a Stream](#reading-from-stream)
-   2. [Writing to a Stream](#writing-to-stream)
-   3. [Seeking](#seeking)
-   4. [Getting the Length of a Stream](#getting-length-of-stream)
-   5. [Copying to Another Stream](#copying-to-another-stream)
-   6. [Closing a Stream](#closing-stream)
-   7. [Multi-Streams](#multi-streams)
+<ol>
+<li><a href="#streams">Streams</a><ol>
+<li><a href="#reading-from-stream">Reading from a Stream</a></li>
+<li><a href="#writing-to-stream">Writing to a Stream</a></li>
+<li><a href="#seeking">Seeking</a></li>
+<li><a href="#getting-length-of-stream">Getting the Length of a Stream</a></li>
+<li><a href="#copying-to-another-stream">Copying to Another Stream</a></li>
+<li><a href="#closing-stream">Closing a Stream</a></li>
+<li><a href="#multi-streams">Multi-Streams</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

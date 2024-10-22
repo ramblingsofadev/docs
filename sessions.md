@@ -6,21 +6,25 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-2. [Basic Usage](#basic-usage)
-   1. [Setting Data](#setting-data)
-   2. [Getting Data](#getting-data)
-   3. [Getting All Data](#getting-all-data)
-   4. [Checking if a Session Has a Variable](#checking-if-session-has-variable)
-   5. [Deleting Data](#deleting-data)
-   6. [Flushing All Data](#flushing-all-data)
-   7. [Flashing Data](#flashing-data)
-   8. [Regenerating the ID](#regenerating-the-id)
-3. [Session Handlers](#session-handlers)
-4. [Using Sessions In Controllers](#using-sessions-in-controllers)
-5. [Middleware](#middleware)
-6. [ID Generators](#id-generators)
-7. [Encrypting Session Data](#encrypting-session-data)
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#basic-usage">Basic Usage</a><ol>
+<li><a href="#setting-data">Setting Data</a></li>
+<li><a href="#getting-data">Getting Data</a></li>
+<li><a href="#getting-all-data">Getting All Data</a></li>
+<li><a href="#checking-if-session-has-variable">Checking if a Session Has a Variable</a></li>
+<li><a href="#deleting-data">Deleting Data</a></li>
+<li><a href="#flushing-all-data">Flushing All Data</a></li>
+<li><a href="#flashing-data">Flashing Data</a></li>
+<li><a href="#regenerating-the-id">Regenerating the ID</a></li>
+</ol>
+</li>
+<li><a href="#session-handlers">Session Handlers</a></li>
+<li><a href="#using-sessions-in-controllers">Using Sessions In Controllers</a></li>
+<li><a href="#middleware">Middleware</a></li>
+<li><a href="#id-generators">ID Generators</a></li>
+<li><a href="#encrypting-session-data">Encrypting Session Data</a></li>
+</ol>
 
 </div>
 

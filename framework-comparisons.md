@@ -6,31 +6,45 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Preface](#preface)
-2. [General](#general)
-   1. [Aphiria](#aphiria-general)
-   2. [Symfony](#symfony-general)
-   3. [Laravel](#laravel-general)
-2. [Routing](#routing)
-   1. [Aphiria](#aphiria-routing)
-   2. [Symfony](#symfony-routing)
-   3. [Laravel](#laravel-routing)
-3. [Controllers](#controllers)
-   1. [Aphiria](#aphiria-controllers)
-   2. [Symfony](#symfony-controllers)
-   3. [Laravel](#laravel-controllers)
-4. [HTTP Library](#http-library)
-   1. [Aphiria](#aphiria-http-library)
-   2. [Symfony](#symfony-http-library)
-   3. [Laravel](#laravel-http-library)
-5. [Dependency Injection Container](#di-container)
-   1. [Aphiria](#aphiria-di-container)
-   2. [Symfony](#symfony-di-container)
-   3. [Laravel](#laravel-di-container)
-6. [Console](#console)
-   1. [Aphiria](#aphiria-console)
-   2. [Symfony](#symfony-console)
-   3. [Laravel](#laravel-console)
+<ol>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#general">General</a><ol>
+<li><a href="#aphiria-general">Aphiria</a></li>
+<li><a href="#symfony-general">Symfony</a></li>
+<li><a href="#laravel-general">Laravel</a></li>
+</ol>
+</li>
+<li><a href="#routing">Routing</a><ol>
+<li><a href="#aphiria-routing">Aphiria</a></li>
+<li><a href="#symfony-routing">Symfony</a></li>
+<li><a href="#laravel-routing">Laravel</a></li>
+</ol>
+</li>
+<li><a href="#controllers">Controllers</a><ol>
+<li><a href="#aphiria-controllers">Aphiria</a></li>
+<li><a href="#symfony-controllers">Symfony</a></li>
+<li><a href="#laravel-controllers">Laravel</a></li>
+</ol>
+</li>
+<li><a href="#http-library">HTTP Library</a><ol>
+<li><a href="#aphiria-http-library">Aphiria</a></li>
+<li><a href="#symfony-http-library">Symfony</a></li>
+<li><a href="#laravel-http-library">Laravel</a></li>
+</ol>
+</li>
+<li><a href="#di-container">Dependency Injection Container</a><ol>
+<li><a href="#aphiria-di-container">Aphiria</a></li>
+<li><a href="#symfony-di-container">Symfony</a></li>
+<li><a href="#laravel-di-container">Laravel</a></li>
+</ol>
+</li>
+<li><a href="#console">Console</a><ol>
+<li><a href="#aphiria-console">Aphiria</a></li>
+<li><a href="#symfony-console">Symfony</a></li>
+<li><a href="#laravel-console">Laravel</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

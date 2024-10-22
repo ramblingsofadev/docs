@@ -6,11 +6,15 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-   1. [Manipulating the Request](#manipulating-the-request)
-   2. [Manipulating the Response](#manipulating-the-response)
-   3. [Middleware Parameters](#middleware-parameters)
-2. [Executing Middleware](#executing-middleware)
+<ol>
+<li><a href="#basics">Basics</a><ol>
+<li><a href="#manipulating-the-request">Manipulating the Request</a></li>
+<li><a href="#manipulating-the-response">Manipulating the Response</a></li>
+<li><a href="#middleware-parameters">Middleware Parameters</a></li>
+</ol>
+</li>
+<li><a href="#executing-middleware">Executing Middleware</a></li>
+</ol>
 
 </div>
 

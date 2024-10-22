@@ -6,20 +6,30 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-   1. [Creating A Validator](#creating-a-validator)
-2. [Validating Data](#validating-data)
-   1. [Validating Objects](#validating-objects)
-   2. [Validating Properties](#validating-properties)
-   3. [Validating Methods](#validating-methods)
-   4. [Validating Values](#validating-values)
-3. [Constraints](#constraints)
-   1. [Built-In Constraints](#built-in-constraints)
-   2. [Custom Constraints](#custom-constraints)
-4. [Error Messages](#error-messages)
-   1. [Error Message Templates](#error-message-templates)
-   2. [Built-In Error Message Interpolators](#built-in-error-message-interpolators)
-5. [Validating Request Bodies](#validating-request-bodies)
+<ol>
+<li><a href="#introduction">Introduction</a><ol>
+<li><a href="#creating-a-validator">Creating A Validator</a></li>
+</ol>
+</li>
+<li><a href="#validating-data">Validating Data</a><ol>
+<li><a href="#validating-objects">Validating Objects</a></li>
+<li><a href="#validating-properties">Validating Properties</a></li>
+<li><a href="#validating-methods">Validating Methods</a></li>
+<li><a href="#validating-values">Validating Values</a></li>
+</ol>
+</li>
+<li><a href="#constraints">Constraints</a><ol>
+<li><a href="#built-in-constraints">Built-In Constraints</a></li>
+<li><a href="#custom-constraints">Custom Constraints</a></li>
+</ol>
+</li>
+<li><a href="#error-messages">Error Messages</a><ol>
+<li><a href="#error-message-templates">Error Message Templates</a></li>
+<li><a href="#built-in-error-message-interpolators">Built-In Error Message Interpolators</a></li>
+</ol>
+</li>
+<li><a href="#validating-request-bodies">Validating Request Bodies</a></li>
+</ol>
 
 </div>
 

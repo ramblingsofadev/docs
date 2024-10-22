@@ -6,13 +6,21 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Global Exception Handler](#global-exception-handler)
-2. [Problem Details Exception Renderer](#problem-details-exception-renderer)
-   1. [Custom Problem Details Mappings](#custom-problem-details-mappings)
-3. [Console Exception Renderer](#console-exception-renderer)
-   1. [Output Writers](#output-writers)
-4. [Logging](#logging)
-   1. [Exception Log Levels](#exception-log-levels)
+<ol>
+<li><a href="#global-exception-handler">Global Exception Handler</a></li>
+<li><a href="#problem-details-exception-renderer">Problem Details Exception Renderer</a><ol>
+<li><a href="#custom-problem-details-mappings">Custom Problem Details Mappings</a></li>
+</ol>
+</li>
+<li><a href="#console-exception-renderer">Console Exception Renderer</a><ol>
+<li><a href="#output-writers">Output Writers</a></li>
+</ol>
+</li>
+<li><a href="#logging">Logging</a><ol>
+<li><a href="#exception-log-levels">Exception Log Levels</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

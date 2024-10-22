@@ -6,12 +6,18 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [Negotiating Requests](#negotiating-requests)
-3. [Negotiating Responses](#negotiating-responses)
-   1. [Negotiating Language](#negotiating-language)
-4. [Media Type Formatters](#media-type-formatters)
-   1. [Customizing (De)Serialization](#customizing-deserialization)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#negotiating-requests">Negotiating Requests</a></li>
+<li><a href="#negotiating-responses">Negotiating Responses</a><ol>
+<li><a href="#negotiating-language">Negotiating Language</a></li>
+</ol>
+</li>
+<li><a href="#media-type-formatters">Media Type Formatters</a><ol>
+<li><a href="#customizing-deserialization">Customizing (De)Serialization</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

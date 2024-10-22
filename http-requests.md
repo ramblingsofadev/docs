@@ -6,27 +6,35 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [Creating Requests](#creating-requests)
-   1. [Creating Requests From Superglobals](#creating-requests-from-superglobals)
-   2. [Request Builders](#request-builders)
-3. [Headers](#headers)
-4. [Bodies](#bodies)
-   1. [String Bodies](#string-bodies)
-   2. [Stream Bodies](#stream-bodies)
-5. [URIs](#uris)
-6. [Getting POST Data](#getting-post-data)
-7. [Getting Query String Data](#getting-query-string-data)
-8. [JSON Requests](#json-requests)
-9. [Getting Cookies](#getting-request-cookies)
-10. [Getting Client IP Address](#getting-client-ip-address)
-11. [Header Parameters](#header-parameters)
-12. [Serializing Requests](#serializing-requests)
-13. [Multipart Requests](#multipart-requests)
-    1. [Saving Uploaded Files](#saving-uploaded-files)
-    2. [Getting the MIME Type of the Body](#getting-mime-type-of-body)
-    3. [Creating Multipart Requests](#creating-multipart-requests)
-14. [Trusted Proxies](#trusted-proxies)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#creating-requests">Creating Requests</a><ol>
+<li><a href="#creating-requests-from-superglobals">Creating Requests From Superglobals</a></li>
+<li><a href="#request-builders">Request Builders</a></li>
+</ol>
+</li>
+<li><a href="#headers">Headers</a></li>
+<li><a href="#bodies">Bodies</a><ol>
+<li><a href="#string-bodies">String Bodies</a></li>
+<li><a href="#stream-bodies">Stream Bodies</a></li>
+</ol>
+</li>
+<li><a href="#uris">URIs</a></li>
+<li><a href="#getting-post-data">Getting POST Data</a></li>
+<li><a href="#getting-query-string-data">Getting Query String Data</a></li>
+<li><a href="#json-requests">JSON Requests</a></li>
+<li><a href="#getting-request-cookies">Getting Cookies</a></li>
+<li><a href="#getting-client-ip-address">Getting Client IP Address</a></li>
+<li><a href="#header-parameters">Header Parameters</a></li>
+<li><a href="#serializing-requests">Serializing Requests</a></li>
+<li><a href="#multipart-requests">Multipart Requests</a><ol>
+<li><a href="#saving-uploaded-files">Saving Uploaded Files</a></li>
+<li><a href="#getting-mime-type-of-body">Getting the MIME Type of the Body</a></li>
+<li><a href="#creating-multipart-requests">Creating Multipart Requests</a></li>
+</ol>
+</li>
+<li><a href="#trusted-proxies">Trusted Proxies</a></li>
+</ol>
 
 </div>
 

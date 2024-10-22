@@ -6,9 +6,11 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [What Is It?](#what-is-it)
-2. [Getting Started](#getting-started)
-3. [Another PHP Framework?](#another-php-framework)
+<ol>
+<li><a href="#what-is-it">What Is It?</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#another-php-framework">Another PHP Framework?</a></li>
+</ol>
 
 </div>
 

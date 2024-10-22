@@ -6,28 +6,36 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [Bugs](#bugs)
-   1. [Reporting a Bug](#reporting-bug)
-   2. [Fixing a Bug](#fixing-bug)
-3. [Features](#features)
-4. [Security Vulnerabilities](#security-vulnerabilities)
-5. [Coding Style](#coding-style)
-   1. [Linter](#linter)
-   2. [Static Analysis](#static-analysis)
-   3. [PHPDoc](#phpdoc)
-6. [Naming Conventions](#naming-conventions)
-   1. [Variables](#variables)
-   2. [Properties](#properties)
-   3. [Functions/Methods](#functions-methods)
-   4. [Constants](#constants)
-   5. [Namespaces](#namespaces)
-   6. [Classes](#classes)
-   7. [Abstract Classes](#abstract-classes)
-   8. [Interfaces](#interfaces)
-   9. [Traits](#traits)
-   10. [Enums](#enums)
-7. [Financial Support](#financial-support)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#bugs">Bugs</a><ol>
+<li><a href="#reporting-bug">Reporting a Bug</a></li>
+<li><a href="#fixing-bug">Fixing a Bug</a></li>
+</ol>
+</li>
+<li><a href="#features">Features</a></li>
+<li><a href="#security-vulnerabilities">Security Vulnerabilities</a></li>
+<li><a href="#coding-style">Coding Style</a><ol>
+<li><a href="#linter">Linter</a></li>
+<li><a href="#static-analysis">Static Analysis</a></li>
+<li><a href="#phpdoc">PHPDoc</a></li>
+</ol>
+</li>
+<li><a href="#naming-conventions">Naming Conventions</a><ol>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#properties">Properties</a></li>
+<li><a href="#functions-methods">Functions/Methods</a></li>
+<li><a href="#constants">Constants</a></li>
+<li><a href="#namespaces">Namespaces</a></li>
+<li><a href="#classes">Classes</a></li>
+<li><a href="#abstract-classes">Abstract Classes</a></li>
+<li><a href="#interfaces">Interfaces</a></li>
+<li><a href="#traits">Traits</a></li>
+<li><a href="#enums">Enums</a></li>
+</ol>
+</li>
+<li><a href="#financial-support">Financial Support</a></li>
+</ol>
 
 </div>
 

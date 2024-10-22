@@ -6,20 +6,26 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-   1. [Principals](#principals) 
-   2. [Claims](#claims)
-   3. [Builder](#builder)
-3. [Authentication Schemes](#authentication-schemes)
-   1. [Default Scheme](#default-scheme)
-   2. [Options](#scheme-options)
-   3. [Basic Authentication](#basic-authentication)
-   4. [Cookie Authentication](#cookie-authentication)
-4. [Configuring an Authenticator](#configuring-an-authenticator)
-5. [Authentication Results](#authentication-results)
-6. [Customizing Authentication Failure Responses](#customizing-authentication-failure-responses)
-7. [User Accessors](#user-accessors)
-8. [Mocking Authentication](#mocking-authentication)
+<ol>
+<li><a href="#introduction">Introduction</a><ol>
+<li><a href="#principals">Principals</a> </li>
+<li><a href="#claims">Claims</a></li>
+<li><a href="#builder">Builder</a></li>
+</ol>
+</li>
+<li><a href="#authentication-schemes">Authentication Schemes</a><ol>
+<li><a href="#default-scheme">Default Scheme</a></li>
+<li><a href="#scheme-options">Options</a></li>
+<li><a href="#basic-authentication">Basic Authentication</a></li>
+<li><a href="#cookie-authentication">Cookie Authentication</a></li>
+</ol>
+</li>
+<li><a href="#configuring-an-authenticator">Configuring an Authenticator</a></li>
+<li><a href="#authentication-results">Authentication Results</a></li>
+<li><a href="#customizing-authentication-failure-responses">Customizing Authentication Failure Responses</a></li>
+<li><a href="#user-accessors">User Accessors</a></li>
+<li><a href="#mocking-authentication">Mocking Authentication</a></li>
+</ol>
 
 </div>
 

@@ -6,16 +6,24 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-   1. [Why Doesn't Aphiria Adopt All The PSRs?](#why-doesnt-aphiria-adopt-all-the-psrs)
-2. [PSR-7](#psr-7)
-   1. [Requests](#psr-7-requests)
-   1. [Responses](#psr-7-responses)
-   1. [Streams](#psr-7-streams)
-   1. [URIs](#psr-7-uris)
-   1. [Uploaded Files](#psr-7-uploaded-files)
-3. [PSR-11](#psr-11)
-   1. [Creating a PSR-11 Container](#creating-a-psr-11-container)
+<ol>
+<li><a href="#introduction">Introduction</a><ol>
+<li><a href="#why-doesnt-aphiria-adopt-all-the-psrs">Why Doesn&#39;t Aphiria Adopt All The PSRs?</a></li>
+</ol>
+</li>
+<li><a href="#psr-7">PSR-7</a><ol>
+<li><a href="#psr-7-requests">Requests</a></li>
+<li><a href="#psr-7-responses">Responses</a></li>
+<li><a href="#psr-7-streams">Streams</a></li>
+<li><a href="#psr-7-uris">URIs</a></li>
+<li><a href="#psr-7-uploaded-files">Uploaded Files</a></li>
+</ol>
+</li>
+<li><a href="#psr-11">PSR-11</a><ol>
+<li><a href="#creating-a-psr-11-container">Creating a PSR-11 Container</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

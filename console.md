@@ -6,33 +6,49 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-   1. [Why Is This Library Included?](#why-is-this-library-included)
-2. [Running Commands](#running-commands)
-   1. [Getting Help](#getting-help)
-3. [Creating Commands](#creating-commands)
-   1. [Input](#input)
-   2. [Arguments](#arguments)
-   3. [Options](#options)
-   4. [Output](#output)
-   5. [Manually Registering Commands](#manually-registering-commands)
-   6. [Calling From Code](#calling-from-code)
-4. [Command Attributes](#command-attributes)
-    1. [Example](#command-attribute-example)
-    4. [Scanning For Attributes](#scanning-for-attributes)
-5. [Prompts](#prompts)
-   1. [Confirmation](#confirmation)
-   2. [Multiple Choice](#multiple-choice)
-   3. [Hiding Input](#hiding-input)
-6. [Formatters](#formatters)
-   1. [Padding](#padding)
-   2. [Tables](#tables)
-   3. [Progress Bars](#progress-bars)
-7. [Style Elements](#style-elements)
-   1. [Built-In Elements](#built-in-elements)
-   2. [Custom Elements](#custom-elements)
-   3. [Overriding Built-In Elements](#overriding-built-in-elements)
-8. [Built-In Commands](#built-in-commands)
+<ol>
+<li><a href="#basics">Basics</a><ol>
+<li><a href="#why-is-this-library-included">Why Is This Library Included?</a></li>
+</ol>
+</li>
+<li><a href="#running-commands">Running Commands</a><ol>
+<li><a href="#getting-help">Getting Help</a></li>
+</ol>
+</li>
+<li><a href="#creating-commands">Creating Commands</a><ol>
+<li><a href="#input">Input</a></li>
+<li><a href="#arguments">Arguments</a></li>
+<li><a href="#options">Options</a></li>
+<li><a href="#output">Output</a></li>
+<li><a href="#manually-registering-commands">Manually Registering Commands</a></li>
+<li><a href="#calling-from-code">Calling From Code</a></li>
+</ol>
+</li>
+<li><a href="#command-attributes">Command Attributes</a><ol>
+<li><a href="#command-attribute-example">Example</a></li>
+<li><a href="#scanning-for-attributes">Scanning For Attributes</a></li>
+</ol>
+</li>
+<li><a href="#prompts">Prompts</a><ol>
+<li><a href="#confirmation">Confirmation</a></li>
+<li><a href="#multiple-choice">Multiple Choice</a></li>
+<li><a href="#hiding-input">Hiding Input</a></li>
+</ol>
+</li>
+<li><a href="#formatters">Formatters</a><ol>
+<li><a href="#padding">Padding</a></li>
+<li><a href="#tables">Tables</a></li>
+<li><a href="#progress-bars">Progress Bars</a></li>
+</ol>
+</li>
+<li><a href="#style-elements">Style Elements</a><ol>
+<li><a href="#built-in-elements">Built-In Elements</a></li>
+<li><a href="#custom-elements">Custom Elements</a></li>
+<li><a href="#overriding-built-in-elements">Overriding Built-In Elements</a></li>
+</ol>
+</li>
+<li><a href="#built-in-commands">Built-In Commands</a></li>
+</ol>
 
 </div>
 

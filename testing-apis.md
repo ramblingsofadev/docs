@@ -6,19 +6,25 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-2. [Sending Requests](#sending-requests)
-   1. [Negotiating Content](#negotiating-content)
-3. [Mocking Authentication](#mocking-authentication)
-4. [Response Assertions](#response-assertions)
-   1. [assertCookieEquals](#assert-cookie-equals)
-   2. [assertHasCookie](#assert-has-cookie)
-   3. [assertHasHeader](#assert-has-header)
-   4. [assertHeaderEquals](#assert-header-equals)
-   5. [assertHeaderMatchesRegex](#assert-header-matches-regex)
-   6. [assertParsedBodyEquals](#assert-parsed-body-equals)
-   7. [assertParsedBodyPassesCallback](#assert-parsed-body-passes-callback)
-   8. [assertStatusCodeEquals](#assert-status-code-equals)
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#sending-requests">Sending Requests</a><ol>
+<li><a href="#negotiating-content">Negotiating Content</a></li>
+</ol>
+</li>
+<li><a href="#mocking-authentication">Mocking Authentication</a></li>
+<li><a href="#response-assertions">Response Assertions</a><ol>
+<li><a href="#assert-cookie-equals">assertCookieEquals</a></li>
+<li><a href="#assert-has-cookie">assertHasCookie</a></li>
+<li><a href="#assert-has-header">assertHasHeader</a></li>
+<li><a href="#assert-header-equals">assertHeaderEquals</a></li>
+<li><a href="#assert-header-matches-regex">assertHeaderMatchesRegex</a></li>
+<li><a href="#assert-parsed-body-equals">assertParsedBodyEquals</a></li>
+<li><a href="#assert-parsed-body-passes-callback">assertParsedBodyPassesCallback</a></li>
+<li><a href="#assert-status-code-equals">assertStatusCodeEquals</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

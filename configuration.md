@@ -6,26 +6,36 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Application Builders](#application-builders)
-   1. [Modules](#modules)
-2. [Components](#components)
-   1. [Binders](#component-binders)
-   2. [Routes](#component-routes)
-   3. [Middleware](#component-middleware)
-   4. [Console Commands](#component-console-commands)
-   5. [Authenticators](#component-authentiators)
-   6. [Authorities](#component-authorities)
-   7. [Validator](#component-validator)
-   8. [Exception Handler](#component-exception-handler)
-3. [Adding Custom Components](#adding-custom-components)
-4. [Reading From Configs](#reading-from-configs)
-   1. [Reading PHP Files](#reading-php-files)
-   2. [Reading JSON Files](#reading-json-files)
-   3. [Reading YAML Files](#reading-yaml-files)
-   4. [Custom File Readers](#custom-file-readers)
-5. [Global Configuration](#global-configuration)
-   1. [Building The Global Configuration](#building-the-global-configuration)
-6. [Custom Applications](#custom-applications)
+<ol>
+<li><a href="#application-builders">Application Builders</a><ol>
+<li><a href="#modules">Modules</a></li>
+</ol>
+</li>
+<li><a href="#components">Components</a><ol>
+<li><a href="#component-binders">Binders</a></li>
+<li><a href="#component-routes">Routes</a></li>
+<li><a href="#component-middleware">Middleware</a></li>
+<li><a href="#component-console-commands">Console Commands</a></li>
+<li><a href="#component-authentiators">Authenticators</a></li>
+<li><a href="#component-authorities">Authorities</a></li>
+<li><a href="#component-validator">Validator</a></li>
+<li><a href="#component-exception-handler">Exception Handler</a></li>
+</ol>
+</li>
+<li><a href="#adding-custom-components">Adding Custom Components</a></li>
+<li><a href="#reading-from-configs">Reading From Configs</a><ol>
+<li><a href="#reading-php-files">Reading PHP Files</a></li>
+<li><a href="#reading-json-files">Reading JSON Files</a></li>
+<li><a href="#reading-yaml-files">Reading YAML Files</a></li>
+<li><a href="#custom-file-readers">Custom File Readers</a></li>
+</ol>
+</li>
+<li><a href="#global-configuration">Global Configuration</a><ol>
+<li><a href="#building-the-global-configuration">Building The Global Configuration</a></li>
+</ol>
+</li>
+<li><a href="#custom-applications">Custom Applications</a></li>
+</ol>
 
 </div>
 

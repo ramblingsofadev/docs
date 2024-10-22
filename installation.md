@@ -6,15 +6,21 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Requirements](#requirements)
-2. [Installing](#installing)
-   1. [Libraries](#libraries)
-3. [Server Config](#server-config)
-   1. [PHP Built-in Web Server Config](#php-built-in-web-server-config)
-   2. [Apache Config](#apache-config)
-   3. [Nginx Config](#nginx-config)
-   4. [Caddy Config](#caddy-config)
-4. [Versioning](#versioning)
+<ol>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installing">Installing</a><ol>
+<li><a href="#libraries">Libraries</a></li>
+</ol>
+</li>
+<li><a href="#server-config">Server Config</a><ol>
+<li><a href="#php-built-in-web-server-config">PHP Built-in Web Server Config</a></li>
+<li><a href="#apache-config">Apache Config</a></li>
+<li><a href="#nginx-config">Nginx Config</a></li>
+<li><a href="#caddy-config">Caddy Config</a></li>
+</ol>
+</li>
+<li><a href="#versioning">Versioning</a></li>
+</ol>
 
 </div>
 

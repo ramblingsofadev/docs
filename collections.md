@@ -6,85 +6,105 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Introduction](#introduction)
-2. [Key-Value Pairs](#key-value-pairs)
-   1. [key](#key-value-pairs-key)
-   2. [value](#key-value-pairs-value)
-3. [Array Lists](#array-lists)
-   1. [add()](#array-lists-add)
-   2. [addRange()](#array-lists-add-range)
-   3. [clear()](#array-lists-clear)
-   4. [containsValue()](#array-lists-contains-value)
-   5. [count()](#array-lists-count)
-   6. [get()](#array-lists-get)
-   7. [indexOf()](#array-lists-index-of)
-   8. [insert()](#array-lists-insert)
-   9. [intersect()](#array-lists-intersect)
-   10. [removeIndex()](#array-lists-remove-index)
-   11. [reverse()](#array-lists-reverse)
-   12. [sort()](#array-lists-sort)
-   12. [toArray()](#array-lists-to-array)
-   12. [union()](#array-lists-union)
-4. [Hash Tables](#hash-tables)
-   1. [add()](#hash-tables-add)
-   2. [addRange()](#hash-tables-add-range)
-   3. [clear()](#hash-tables-clear)
-   4. [containsKey()](#hash-tables-contains-key)
-   5. [containsValue()](#hash-tables-contains-value)
-   6. [count()](#hash-tables-count)
-   7. [get()](#hash-tables-get)
-   8. [keys](#hash-tables-get-keys)
-   9. [removeKey()](#hash-tables-remove-key)
-   10. [removeValue()](#hash-tables-remove-value)
-   11. [toArray()](#hash-tables-to-array)
-   12. [tryGet()](#hash-tables-try-get)
-   13. [values](#hash-tables-get-values)
-5. [Hash Sets](#hash-sets)
-   1. [add()](#hash-sets-add)
-   2. [addRange()](#hash-sets-add-range)
-   3. [clear()](#hash-sets-clear)
-   4. [containsValue()](#hash-sets-contains-value)
-   5. [count()](#hash-sets-count)
-   6. [intersect()](#hash-sets-intersect)
-   7. [removeValue()](#hash-sets-remove-value)
-   8. [sort()](#hash-sets-sort)
-   9. [toArray()](#hash-sets-to-array)
-   10. [union()](#hash-sets-union)
-6. [Stacks](#stacks)
-   1. [clear()](#stacks-clear)
-   2. [containsValue()](#stacks-contains-value)
-   3. [count()](#stacks-count)
-   4. [peek()](#stacks-peek)
-   5. [pop()](#stacks-pop)
-   1. [push()](#stacks-push)
-   1. [toArray()](#stacks-to-array)
-7. [Queues](#queues)
-   1. [clear()](#queues-clear)
-   2. [containsValue()](#queues-contains-value)
-   3. [count()](#queues-count)
-   4. [dequeue()](#queues-dequeue)
-   5. [enqueue()](#queues-enqueue)
-   6. [peek()](#queues-peek)
-   7. [toArray()](#queues-to-array)
-8. [Immutable Array Lists](#immutable-array-lists)
-   1. [containsValue()](#immutable-array-lists-contains-value)
-   2. [count()](#immutable-array-lists-count)
-   3. [get()](#immutable-array-lists-get)
-   4. [indexOf()](#immutable-array-lists-index-of)
-   5. [toArray()](#immutable-array-lists-to-array)
-9. [Immutable Hash Tables](#immutable-hash-tables)
-   1. [containsKey()](#immutable-hash-tables-contains-key)
-   2. [containsValue()](#immutable-hash-tables-contains-value)
-   3. [count()](#immutable-hash-tables-count)
-   4. [get()](#immutable-hash-tables-get)
-   5. [keys](#immutable-hash-tables-get-keys)
-   6[toArray()](#immutable-hash-tables-to-array)
-   7[tryGet()](#immutable-hash-tables-try-get)
-   8[values](#immutable-hash-tables-get-values)
-10. [Immutable Hash Sets](#immutable-hash-sets)
-    1. [containsValue()](#immutable-hash-sets-contains-value)
-    2. [count()](#immutable-hash-sets-count)
-    3. [toArray()](#immutable-hash-sets-to-array)
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#key-value-pairs">Key-Value Pairs</a><ol>
+<li><a href="#key-value-pairs-key">key</a></li>
+<li><a href="#key-value-pairs-value">value</a></li>
+</ol>
+</li>
+<li><a href="#array-lists">Array Lists</a><ol>
+<li><a href="#array-lists-add">add()</a></li>
+<li><a href="#array-lists-add-range">addRange()</a></li>
+<li><a href="#array-lists-clear">clear()</a></li>
+<li><a href="#array-lists-contains-value">containsValue()</a></li>
+<li><a href="#array-lists-count">count()</a></li>
+<li><a href="#array-lists-get">get()</a></li>
+<li><a href="#array-lists-index-of">indexOf()</a></li>
+<li><a href="#array-lists-insert">insert()</a></li>
+<li><a href="#array-lists-intersect">intersect()</a></li>
+<li><a href="#array-lists-remove-index">removeIndex()</a></li>
+<li><a href="#array-lists-reverse">reverse()</a></li>
+<li><a href="#array-lists-sort">sort()</a></li>
+<li><a href="#array-lists-to-array">toArray()</a></li>
+<li><a href="#array-lists-union">union()</a></li>
+</ol>
+</li>
+<li><a href="#hash-tables">Hash Tables</a><ol>
+<li><a href="#hash-tables-add">add()</a></li>
+<li><a href="#hash-tables-add-range">addRange()</a></li>
+<li><a href="#hash-tables-clear">clear()</a></li>
+<li><a href="#hash-tables-contains-key">containsKey()</a></li>
+<li><a href="#hash-tables-contains-value">containsValue()</a></li>
+<li><a href="#hash-tables-count">count()</a></li>
+<li><a href="#hash-tables-get">get()</a></li>
+<li><a href="#hash-tables-get-keys">keys</a></li>
+<li><a href="#hash-tables-remove-key">removeKey()</a></li>
+<li><a href="#hash-tables-remove-value">removeValue()</a></li>
+<li><a href="#hash-tables-to-array">toArray()</a></li>
+<li><a href="#hash-tables-try-get">tryGet()</a></li>
+<li><a href="#hash-tables-get-values">values</a></li>
+</ol>
+</li>
+<li><a href="#hash-sets">Hash Sets</a><ol>
+<li><a href="#hash-sets-add">add()</a></li>
+<li><a href="#hash-sets-add-range">addRange()</a></li>
+<li><a href="#hash-sets-clear">clear()</a></li>
+<li><a href="#hash-sets-contains-value">containsValue()</a></li>
+<li><a href="#hash-sets-count">count()</a></li>
+<li><a href="#hash-sets-intersect">intersect()</a></li>
+<li><a href="#hash-sets-remove-value">removeValue()</a></li>
+<li><a href="#hash-sets-sort">sort()</a></li>
+<li><a href="#hash-sets-to-array">toArray()</a></li>
+<li><a href="#hash-sets-union">union()</a></li>
+</ol>
+</li>
+<li><a href="#stacks">Stacks</a><ol>
+<li><a href="#stacks-clear">clear()</a></li>
+<li><a href="#stacks-contains-value">containsValue()</a></li>
+<li><a href="#stacks-count">count()</a></li>
+<li><a href="#stacks-peek">peek()</a></li>
+<li><a href="#stacks-pop">pop()</a></li>
+<li><a href="#stacks-push">push()</a></li>
+<li><a href="#stacks-to-array">toArray()</a></li>
+</ol>
+</li>
+<li><a href="#queues">Queues</a><ol>
+<li><a href="#queues-clear">clear()</a></li>
+<li><a href="#queues-contains-value">containsValue()</a></li>
+<li><a href="#queues-count">count()</a></li>
+<li><a href="#queues-dequeue">dequeue()</a></li>
+<li><a href="#queues-enqueue">enqueue()</a></li>
+<li><a href="#queues-peek">peek()</a></li>
+<li><a href="#queues-to-array">toArray()</a></li>
+</ol>
+</li>
+<li><a href="#immutable-array-lists">Immutable Array Lists</a><ol>
+<li><a href="#immutable-array-lists-contains-value">containsValue()</a></li>
+<li><a href="#immutable-array-lists-count">count()</a></li>
+<li><a href="#immutable-array-lists-get">get()</a></li>
+<li><a href="#immutable-array-lists-index-of">indexOf()</a></li>
+<li><a href="#immutable-array-lists-to-array">toArray()</a></li>
+</ol>
+</li>
+<li><a href="#immutable-hash-tables">Immutable Hash Tables</a><ol>
+<li><a href="#immutable-hash-tables-contains-key">containsKey()</a></li>
+<li><a href="#immutable-hash-tables-contains-value">containsValue()</a></li>
+<li><a href="#immutable-hash-tables-count">count()</a></li>
+<li><a href="#immutable-hash-tables-get">get()</a></li>
+<li><a href="#immutable-hash-tables-get-keys">keys</a></li>
+<li><a href="#immutable-hash-tables-to-array">toArray()</a></li>
+<li><a href="#immutable-hash-tables-try-get">tryGet()</a></li>
+<li><a href="#immutable-hash-tables-get-values">values</a></li>
+</ol>
+</li>
+<li><a href="#immutable-hash-sets">Immutable Hash Sets</a><ol>
+<li><a href="#immutable-hash-sets-contains-value">containsValue()</a></li>
+<li><a href="#immutable-hash-sets-count">count()</a></li>
+<li><a href="#immutable-hash-sets-to-array">toArray()</a></li>
+</ol>
+</li>
+</ol>
 
 </div>
 

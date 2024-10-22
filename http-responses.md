@@ -6,13 +6,17 @@
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
-1. [Basics](#basics)
-2. [JSON Responses](#json-responses)
-3. [Redirect Responses](#redirect-responses)
-4. [Setting Cookies](#setting-response-cookies)
-   1. [Deleting Cookies](#deleting-response-cookies)
-5. [Writing Responses](#writing-responses)
-6. [Serializing Responses](#serializing-responses)
+<ol>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#json-responses">JSON Responses</a></li>
+<li><a href="#redirect-responses">Redirect Responses</a></li>
+<li><a href="#setting-response-cookies">Setting Cookies</a><ol>
+<li><a href="#deleting-response-cookies">Deleting Cookies</a></li>
+</ol>
+</li>
+<li><a href="#writing-responses">Writing Responses</a></li>
+<li><a href="#serializing-responses">Serializing Responses</a></li>
+</ol>
 
 </div>
 
