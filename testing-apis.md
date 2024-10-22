@@ -1,8 +1,8 @@
 <h1 id="doc-title">Testing APIs</h1>
 
-<nav class="toc-nav" markdown="1">
+<nav class="toc-nav">
 
-<div class="toc-nav-contents" markdown="1">
+<div class="toc-nav-contents">
 
 <h2 id="table-of-contents">Table of Contents</h2>
 
