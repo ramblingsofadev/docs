@@ -45,8 +45,8 @@ final class ArticleController extends Controller
 Here's the identical functionality, just using `IAuthority` instead of an attribute:
 
 ```php
-use Aphiria\Authorization\IAuthority;
 use Aphiria\Authorization\AuthorizationPolicy;
+use Aphiria\Authorization\IAuthority;
 use Aphiria\Authorization\RequirementHandlers\RolesRequirement;
 
 final class ArticleController extends Controller
