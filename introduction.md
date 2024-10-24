@@ -84,7 +84,7 @@ final class GlobalModule extends AphiriaModule
 }
 ```
 
-That's all it takes to build a fully-functional API with Aphiria.
+That's all it takes to build a fully functional API with Aphiria.
 
 <h2 id="getting-started">Getting Started</h2>
 
