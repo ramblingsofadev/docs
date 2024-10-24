@@ -123,12 +123,12 @@ final class User
     /**
      * @param string $firstName The user's first name
      * @param string $lastName The user's last name
-     * @param list<string> $roles The list of roles this user has
+     * @param list<string> $roles The user's roles
      */
     public function __construct(
         public readonly string $firstName,
         public readonly string $lastName,
-        public private(set) array $roles
+        public private(set) array $roles = []
     ) {
     }
     
